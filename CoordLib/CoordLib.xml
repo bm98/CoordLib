@@ -1,0 +1,694 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CoordLib</name>
+    </assembly>
+    <members>
+        <member name="T:CoordLib.ConvConsts">
+            <summary>
+            Useful conversions and constants
+            </summary>
+        </member>
+        <member name="F:CoordLib.ConvConsts.KmPerSm">
+            <summary>
+            Const Km per Sm (Statute Mile)
+            </summary>
+        </member>
+        <member name="F:CoordLib.ConvConsts.KmPerNm">
+            <summary>
+            Const Km per Nm
+            </summary>
+        </member>
+        <member name="F:CoordLib.ConvConsts.MPerFt">
+            <summary>
+            Const M per Ft
+            </summary>
+        </member>
+        <member name="F:CoordLib.ConvConsts.EarthRadiusM">
+            <summary>
+            Const Earth radius in M
+            </summary>
+        </member>
+        <member name="F:CoordLib.ConvConsts.EarthRadiusKm">
+            <summary>
+            Const Earth radius in km
+            </summary>
+        </member>
+        <member name="F:CoordLib.ConvConsts.EarthRadiusNm">
+            <summary>
+            Const Earth radius in Nm
+            </summary>
+        </member>
+        <member name="F:CoordLib.ConvConsts.EarthRadiusSM">
+            <summary>
+            Const Earth radius in SM
+            </summary>
+        </member>
+        <member name="M:CoordLib.ConvConsts.MToNm(System.Double)">
+            <summary>
+            Convert m to nm
+            </summary>
+            <param name="m">m to convert</param>
+            <returns>nm</returns>
+        </member>
+        <member name="M:CoordLib.ConvConsts.MToSm(System.Double)">
+            <summary>
+            Convert m to Sm
+            </summary>
+            <param name="m">m to convert</param>
+            <returns>Sm</returns>
+        </member>
+        <member name="M:CoordLib.ConvConsts.KmToNm(System.Double)">
+            <summary>
+            Convert km to nm
+            </summary>
+            <param name="km">km to convert</param>
+            <returns>nm</returns>
+        </member>
+        <member name="M:CoordLib.ConvConsts.KmToSm(System.Double)">
+            <summary>
+            Convert km to Sm
+            </summary>
+            <param name="km">km to convert</param>
+            <returns>Sm</returns>
+        </member>
+        <member name="M:CoordLib.ConvConsts.NmToM(System.Double)">
+            <summary>
+            Convert nm to m
+            </summary>
+            <param name="nm">nm to convert</param>
+            <returns>m</returns>
+        </member>
+        <member name="M:CoordLib.ConvConsts.SmToM(System.Double)">
+            <summary>
+            Convert Sm to m
+            </summary>
+            <param name="sm">Sm to convert</param>
+            <returns>m</returns>
+        </member>
+        <member name="M:CoordLib.ConvConsts.NmToKm(System.Double)">
+            <summary>
+            Convert nm to km
+            </summary>
+            <param name="nm">nm to convert</param>
+            <returns>km</returns>
+        </member>
+        <member name="M:CoordLib.ConvConsts.SmToKm(System.Double)">
+            <summary>
+            Convert Sm to km
+            </summary>
+            <param name="sm">Sm to convert</param>
+            <returns>km</returns>
+        </member>
+        <member name="M:CoordLib.ConvConsts.MToFt(System.Double)">
+            <summary>
+            Convert m to ft
+            </summary>
+            <param name="m">m to convert</param>
+            <returns>ft</returns>
+        </member>
+        <member name="M:CoordLib.ConvConsts.FtToM(System.Double)">
+            <summary>
+            Convert ft to m
+            </summary>
+            <param name="ft">ft to convert</param>
+            <returns>m</returns>
+        </member>
+        <member name="M:CoordLib.ConvConsts.ToRadians(System.Double)">
+            <summary>
+            Convert Radians to Degrees
+            </summary>
+            <param name="angleInDegree">An angle in degrees</param>
+            <returns>The angle in radians</returns>
+        </member>
+        <member name="M:CoordLib.ConvConsts.ToDegrees(System.Double)">
+            <summary>
+            Convert Degrees to Radians
+            </summary>
+            <param name="angleInRadians">An angle in radians</param>
+            <returns>The angle in degrees</returns>
+        </member>
+        <member name="T:CoordLib.Dms">
+            <summary>
+            Geodesy representation conversion functions  
+            Latitude/longitude points may be represented as double degrees, or subdivided into sexagesimal
+            minutes and seconds.
+            1:1 C# translation from above
+            </summary>
+        </member>
+        <member name="F:CoordLib.Dms.Separator">
+            <summary>
+            Separator character to be used to separate degrees, minutes, seconds, and cardinal directions.
+            
+            Set to '\u202f' (narrow no-break space) for improved formatting.
+                 * @example
+                 * var p = new LatLon(51.2, 0.33);  // 51°12′00.0″N, 000°19′48.0″E
+                 *   Dms.separator = '\u202f';        // narrow no-break space
+                 *   var pʹ = new LatLon( 51.2, 0.33 ); // 51° 12′ 00.0″ N, 000° 19′ 48.0″ E
+            </summary>
+        </member>
+        <member name="M:CoordLib.Dms.ParseDMS(System.String)">
+            <summary>
+            Parses string representing degrees/minutes/seconds into numeric degrees.
+            
+            This is very flexible on formats, allowing signed double degrees, or deg-min-sec optionally
+            suffixed by compass direction( NSEW). A variety of separators are accepted( eg 3° 37′ 09″W).
+            Seconds and minutes may be omitted.
+            
+                 * @example
+                 * var lat = Dms.parseDMS("N51° 28' 40.12\"");
+                 *     var lon = Dms.parseDMS( "W0° 00' 5.31\"" );
+                 *     var p1 = new LatLon( lat, lon ); // N51.4778°, W0.0015°
+            </summary>
+            <param name="dmsStr">{string|number} dmsStr - Degrees or deg/min/sec in variety of formats.</param>
+            <returns>{number} Degrees as double number.</returns>
+        </member>
+        <member name="M:CoordLib.Dms.ToDMS(System.Double,System.String,System.Int32)">
+            <summary>
+            Converts double degrees to deg/min/sec format
+             - degree, prime, double-prime symbols are added, but sign is discarded, though no compass
+            direction is added.
+            </summary>
+            <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
+            <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
+            <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
+            <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
+        </member>
+        <member name="M:CoordLib.Dms.ToLat(System.Double,System.String,System.Int32)">
+            <summary>
+            Converts numeric degrees to deg/min/sec latitude (2-digit degrees, prefixed with N/S).
+            </summary>
+            <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
+            <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
+            <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
+            <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
+        </member>
+        <member name="M:CoordLib.Dms.ToLon(System.Double,System.String,System.Int32)">
+            <summary>
+            Convert numeric degrees to deg/min/sec longitude (3-digit degrees, prefixed with E/W)
+            </summary>
+            <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
+            <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
+            <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
+            <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
+        </member>
+        <member name="M:CoordLib.Dms.ToBrng(System.Double,System.String,System.Int32)">
+            <summary>
+            Converts numeric degrees to deg/min/sec as a bearing (0°..360°)
+            </summary>
+            <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
+            <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
+            <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
+            <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
+        </member>
+        <member name="M:CoordLib.Dms.CompassPoint(System.Double,System.Int32)">
+            <summary>
+            Returns compass point (to given precision) for supplied bearing.
+                 * @example
+                 * var point = Dms.compassPoint(24);    // point = 'NNE'
+                 * var point = Dms.compassPoint( 24, 1 ); // point = 'N'
+            </summary>
+            <param name="bearing">{number} bearing - Bearing in degrees from north.</param>
+            <param name="precision">{number} [precision=3] - Precision (1:cardinal / 2:intercardinal / 3:secondary-intercardinal).</param>
+            <returns>{string} Compass point for supplied bearing.</returns>
+        </member>
+        <member name="T:CoordLib.Geo">
+            <summary>
+            Geodetic functions
+            A pool of static base functions
+            
+            Derived from 
+            - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
+            Latitude/longitude spherical geodesy tools                         (c) Chris Veness 2002-2017  */
+                                                                                              MIT Licence  */
+            www.movable-type.co.uk/scripts/latlong.html                                                    */
+            www.movable-type.co.uk/scripts/geodesy/docs/module-latlon-spherical.html                       */
+            https://github.com/chrisveness/geodesy
+            - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
+            </summary>
+        </member>
+        <member name="M:CoordLib.Geo.DistanceTo(System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the distance from ‘this’ point to destination point (using haversine formula).
+            </summary>
+            <param name="thisLat">Latitude of starting point</param>
+            <param name="thisLon">Longitude of starting point</param>
+            <param name="pointLat">Latitude of destination point</param>
+            <param name="pointLon">Longitude of destination point</param>
+            <param name="radius">{number} [radius=6371e3] - (Mean) radius of earth (defaults to radius in metres).</param>
+            <returns>{number} Distance between this point and destination point, in same units as radius.</returns>
+        </member>
+        <member name="M:CoordLib.Geo.BearingTo(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the (initial) bearing from ‘this’ point to destination point.
+            </summary>
+            <param name="thisLat">Latitude of starting point</param>
+            <param name="thisLon">Longitude of starting point</param>
+            <param name="pointLat">Latitude of destination point</param>
+            <param name="pointLon">Longitude of destination point</param>
+            <returns>{number} Initial bearing in degrees from north.</returns>
+        </member>
+        <member name="M:CoordLib.Geo.FinalBearingTo(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Returns final bearing arriving at destination destination point from ‘this’ point; the final bearing
+            will differ from the initial bearing by varying degrees according to distance and latitude.
+            </summary>
+            <param name="thisLat">Latitude of starting point</param>
+            <param name="thisLon">Longitude of starting point</param>
+            <param name="pointLat">Latitude of destination point</param>
+            <param name="pointLon">Longitude of destination point</param>
+            <returns>{number} Final bearing in degrees from north.</returns>
+        </member>
+        <member name="M:CoordLib.Geo.MidpointTo(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the midpoint between ‘this’ point and the supplied point.
+            </summary>
+            <param name="thisLat">Latitude of starting point</param>
+            <param name="thisLon">Longitude of starting point</param>
+            <param name="pointLat">Latitude of destination point</param>
+            <param name="pointLon">Longitude of destination point</param>
+            <returns>Lat and Lon of the Mid point as array</returns>
+        </member>
+        <member name="M:CoordLib.Geo.IntermediatePointTo(System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the point at given fraction between ‘this’ point and specified point.
+            </summary>
+            <param name="thisLat">Latitude of starting point</param>
+            <param name="thisLon">Longitude of starting point</param>
+            <param name="pointLat">Latitude of destination point</param>
+            <param name="pointLon">Longitude of destination point</param>
+            <param name="fraction">{number} fraction - Fraction between the two points (0 = this point, 1 = specified point).</param>
+            <returns>Lat and Lon of the intermediate point as array</returns>
+        </member>
+        <member name="M:CoordLib.Geo.DestinationPoint(System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the destination point from ‘this’ point having travelled the given distance on the
+            given initial bearing( bearing normally varies around path followed ).
+            </summary>
+            <param name="thisLat">Latitude of starting point</param>
+            <param name="thisLon">Longitude of starting point</param>
+            <param name="distance">{number} distance - Distance travelled, in same units as earth radius (default: metres).</param>
+            <param name="bearing">{number} bearing - Initial bearing in degrees from north.</param>
+            <param name="radius">{number} [radius=6371e3] - (Mean) radius of earth (defaults to radius in metres).</param>
+            <returns>Lat and Lon of the Destination point as array</returns>
+        </member>
+        <member name="M:CoordLib.Geo.Intersection(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the point of intersection of two paths defined by point and bearing.
+            </summary>
+            <param name="p1Lat">Latitude of First point</param>
+            <param name="p1Lon">Longitude of First point</param>
+            <param name="brng1">{number} brng1 - Initial bearing from first point.</param>
+            <param name="p2Lat">Latitude of Second point</param>
+            <param name="p2Lon">Longitude of Second point</param>
+            <param name="brng2">{number} brng2 - Initial bearing from second point.</param>
+            <returns>Lat and Lon of the Intersection point as array (null if no unique intersection defined)</returns>
+        </member>
+        <member name="M:CoordLib.Geo.DoubleCrossTrackDistanceTo(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Returns (signed) distance from ‘this’ point to great circle defined by start-point and end-point.
+            </summary>
+            <param name="thisLat">Latitude of starting point</param>
+            <param name="thisLon">Longitude of starting point</param>
+            <param name="pStartLat">Latitude of Start point of great circle path</param>
+            <param name="pStartLon">Longitude of Start point of great circle path</param>
+            <param name="pEndLat">Latitude of End point of great circle path</param>
+            <param name="pEndLon">Longitude of End point of great circle path</param>
+            <param name="radius">{number} [radius=6371e3] - (Mean) radius of earth (defaults to radius in metres).</param>
+            <returns>{number} Distance to great circle (-ve if to left, +ve if to right of path).</returns>
+        </member>
+        <member name="M:CoordLib.Geo.AlongTrackDistanceTo(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Returns how far ‘this’ point is along a path from from start-point, heading towards end-point.
+            That is, if a perpendicular is drawn from ‘this’ point to the( great circle ) path, the along-track
+            distance is the distance from the start point to where the perpendicular crosses the path.
+            </summary>
+            <param name="thisLat">Latitude of starting point</param>
+            <param name="thisLon">Longitude of starting point</param>
+            <param name="pStartLat">Latitude of Start point of great circle path</param>
+            <param name="pStartLon">Longitude of Start point of great circle path</param>
+            <param name="pEndLat">Latitude of End point of great circle path</param>
+            <param name="pEndLon">Longitude of End point of great circle path</param>
+            <param name="radius">{number} [radius=6371e3] - (Mean) radius of earth (defaults to radius in metres).</param>
+            <returns>{number} Distance along great circle to point nearest ‘this’ point.</returns>
+        </member>
+        <member name="M:CoordLib.Geo.MaxLatitude(System.Double,System.Double)">
+            <summary>
+            Returns maximum latitude reached when travelling on a great circle on given bearing from this
+            point('Clairaut's formula'). Negate the result for the minimum latitude (in the Southern
+            hemisphere).
+            
+            The maximum latitude is independent of longitude; it will be the same for all points on a given
+            latitude.
+            </summary>
+            <param name="thisLat">Latitude of starting point</param>
+            <param name="bearing">{number} bearing - Initial bearing.</param>
+            <returns>maximum latitude reached</returns>
+        </member>
+        <member name="M:CoordLib.Geo.CrossingParallels(System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the pair of meridians at which a great circle defined by two points crosses the given
+            latitude.If the great circle doesn't reach the given latitude, null is returned.
+            </summary>
+            <param name="p1Lat">Latitude of First point defining great circle</param>
+            <param name="p1Lon">Longitude of First point defining great circle</param>
+            <param name="p2Lat">Latitude of Second point defining great circle</param>
+            <param name="p2Lon">Longitude of Second point defining great circle</param>
+            <param name="latitude">{number} latitude - Latitude crossings are to be determined for.</param>
+            <returns>{Object|null} Object containing { lon1, lon2 } or null if given latitude not reached.</returns>
+        </member>
+        <member name="M:CoordLib.Geo.Wrap90(System.Double)">
+             Constrain degrees to range -90..+90 (for latitude); e.g. -91 => -89, 91 => 89.
+            
+             @private
+             @param {number} degrees
+             @returns degrees within range -90..+90.
+        </member>
+        <member name="M:CoordLib.Geo.Wrap180(System.Double)">
+             Constrain degrees to range -180..+180 (for longitude); e.g. -181 => 179, 181 => -179.
+            
+             @private
+             @param {number} degrees
+             @returns degrees within range -180..+180.
+        </member>
+        <member name="M:CoordLib.Geo.Wrap360(System.Double)">
+             Constrain degrees to range 0..360 (for bearings); e.g. -1 => 359, 361 => 1.
+            
+             @private
+             @param {number} degrees
+             @returns degrees within range 0..360.
+        </member>
+        <member name="T:CoordLib.LatLon">
+            <summary>
+            Implements a Lat, Lon point
+            1:1 C# translation of functions from above
+            Redesign to provide Static Functions with Lat/Lon doubles in Geo.XY
+            and using them here for the LatLon Class
+            
+            Added Altitude for convenience
+            Added UTM Zone resolution
+            </summary>
+        </member>
+        <member name="F:CoordLib.LatLon._lat">
+            <summary>
+            Latitude
+            </summary>
+        </member>
+        <member name="F:CoordLib.LatLon._lon">
+            <summary>
+            Longitude
+            </summary>
+        </member>
+        <member name="F:CoordLib.LatLon._height">
+            <summary>
+            Altitude metres above ellipsoid.
+            </summary>
+        </member>
+        <member name="P:CoordLib.LatLon.Lat">
+            <summary>
+            Latitude part
+            </summary>
+        </member>
+        <member name="P:CoordLib.LatLon.Lon">
+            <summary>
+            Longitude part
+            </summary>
+        </member>
+        <member name="P:CoordLib.LatLon.Altitude">
+            <summary>
+            Altitude part metres above ellipsoid.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LatLon.#ctor">
+            <summary>
+            Creates a LatLon point on the earth's surface at the specified latitude / longitude.
+             initialized to 0/0/0
+            </summary>
+        </member>
+        <member name="M:CoordLib.LatLon.#ctor(System.Double,System.Double)">
+            <summary>
+            Creates a LatLon point on the earth's surface at the specified latitude / longitude.
+            </summary>
+            <param name="lat"></param>
+            <param name="lon"></param>
+        </member>
+        <member name="M:CoordLib.LatLon.#ctor(System.Double,System.Double,System.Double)">
+            <summary>
+            Creates a LatLon point on the earth's surface at the specified latitude / longitude / altitude.
+            </summary>
+            <param name="lat">Latitude</param>
+            <param name="lon">Longitude</param>
+            <param name="alt">Altitude above the ellipsoid</param>
+        </member>
+        <member name="M:CoordLib.LatLon.#ctor(System.Double[])">
+            <summary>
+            Creates a LatLon point on the earth's surface at the specified latitude / longitude.
+            </summary>
+            <param name="latLon"> Array of double where [0] = Lat, [1] = Lon, [2]= Alt (if provided)</param>
+        </member>
+        <member name="M:CoordLib.LatLon.#ctor(CoordLib.LatLon)">
+            <summary>
+            Creates a LatLon point on the earth's surface at the specified latitude / longitude.
+              as copy of the given LatLon
+            </summary>
+            <param name="other">LatLon to copy from</param>
+        </member>
+        <member name="M:CoordLib.LatLon.DistanceTo(CoordLib.LatLon,System.Double)">
+            <summary>
+            Returns the distance from ‘this’ point to destination point (using haversine formula).
+                 * @example
+                 *     var p1 = new LatLon( 52.205, 0.119 );
+                 *     var p2 = new LatLon( 48.857, 2.351 );
+                 *     var d = p1.distanceTo( p2 ); // 404.3 km
+            </summary>
+            <param name="point">{LatLon} point - Latitude/longitude of destination point</param>
+            <param name="radius">{number} [radius=6371e3] - (Mean) radius of earth (defaults to radius in metres).</param>
+            <returns>{number} Distance between this point and destination point, in same units as radius.</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.BearingTo(CoordLib.LatLon)">
+            <summary>
+            Returns the (initial) bearing from ‘this’ point to destination point.
+            
+                 * @example
+                 *     var p1 = new LatLon( 52.205, 0.119 );
+                 *     var p2 = new LatLon( 48.857, 2.351 );
+                 *     var b1 = p1.bearingTo( p2 ); // 156.2°
+            </summary>
+            <param name="point">{LatLon} point - Latitude/longitude of destination point.</param>
+            <returns>{number} Initial bearing in degrees from north.</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.FinalBearingTo(CoordLib.LatLon)">
+            <summary>
+            Returns final bearing arriving at destination destination point from ‘this’ point; the final bearing
+            will differ from the initial bearing by varying degrees according to distance and latitude.
+            
+                 * @example
+                 *     var p1 = new LatLon( 52.205, 0.119 );
+                 *     var p2 = new LatLon( 48.857, 2.351 );
+                 *     var b2 = p1.finalBearingTo( p2 ); // 157.9°
+            </summary>
+            <param name="point">{LatLon} point - Latitude/longitude of destination point.</param>
+            <returns>{number} Final bearing in degrees from north.</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.MidpointTo(CoordLib.LatLon)">
+            <summary>
+            Returns the midpoint between ‘this’ point and the supplied point.
+            
+             * @example
+             *     var p1 = new LatLon( 52.205, 0.119 );
+             *     var p2 = new LatLon( 48.857, 2.351 );
+             *     var pMid = p1.midpointTo( p2 ); // 50.5363°N, 001.2746°E
+            </summary>
+            <param name="point">{LatLon} point - Latitude/longitude of destination point.</param>
+            <returns>{LatLon} Midpoint between this point and the supplied point.</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.IntermediatePointTo(CoordLib.LatLon,System.Double)">
+            <summary>
+            Returns the point at given fraction between ‘this’ point and specified point.
+            
+                 * @example
+                 *   let p1 = new LatLon( 52.205, 0.119 );
+                 *   let p2 = new LatLon( 48.857, 2.351 );
+                 *   let pMid = p1.intermediatePointTo( p2, 0.25 ); // 51.3721°N, 000.7073°E
+            </summary>
+            <param name="point">{LatLon} point - Latitude/longitude of destination point.</param>
+            <param name="fraction">{number} fraction - Fraction between the two points (0 = this point, 1 = specified point).</param>
+            <returns>{LatLon} Intermediate point between this point and destination point.</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.DestinationPoint(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the destination point from ‘this’ point having travelled the given distance on the
+            given initial bearing( bearing normally varies around path followed ).
+            
+                 * @example
+                 *     var p1 = new LatLon( 51.4778, -0.0015 );
+                 *     var p2 = p1.destinationPoint( 7794, 300.7 ); // 51.5135°N, 000.0983°W
+            </summary>
+            <param name="distance">{number} distance - Distance travelled, in same units as earth radius (default: metres).</param>
+            <param name="bearing">{number} bearing - Initial bearing in degrees from north.</param>
+            <param name="radius">{number} [radius=6371e3] - (Mean) radius of earth (defaults to radius in metres).</param>
+            <returns>{LatLon} Destination point.</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.Intersection(CoordLib.LatLon,System.Double,CoordLib.LatLon,System.Double)">
+            <summary>
+            Returns the point of intersection of two paths defined by point and bearing.
+            
+                 * @example
+                 *     var p1 = LatLon( 51.8853, 0.2545 ), brng1 = 108.547;
+                 *     var p2 = LatLon( 49.0034, 2.5735 ), brng2 = 32.435;
+                 *     var pInt = LatLon.intersection( p1, brng1, p2, brng2 ); // 50.9078°N, 004.5084°E
+            </summary>
+            <param name="p1">{LatLon} p1 - First point.</param>
+            <param name="brng1">{number} brng1 - Initial bearing from first point.</param>
+            <param name="p2">{LatLon} p2 - Second point.</param>
+            <param name="brng2">{number} brng2 - Initial bearing from second point.</param>
+            <returns>{LatLon|null} Destination point (null if no unique intersection defined).</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.DoubleCrossTrackDistanceTo(CoordLib.LatLon,CoordLib.LatLon,System.Double)">
+            <summary>
+            Returns (signed) distance from ‘this’ point to great circle defined by start-point and end-point.
+            
+                 * @example
+                 *   var pCurrent = new LatLon( 53.2611, -0.7972 );
+                 *   var p1 = new LatLon( 53.3206, -1.7297 );
+                 *   var p2 = new LatLon( 53.1887, 0.1334 );
+                 *   var d = pCurrent.crossTrackDistanceTo( p1, p2 );  // -307.5 m
+            </summary>
+            <param name="pathStart">{LatLon} pathStart - Start point of great circle path.</param>
+            <param name="pathEnd">{LatLon} pathEnd - End point of great circle path.</param>
+            <param name="radius">{number} [radius=6371e3] - (Mean) radius of earth (defaults to radius in metres).</param>
+            <returns>{number} Distance to great circle (-ve if to left, +ve if to right of path).</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.AlongTrackDistanceTo(CoordLib.LatLon,CoordLib.LatLon,System.Double)">
+            <summary>
+            Returns how far ‘this’ point is along a path from from start-point, heading towards end-point.
+            That is, if a perpendicular is drawn from ‘this’ point to the( great circle ) path, the along-track
+            distance is the distance from the start point to where the perpendicular crosses the path.
+            
+                 * @example
+                 *   var pCurrent = new LatLon( 53.2611, -0.7972 );
+                 *   var p1 = new LatLon( 53.3206, -1.7297 );
+                 *   var p2 = new LatLon( 53.1887, 0.1334 );
+                 *   var d = pCurrent.alongTrackDistanceTo( p1, p2 );  // 62.331 km
+            </summary>
+            <param name="pathStart">{LatLon} pathStart - Start point of great circle path.</param>
+            <param name="pathEnd">{LatLon} pathEnd - End point of great circle path.</param>
+            <param name="radius">{number} [radius=6371e3] - (Mean) radius of earth (defaults to radius in metres).</param>
+            <returns>{number} Distance along great circle to point nearest ‘this’ point.</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.MaxLatitude(System.Double)">
+            <summary>
+            Returns maximum latitude reached when travelling on a great circle on given bearing from this
+            point('Clairaut's formula'). Negate the result for the minimum latitude (in the Southern
+            hemisphere).
+            
+            The maximum latitude is independent of longitude; it will be the same for all points on a given
+            latitude.
+            </summary>
+            <param name="bearing">{number} bearing - Initial bearing.</param>
+            <returns>maximum latitude reached</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.CrossingParallels(CoordLib.LatLon,CoordLib.LatLon,System.Double)">
+            <summary>
+            Returns the pair of meridians at which a great circle defined by two points crosses the given
+            latitude.If the great circle doesn't reach the given latitude, null is returned.
+            </summary>
+            <param name="point1">{LatLon} point1 - First point defining great circle.</param>
+            <param name="point2">{LatLon} point2 - Second point defining great circle.</param>
+            <param name="latitude">{number} latitude - Latitude crossings are to be determined for.</param>
+            <returns>{Object|null} Object containing { lon1, lon2 } or null if given latitude not reached.</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.Equals(CoordLib.LatLon)">
+            <summary>
+            Checks if another point is equal to ‘this’ point.
+            
+                 * @example
+                 *   var p1 = new LatLon( 52.205, 0.119 );
+                 *   var p2 = new LatLon( 52.205, 0.119 );
+                 *   var equal = p1.equals( p2 ); // true
+            </summary>
+            <param name="point">{LatLon} point - Point to be compared against this point.</param>
+            <returns>{bool}   True if points are identical.</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.ToString(System.String,System.Int32)">
+            <summary>
+            Returns a string representation of ‘this’ point, formatted as degrees, degrees+minutes, or
+            degrees+minutes+seconds.
+            </summary>
+            <param name="format">{string} [format=dms] - Format point as 'd', 'dm', 'dms'.</param>
+            <param name="dp">{number} [dp=0|2|4] - Number of decimal places to use - default 0 for dms, 2 for dm, 4 for d.</param>
+            <returns>{string} Comma-separated latitude/longitude.</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.getZoneNo(CoordLib.LatLon)">
+            <summary>
+            Returns the UTM Zone Number with Norway exceptions handled
+            </summary>
+            <param name="ll">A LatLon item</param>
+            <returns>The ZoneNumber</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.getLetterDesignator(CoordLib.LatLon)">
+            <summary>
+            Calculates the MGRS letter designator for the given latitude.
+            latitude The latitude in WGS84 to get the letter designator for.
+            The letter designator.
+            </summary>
+            <param name="latLon">LatLon obj</param>
+            <returns>The ZoneLetter</returns>
+        </member>
+        <member name="P:CoordLib.LatLon.UtmZone">
+            <summary>
+            Returns the UtmZone Designator NNC 
+            </summary>
+        </member>
+        <member name="T:CoordLib.Foo">
+            <summary>
+            Extension ToRadians / ToDegrees for double type
+            </summary>
+        </member>
+        <member name="T:CoordLib.LLA">
+            <summary>
+            Handle MS FSim LLA items
+            
+            N9° 44' 31.60",E118° 45' 31.51",+000045.00
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLA.ToLL(System.Double,System.Double)">
+            <summary>
+            Convert from values to an LL string
+              N9° 44' 31.60",E118° 45' 31.51"
+            </summary>
+            <param name="lat">Latitude</param>
+            <param name="lon">Longitude</param>
+            <returns>An LL string</returns>
+        </member>
+        <member name="M:CoordLib.LLA.ToLLA(System.Double,System.Double,System.Double)">
+            <summary>
+            Convert from values to an LLA string
+              N9° 44' 31.60",E118° 45' 31.51",+000045.00
+            </summary>
+            <param name="lat">Latitude</param>
+            <param name="lon">Longitude</param>
+            <param name="alt">Altitude (must be in meters for FSim use)</param>
+            <returns>An LLA string</returns>
+        </member>
+        <member name="M:CoordLib.LLA.TryParseLL(System.String,System.Double@,System.Double@)">
+            <summary>
+            Converts the string from an LL to its double values or returns false
+            </summary>
+            <param name="ll">An LL string</param>
+            <param name="lat">out Lat</param>
+            <param name="lon">out Lon</param>
+            <returns>True if successfull</returns>
+        </member>
+        <member name="M:CoordLib.LLA.TryParseLLA(System.String,System.Double@,System.Double@,System.Double@)">
+            <summary>
+            Converts the string from an LLA to its double values or returns false
+            </summary>
+            <param name="lla">An LLA string</param>
+            <param name="lat">out Lat</param>
+            <param name="lon">out Lon</param>
+            <param name="alt">out Alt</param>
+            <returns>True if successfull</returns>
+        </member>
+    </members>
+</doc>

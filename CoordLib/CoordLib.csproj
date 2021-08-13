@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Coordinate Library; derived from
+https://github.com/chrisveness/geodesy</Description>
+    <Copyright>2021 M.Burri</Copyright>
+    <AssemblyVersion>1.0.0.5</AssemblyVersion>
+    <FileVersion>1.0.0.5</FileVersion>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>G:\AA_DEVELOP\GitHub\bm98\FSim\CoordLib\CoordLib\CoordLib.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>G:\AA_DEVELOP\GitHub\bm98\FSim\CoordLib\CoordLib\CoordLib.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if $(ConfigurationName) == Release copy $(TargetDir)*.* $(SolutionDir)..\Redist\&#xD;&#xA;if $(ConfigurationName) == Release del $(SolutionDir)..\Redist\*.tmp" />
+  </Target>
+
+</Project>
