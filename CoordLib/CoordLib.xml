@@ -738,6 +738,7 @@
         <member name="T:CoordLib.LLPoint">
             <summary>
             Point Struct with LatLon items as Points
+            Note: Math operations are performed on the numbers and not in any particular projection
             </summary>
         </member>
         <member name="F:CoordLib.LLPoint.Empty">
@@ -846,6 +847,7 @@
         <member name="T:CoordLib.LLRectangle">
             <summary>
             Rectangle made from LatLon Coordinate Items
+            Note: Math operations are performed on the numbers and not in any particular projection
             </summary>
         </member>
         <member name="M:CoordLib.LLRectangle.#cctor">
@@ -999,6 +1001,7 @@
         <member name="T:CoordLib.LLSize">
             <summary>
             Size Struct with LatLon items as Points
+            Note: Math operations are performed on the numbers and not in any particular projection
             </summary>
         </member>
         <member name="M:CoordLib.LLSize.#cctor">
