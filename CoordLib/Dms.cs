@@ -102,10 +102,11 @@ namespace CoordLib
     /// direction is added.
     /// </summary>
     /// <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
+    /// <param name="lat">bool - Format Latitude(00 Deg), else it is Longitude(000 Deg)</param>
     /// <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
     /// <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
     /// <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
-    public static string ToDMS( double deg, string format = "dms", int dPlaces = -1 )
+    public static string ToDMS( double deg, bool lat = true, string format = "dms", int dPlaces = -1 )
     {
       if ( deg == double.NaN ) return ""; // give up here if we can't make a number from deg
 
@@ -123,44 +124,48 @@ namespace CoordLib
 
       string dms = "", d = "", m = "", s = "";
       double dN = 0, mN = 0, sN = 0;
+      string degFmt = lat?"00":"000";
       switch ( format ) {
         case "d":
-        case "deg":
-          // round/right-pad degrees, left-pad with leading zeros (note may include doubles)
-          if ( dPlaces > 0 )
-            d = Math.Round( deg, dPlaces ).ToString( "#0." + "000000".Substring( 0, dPlaces ) );
-          else
-            d = Math.Round( deg, dPlaces ).ToString( "#0" );
-          dms = d + '°';
+        case "deg": {
+            // round/right-pad degrees, left-pad with leading zeros (note may include doubles)
+            if ( dPlaces > 0 )
+              d = Math.Round( deg, dPlaces ).ToString( degFmt + "." + "000000".Substring( 0, dPlaces ) );
+            else
+              d = Math.Round( deg, dPlaces ).ToString( degFmt );
+            dms = d + '°';
+          }
           break;
 
         case "dm":
-        case "deg+min":
-          dN = Math.Floor( deg );
-          mN = Math.Round( ( ( deg * 60 ) % 60 ), dPlaces );// get component min & round/right-pad
-          if ( mN == 60 ) { mN = 0; dN++; }               // check for rounding up
-          d = dN.ToString( "#0" );
-          if ( dPlaces > 0 )
-            m = mN.ToString( "#0." + "000000".Substring( 0, dPlaces ) );
-          else
-            m = mN.ToString( "#0" );
-          dms = d + '°' + Separator + m + "'";
+        case "deg+min": {
+            dN = Math.Floor( deg );
+            mN = Math.Round( ( ( deg * 60 ) % 60 ), dPlaces );// get component min & round/right-pad
+            if ( mN == 60 ) { mN = 0; dN++; }               // check for rounding up
+            d = dN.ToString( degFmt );
+            if ( dPlaces > 0 )
+              m = mN.ToString( "00." + "000000".Substring( 0, dPlaces ) );
+            else
+              m = mN.ToString( "00" );
+            dms = d + '°' + Separator + m + "'";
+          }
           break;
 
         case "dms":
-        case "deg+min+sec":
-          dN = Math.Floor( deg );
-          mN = Math.Floor( ( deg * 60 ) % 60 );// get component min & round/right-pad
-          sN = Math.Round( ( deg * 3600 % 60 ), dPlaces );  // get component sec & round/right-pad
-          if ( sN == 60 ) { sN = 0; mN++; } // check for rounding up
-          if ( mN == 60 ) { mN = 0; dN++; } // check for rounding up
-          d = dN.ToString( "#0" );
-          m = mN.ToString( "#0" );
-          if ( dPlaces > 0 )
-            s = sN.ToString( "#0." + "000000".Substring( 0, dPlaces ) );
-          else
-            s = sN.ToString( "#0" );
-          dms = d + '°' + Separator + m + "'" + Separator + s + '"';
+        case "deg+min+sec": {
+            dN = Math.Floor( deg );
+            mN = Math.Floor( ( deg * 60 ) % 60 );// get component min & round/right-pad
+            sN = Math.Round( ( deg * 3600 % 60 ), dPlaces );  // get component sec & round/right-pad
+            if ( sN == 60 ) { sN = 0; mN++; } // check for rounding up
+            if ( mN == 60 ) { mN = 0; dN++; } // check for rounding up
+            d = dN.ToString( degFmt );
+            m = mN.ToString( "00" );
+            if ( dPlaces > 0 )
+              s = sN.ToString( "00." + "000000".Substring( 0, dPlaces ) );
+            else
+              s = sN.ToString( "00" );
+            dms = d + '°' + Separator + m + "'" + Separator + s + '"';
+          }
           break;
         default: break; // invalid format spec!
       }
@@ -178,7 +183,7 @@ namespace CoordLib
     /// <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
     public static string ToLat( double deg, string format = "dms", int dPlaces = -1 )
     {
-      var lat = ToDMS( deg, format, dPlaces );
+      var lat = ToDMS( deg, true, format, dPlaces );
       return ( lat == "" ) ? "–" : ( ( deg < 0 ? 'S' : 'N' ) + lat );
     }
 
@@ -192,7 +197,7 @@ namespace CoordLib
     /// <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
     public static string ToLon( double deg, string format = "dms", int dPlaces = -1 )
     {
-      var lon = ToDMS( deg, format, dPlaces );
+      var lon = ToDMS( deg, false, format, dPlaces );
       return ( lon == "" ) ? "–" : ( deg < 0 ? 'W' : 'E' ) + lon;
     }
 
@@ -207,7 +212,7 @@ namespace CoordLib
     public static string ToBrng( double deg, string format = "dms", int dPlaces = -1 )
     {
       deg = ( deg + 360 ) % 360;  // normalise -ve values to 180°..360°
-      var brng = ToDMS( deg, format, dPlaces );
+      var brng = ToDMS( deg, false, format, dPlaces ); // use Longitude format 000 Deg
       return ( brng == "" ) ? "–" : brng.Replace( "360", "0" );  // just in case rounding took us up to 360°!
     }
 

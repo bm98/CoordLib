@@ -4,10 +4,11 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>Coordinate Library; derived from
 https://github.com/chrisveness/geodesy</Description>
-    <Copyright>2021 M.Burri</Copyright>
-    <AssemblyVersion>1.0.0.5</AssemblyVersion>
-    <FileVersion>1.0.0.5</FileVersion>
+    <Copyright>2022 M.Burri</Copyright>
+    <AssemblyVersion>1.1.0.8</AssemblyVersion>
+    <FileVersion>1.1.0.8</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

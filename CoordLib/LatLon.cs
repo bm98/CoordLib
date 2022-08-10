@@ -16,23 +16,31 @@ namespace CoordLib
   /// 
   /// Added Altitude for convenience
   /// Added UTM Zone resolution
+  /// 
+  /// Changed to Struct (Aug 2033/BM)
   /// </summary>
-  public class LatLon
+  public struct LatLon
   {
+    /// <summary>
+    /// Returns an Empty LatLon (Lat,Lon,Alt=NaN)
+    /// </summary>
+    public static LatLon Empty => new LatLon( false );
+
+
     /// <summary>
     /// Latitude
     /// </summary>
-    protected double _lat = 0;
+    private double _lat;
 
     /// <summary>
     /// Longitude
     /// </summary>
-    protected double _lon = 0;
+    private double _lon;
 
     /// <summary>
-    /// Altitude metres above ellipsoid.
+    /// Altitude metres above ellipsoid
     /// </summary>
-    protected double _height = 0;
+    private double _altitude;
 
     /// <summary>
     /// Latitude part
@@ -46,14 +54,28 @@ namespace CoordLib
     /// <summary>
     /// Altitude part metres above ellipsoid.
     /// </summary>
-    public double Altitude { get => _height; set => _height = value; }
+    public double Altitude { get => _altitude; set => _altitude = value; }
+
+    /// <summary>
+    /// True if Lat or Lon are not assigned
+    /// </summary>
+    public bool IsEmpty => (double.IsNaN( _lat ) || double.IsNaN( _lon ));
 
     /// <summary>
     /// Creates a LatLon point on the earth's surface at the specified latitude / longitude.
     ///  initialized to 0/0/0
     /// </summary>
-    public LatLon( )
+    /// <param name="initZero">Will init an 0/0/0 item if true (default) else it's Empty</param>
+    public LatLon( bool initZero = true )
     {
+      if (initZero) {
+        _lat = 0; _lon = 0; _altitude = 0;
+      }
+      else {
+        _lat = double.NaN;
+        _lon = double.NaN;
+        _altitude = double.NaN;
+      }
     }
 
     /// <summary>
@@ -65,6 +87,7 @@ namespace CoordLib
     {
       _lat = lat;
       _lon = lon;
+      _altitude = 0;
     }
 
     /// <summary>
@@ -77,7 +100,7 @@ namespace CoordLib
     {
       _lat = lat;
       _lon = lon;
-      _height = alt;
+      _altitude = alt;
     }
 
     /// <summary>
@@ -86,12 +109,19 @@ namespace CoordLib
     /// <param name="latLon"> Array of double where [0] = Lat, [1] = Lon, [2]= Alt (if provided)</param>
     public LatLon( double[] latLon )
     {
-      if ( latLon?.Length > 1 ) {
+      // init with 0
+      _lat = 0;
+      _lon = 0;
+      _altitude = 0;
+      // lat / lon given?
+      if (latLon?.Length > 1) {
         _lat = latLon[0];
         _lon = latLon[1];
+        _altitude = 0;
       }
-      if ( latLon?.Length > 2 ) {
-        _height = latLon[2];
+      // akt given?
+      if (latLon?.Length > 2) {
+        _altitude = latLon[2];
       }
     }
 
@@ -104,7 +134,7 @@ namespace CoordLib
     {
       _lat = other.Lat;
       _lon = other.Lon;
-      _height = other.Altitude;
+      _altitude = other.Altitude;
     }
 
 
@@ -308,8 +338,9 @@ namespace CoordLib
     /// <returns>{bool}   True if points are identical.</returns>
     public bool Equals( LatLon point )
     {
-      if ( _lat != point.Lat ) return false;
-      if ( _lon != point.Lon ) return false;
+      if (_lat != point.Lat) return false;
+      if (_lon != point.Lon) return false;
+      if (_altitude != point.Altitude) return false;
 
       return true;
     }
@@ -327,6 +358,13 @@ namespace CoordLib
       return Dms.ToLat( _lat, format, dp ) + ", " + Dms.ToLon( _lon, format, dp );
     }
 
+    /// <summary>
+    /// Returns the default string representation 
+    /// </summary>
+    /// <returns>A string</returns>
+    public override string ToString( ) => ToString( "dms", 0 );
+
+
     #region UTM Zone
 
     /// <summary>
@@ -334,32 +372,32 @@ namespace CoordLib
     /// </summary>
     /// <param name="ll">A LatLon item</param>
     /// <returns>The ZoneNumber</returns>
-    private static int getZoneNo( LatLon ll )
+    private static int _utmZoneNo( LatLon ll )
     {
-      int ZoneNumber = (int)Math.Floor( ( ll.Lon + 180 ) / 6 ) + 1;
+      int ZoneNumber = (int)Math.Floor( (ll.Lon + 180) / 6 ) + 1;
 
       //Make sure the longitude 180 is in Zone 60
-      if ( ll.Lon >= 180 ) {
+      if (ll.Lon >= 180) {
         ZoneNumber = 60;
       }
 
       // Special zone for Norway
-      if ( ll.Lat >= 56 && ll.Lat < 64 && ll.Lon >= 3 && ll.Lon < 12 ) {
+      if (ll.Lat >= 56 && ll.Lat < 64 && ll.Lon >= 3 && ll.Lon < 12) {
         ZoneNumber = 32;
       }
 
       // Special zones for Svalbard
-      if ( ll.Lat >= 72 && ll.Lat < 84 ) {
-        if ( ll.Lon >= 0 && ll.Lon < 9 ) {
+      if (ll.Lat >= 72 && ll.Lat < 84) {
+        if (ll.Lon >= 0 && ll.Lon < 9) {
           ZoneNumber = 31;
         }
-        else if ( ll.Lon >= 9 && ll.Lon < 21 ) {
+        else if (ll.Lon >= 9 && ll.Lon < 21) {
           ZoneNumber = 33;
         }
-        else if ( ll.Lon >= 21 && ll.Lon < 33 ) {
+        else if (ll.Lon >= 21 && ll.Lon < 33) {
           ZoneNumber = 35;
         }
-        else if ( ll.Lon >= 33 && ll.Lon < 42 ) {
+        else if (ll.Lon >= 33 && ll.Lon < 42) {
           ZoneNumber = 37;
         }
       }
@@ -375,28 +413,28 @@ namespace CoordLib
     /// </summary>
     /// <param name="latLon">LatLon obj</param>
     /// <returns>The ZoneLetter</returns>
-    private static string getLetterDesignator( LatLon latLon )
+    private static string _utmLetterDesignator( LatLon latLon )
     {
-      if ( latLon.Lat <= 84 && latLon.Lat >= 72 ) {
+      if (latLon.Lat <= 84 && latLon.Lat >= 72) {
         // the X band is 12 degrees high
         return "X";
       }
-      else if ( latLon.Lat < 72 && latLon.Lat >= -80 ) {
+      else if (latLon.Lat < 72 && latLon.Lat >= -80) {
         // Latitude bands are lettered C through X, excluding I and O
         var bandLetters = "CDEFGHJKLMNPQRSTUVWX";
         var bandHeight = 8;
         var minLatitude = -80;
-        int index =(int) Math.Floor((latLon.Lat - minLatitude) / bandHeight);
+        int index = (int)Math.Floor( (latLon.Lat - minLatitude) / bandHeight );
         return bandLetters.Substring( index, 1 );
       }
-      else if ( latLon.Lat > 84 ) {
-        if ( latLon.Lon >= 0 )
+      else if (latLon.Lat > 84) {
+        if (latLon.Lon >= 0)
           return "Z"; // East
         else
           return "Y"; // West
       }
-      else if ( latLon.Lat < -80 ) {
-        if ( latLon.Lon >= 0 )
+      else if (latLon.Lat < -80) {
+        if (latLon.Lon >= 0)
           return "B"; // East
         else
           return "A"; // West
@@ -409,9 +447,19 @@ namespace CoordLib
     /// </summary>
     public string UtmZone {
       get {
-        return $"{getZoneNo( this ):00}{getLetterDesignator( this )}";
+        return $"{_utmZoneNo( this ):00}{_utmLetterDesignator( this )}";
       }
     }
+
+    /// <summary>
+    /// Returns the UTM Longitude Zone Number
+    /// </summary>
+    public int UtmZoneNumber => _utmZoneNo( this );
+
+    /// <summary>
+    /// Returns the UTM Latitude Zone Letter
+    /// </summary>
+    public string UtmZoneLetter => _utmLetterDesignator( this );
 
     #endregion
 
@@ -425,15 +473,21 @@ namespace CoordLib
   /// </summary>
   internal static class Foo
   {
+    /// <summary>
+    /// Returns the angle in radians
+    /// </summary>
     public static double ToRadians( this double angleInDegree )
     {
-      return ( angleInDegree * Math.PI ) / 180.0;
+      return (angleInDegree * Math.PI) / 180.0;
     }
-
+    /// <summary>
+    /// Returns the angle in Degrees
+    /// </summary>
     public static double ToDegrees( this double angleInRadians )
     {
-      return angleInRadians * ( 180.0 / Math.PI );
+      return angleInRadians * (180.0 / Math.PI);
     }
+
 
   }
   #endregion

@@ -29,6 +29,11 @@
             Const Earth radius in M
             </summary>
         </member>
+        <member name="F:CoordLib.ConvConsts.EarthFlattening_WGS84">
+            <summary>
+            Const Earth Flattening for the WGS 84 spheroid
+            </summary>
+        </member>
         <member name="F:CoordLib.ConvConsts.EarthRadiusKm">
             <summary>
             Const Earth radius in km
@@ -163,13 +168,14 @@
             <param name="dmsStr">{string|number} dmsStr - Degrees or deg/min/sec in variety of formats.</param>
             <returns>{number} Degrees as double number.</returns>
         </member>
-        <member name="M:CoordLib.Dms.ToDMS(System.Double,System.String,System.Int32)">
+        <member name="M:CoordLib.Dms.ToDMS(System.Double,System.Boolean,System.String,System.Int32)">
             <summary>
             Converts double degrees to deg/min/sec format
              - degree, prime, double-prime symbols are added, but sign is discarded, though no compass
             direction is added.
             </summary>
             <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
+            <param name="lat">bool - Format Latitude(00 Deg), else it is Longitude(000 Deg)</param>
             <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
             <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
             <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
@@ -387,6 +393,13 @@
             
             Added Altitude for convenience
             Added UTM Zone resolution
+            
+            Changed to Struct (Aug 2033/BM)
+            </summary>
+        </member>
+        <member name="P:CoordLib.LatLon.Empty">
+            <summary>
+            Returns an Empty LatLon (Lat,Lon,Alt=NaN)
             </summary>
         </member>
         <member name="F:CoordLib.LatLon._lat">
@@ -399,9 +412,9 @@
             Longitude
             </summary>
         </member>
-        <member name="F:CoordLib.LatLon._height">
+        <member name="F:CoordLib.LatLon._altitude">
             <summary>
-            Altitude metres above ellipsoid.
+            Altitude metres above ellipsoid
             </summary>
         </member>
         <member name="P:CoordLib.LatLon.Lat">
@@ -419,11 +432,17 @@
             Altitude part metres above ellipsoid.
             </summary>
         </member>
-        <member name="M:CoordLib.LatLon.#ctor">
+        <member name="P:CoordLib.LatLon.IsEmpty">
+            <summary>
+            True if Lat or Lon are not assigned
+            </summary>
+        </member>
+        <member name="M:CoordLib.LatLon.#ctor(System.Boolean)">
             <summary>
             Creates a LatLon point on the earth's surface at the specified latitude / longitude.
              initialized to 0/0/0
             </summary>
+            <param name="initZero">Will init an 0/0/0 item if true (default) else it's Empty</param>
         </member>
         <member name="M:CoordLib.LatLon.#ctor(System.Double,System.Double)">
             <summary>
@@ -619,14 +638,20 @@
             <param name="dp">{number} [dp=0|2|4] - Number of decimal places to use - default 0 for dms, 2 for dm, 4 for d.</param>
             <returns>{string} Comma-separated latitude/longitude.</returns>
         </member>
-        <member name="M:CoordLib.LatLon.getZoneNo(CoordLib.LatLon)">
+        <member name="M:CoordLib.LatLon.ToString">
+            <summary>
+            Returns the default string representation 
+            </summary>
+            <returns>A string</returns>
+        </member>
+        <member name="M:CoordLib.LatLon._utmZoneNo(CoordLib.LatLon)">
             <summary>
             Returns the UTM Zone Number with Norway exceptions handled
             </summary>
             <param name="ll">A LatLon item</param>
             <returns>The ZoneNumber</returns>
         </member>
-        <member name="M:CoordLib.LatLon.getLetterDesignator(CoordLib.LatLon)">
+        <member name="M:CoordLib.LatLon._utmLetterDesignator(CoordLib.LatLon)">
             <summary>
             Calculates the MGRS letter designator for the given latitude.
             latitude The latitude in WGS84 to get the letter designator for.
@@ -640,9 +665,29 @@
             Returns the UtmZone Designator NNC 
             </summary>
         </member>
+        <member name="P:CoordLib.LatLon.UtmZoneNumber">
+            <summary>
+            Returns the UTM Longitude Zone Number
+            </summary>
+        </member>
+        <member name="P:CoordLib.LatLon.UtmZoneLetter">
+            <summary>
+            Returns the UTM Latitude Zone Letter
+            </summary>
+        </member>
         <member name="T:CoordLib.Foo">
             <summary>
             Extension ToRadians / ToDegrees for double type
+            </summary>
+        </member>
+        <member name="M:CoordLib.Foo.ToRadians(System.Double)">
+            <summary>
+            Returns the angle in radians
+            </summary>
+        </member>
+        <member name="M:CoordLib.Foo.ToDegrees(System.Double)">
+            <summary>
+            Returns the angle in Degrees
             </summary>
         </member>
         <member name="T:CoordLib.LLA">
@@ -689,6 +734,373 @@
             <param name="lon">out Lon</param>
             <param name="alt">out Alt</param>
             <returns>True if successfull</returns>
+        </member>
+        <member name="T:CoordLib.LLPoint">
+            <summary>
+            Point Struct with LatLon items as Points
+            </summary>
+        </member>
+        <member name="F:CoordLib.LLPoint.Empty">
+            <summary>
+            Represents a Point that has X and Y values set to zero.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLPoint.#ctor(System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the Point struct with the specified coordinates.
+            </summary>
+            <param name="lat">Latitude</param>
+            <param name="lon">Longitude</param>
+        </member>
+        <member name="M:CoordLib.LLPoint.#ctor(CoordLib.LatLon)">
+            <summary>
+            Initializes a new instance of the Point struct with the specified LatLon obj
+            </summary>
+            <param name="latLon">A LatLon Item</param>
+        </member>
+        <member name="M:CoordLib.LLPoint.AsLatLon">
+            <summary>
+            Returns the Point as LatLon Type
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLPoint.IsEmpty">
+            <summary>
+            returns true if coordinates wasn't assigned
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLPoint.Lat">
+            <summary>
+            Latitude of this Point
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLPoint.Lon">
+            <summary>
+            Longitude of this Point
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLPoint.op_Explicit(CoordLib.LLPoint)~CoordLib.LatLon">
+            <summary>
+            Returns the Point as LatLon Type
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLPoint.op_Addition(CoordLib.LLPoint,CoordLib.LLSize)">
+            <summary>
+            Translates a Point by a given Size.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLPoint.op_Subtraction(CoordLib.LLPoint,CoordLib.LLSize)">
+            <summary>
+            Translates a Point by the negative of a given Size.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLPoint.op_Subtraction(CoordLib.LLPoint,CoordLib.LLPoint)">
+            <summary>
+            Translates a Point by the negative of a given Point
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLPoint.op_Equality(CoordLib.LLPoint,CoordLib.LLPoint)">
+            <summary>
+            Compares two Point objects. The result specifies whether the values of the X and Y properties of the two Point objects are equal.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLPoint.op_Inequality(CoordLib.LLPoint,CoordLib.LLPoint)">
+            <summary>
+            Compares two Point objects. The result specifies whether the values of the X or Y properties of the two Point objects are unequal.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLPoint.Add(CoordLib.LLPoint,CoordLib.LLSize)">
+            <summary>
+            Adds the specified Size to the specified Point.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLPoint.Subtract(CoordLib.LLPoint,CoordLib.LLSize)">
+            <summary>
+            Returns the result of subtracting specified Size from the specified Point.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLPoint.Equals(System.Object)">
+            <summary>
+            Specifies whether this point instance contains the same coordinates as the specified object.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLPoint.Offset(CoordLib.LLPoint)">
+            <summary>
+            Translates this Point by the specified Point.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLPoint.Offset(System.Double,System.Double)">
+            <summary>
+            Translates this Point by the specified amount.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLPoint.GetHashCode">
+            <summary>
+            Returns a hash code for this Point.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLPoint.ToString">
+            <summary>
+            Converts this Point to a human-readable string.
+            </summary>
+        </member>
+        <member name="T:CoordLib.LLRectangle">
+            <summary>
+            Rectangle made from LatLon Coordinate Items
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLRectangle.#cctor">
+            <summary>
+            static cTor: init empty field
+            </summary>
+        </member>
+        <member name="F:CoordLib.LLRectangle.Empty">
+            <summary>
+            Represents a Rectangle structure with its properties left uninitialized.
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLRectangle.Lon">
+            <summary>
+            Longitude (X) Part
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLRectangle.Lat">
+            <summary>
+            Latitude (Y) Part
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLRectangle.WidthLon">
+            <summary>
+            Radial Distance as angle (deg)
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLRectangle.HeightLat">
+            <summary>
+            Radial Distance as angle (deg)
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLRectangle.IsEmpty">
+            <summary>
+            Returns true if coordinates are not assigned
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLRectangle.#ctor(System.Boolean)">
+            <summary>
+            cTor: Empty (init as Empty)
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLRectangle.#ctor(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            cTor: from valued
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLRectangle.#ctor(CoordLib.LLPoint,CoordLib.LLSize)">
+            <summary>
+            cTor: from point and size
+            </summary>
+            <param name="location"></param>
+            <param name="size"></param>
+        </member>
+        <member name="M:CoordLib.LLRectangle.FromLTRB(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Returns an LLRectangle from Left,Top,Right,Bottom points
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLRectangle.LocationTopLeft">
+            <summary>
+            TopLeft Point
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLRectangle.LocationRightBottom">
+            <summary>
+            Right Bottom Point
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLRectangle.LocationMiddle">
+            <summary>
+            Center Point
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLRectangle.Size">
+            <summary>
+            Gets or sets the size of this Rectangle.
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLRectangle.Left">
+            <summary>
+            Left (Longitude)
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLRectangle.Top">
+            <summary>
+            Top (Latitude)
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLRectangle.Right">
+            <summary>
+            Right (Lon + WidthDeg)
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLRectangle.Bottom">
+            <summary>
+            Bottom (Lat-Height)
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLRectangle.Equals(System.Object)">
+            <summary>
+            Tests whether obj is a Rectangle structure with the same location and size of this Rectangle structure.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLRectangle.op_Equality(CoordLib.LLRectangle,CoordLib.LLRectangle)">
+            <summary>
+            Equality: Tests whether two Rectangle structures have equal location and size.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLRectangle.op_Inequality(CoordLib.LLRectangle,CoordLib.LLRectangle)">
+            <summary>
+            Inequality: Tests whether two Rectangle structures differ in location or size.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLRectangle.Contains(System.Double,System.Double)">
+            <summary>
+            Determines if the specified point is contained within this Rectangle structure.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLRectangle.Contains(CoordLib.LLPoint)">
+            <summary>
+            Determines if the specified point is contained within this Rectangle structure.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLRectangle.Contains(CoordLib.LLRectangle)">
+            <summary>
+            Determines if the rectangular region represented by rect is entirely contained within this Rectangle structure.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLRectangle.GetHashCode">
+            <summary>
+            Returns the hash code for this Rectangle structure. For information about the use of hash codes, see GetHashCode() .
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CoordLib.LLRectangle.Offset(CoordLib.LLPoint)">
+            <summary>
+            Adjusts the location of this rectangle by the specified amount.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLRectangle.Offset(System.Double,System.Double)">
+            <summary>
+            Adjusts the location of this rectangle by the specified amount.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLRectangle.ToString">
+            <summary>
+            Converts the attributes of this Rectangle to a human-readable string.
+            </summary>
+        </member>
+        <member name="T:CoordLib.LLSize">
+            <summary>
+            Size Struct with LatLon items as Points
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLSize.#cctor">
+            <summary>
+            static cTor:
+            </summary>
+        </member>
+        <member name="F:CoordLib.LLSize.Empty">
+            <summary>
+            An Empty LLSize
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLSize.IsEmpty">
+            <summary>
+            Get: true if it is empty (Height and Width value of 0)
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLSize.WidthLon">
+            <summary>
+            Width or Longitude degrees
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLSize.HeightLat">
+            <summary>
+            Height or Latitude degrees
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLSize.#ctor(System.Boolean)">
+            <summary>
+            cTor: empty (will always init with 0 Values
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLSize.#ctor(CoordLib.LLSize)">
+            <summary>
+            cTor: copy
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLSize.#ctor(CoordLib.LLPoint)">
+            <summary>
+            cTor: From LLPoint values
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLSize.#ctor(System.Double,System.Double)">
+            <summary>
+            cTor: from height (latitude) and width (longitude) as coordinates [deg]
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLSize.op_Addition(CoordLib.LLSize,CoordLib.LLSize)">
+            <summary>
+            Addition: Adds the width and height of one Size structure to the width and height of another Size structure.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLSize.op_Subtraction(CoordLib.LLSize,CoordLib.LLSize)">
+            <summary>
+            Subtraction: Subtracts the width and height of one Size structure from the width and height of another Size structure.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLSize.op_Equality(CoordLib.LLSize,CoordLib.LLSize)">
+            <summary>
+            Equality: Tests whether two Size structures are equal.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLSize.op_Inequality(CoordLib.LLSize,CoordLib.LLSize)">
+            <summary>
+            Inequality: Tests whether two Size structures are different.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLSize.op_Explicit(CoordLib.LLSize)~CoordLib.LLPoint">
+            <summary>
+            Conversion: Returns an LLPoint from the values (X=Height,Lat / Y=Width,Lon)
+            </summary>
+            <param name="size"></param>
+        </member>
+        <member name="M:CoordLib.LLSize.Add(CoordLib.LLSize,CoordLib.LLSize)">
+            <summary>
+            Adds the width and height of one Size structure to the width and height of another Size structure.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLSize.Subtract(CoordLib.LLSize,CoordLib.LLSize)">
+            <summary>
+            Subtracts the width and height of one Size structure from the width and height of another Size structure.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLSize.Equals(System.Object)">
+            <summary>
+            Tests to see whether the specified object is a Size structure with the same dimensions as this Size structure.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLSize.GetHashCode">
+            <summary>
+            Returns a hash code for this Size structure.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLSize.ToLLPoint">
+            <summary>
+            Returns the Values as LLPoint Struct
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLSize.ToString">
+            <summary>
+            Creates a human-readable string that represents this Size structure.
+            </summary>
         </member>
     </members>
 </doc>

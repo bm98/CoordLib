@@ -25,7 +25,11 @@ namespace CoordLib
     /// <summary>
     /// Const Earth radius in M
     /// </summary>
-    public const double EarthRadiusM = 6371.0E3;
+    public const double EarthRadiusM = 6378137.0; //20220726: set exact number
+    /// <summary>
+    /// Const Earth Flattening for the WGS 84 spheroid
+    /// </summary>
+    public const double EarthFlattening_WGS84 = 1.0 / 298.257223563;
     /// <summary>
     /// Const Earth radius in km
     /// </summary>
