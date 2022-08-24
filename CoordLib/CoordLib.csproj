@@ -5,10 +5,10 @@
     <Description>Coordinate Library; derived from
 https://github.com/chrisveness/geodesy</Description>
     <Copyright>2022 M.Burri</Copyright>
-    <AssemblyVersion>1.1.0.9</AssemblyVersion>
-    <FileVersion>1.1.0.9</FileVersion>
+    <AssemblyVersion>1.2.0.10</AssemblyVersion>
+    <FileVersion>1.2.0.10</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

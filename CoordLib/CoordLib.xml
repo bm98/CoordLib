@@ -218,6 +218,51 @@
             <param name="precision">{number} [precision=3] - Precision (1:cardinal / 2:intercardinal / 3:secondary-intercardinal).</param>
             <returns>{string} Compass point for supplied bearing.</returns>
         </member>
+        <member name="T:CoordLib.Extensions">
+            <summary>
+            Helper Extensions 
+            </summary>
+        </member>
+        <member name="M:CoordLib.Extensions.ToRadians(System.Double)">
+            <summary>
+            Returns the angle in radians
+            </summary>
+        </member>
+        <member name="M:CoordLib.Extensions.ToDegrees(System.Double)">
+            <summary>
+            Returns the angle in Degrees
+            </summary>
+        </member>
+        <member name="M:CoordLib.Extensions.Clip(System.Double,System.Double,System.Double)">
+            <summary>
+            Clips a number to the specified minimum and maximum values.
+            Returns the clipped value
+            </summary>
+            <param name="_d"></param>
+            <param name="minValue">Minimum allowable value.</param>
+            <param name="maxValue">Maximum allowable value.</param>
+            <returns>The clipped value.</returns>
+        </member>
+        <member name="M:CoordLib.Extensions.Clip(System.Int32,System.Double,System.Double)">
+            <summary>
+            Clips a number to the specified minimum and maximum values.
+            Returns the clipped value
+            </summary>
+            <param name="_i"></param>
+            <param name="minValue">Minimum allowable value.</param>
+            <param name="maxValue">Maximum allowable value.</param>
+            <returns>The clipped value.</returns>
+        </member>
+        <member name="M:CoordLib.Extensions.Clip(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Clips a number to the specified minimum and maximum values.
+            Returns the clipped value
+            </summary>
+            <param name="_i"></param>
+            <param name="minValue">Minimum allowable value.</param>
+            <param name="maxValue">Maximum allowable value.</param>
+            <returns>The clipped value.</returns>
+        </member>
         <member name="T:CoordLib.Geo">
             <summary>
             Geodetic functions
@@ -675,21 +720,6 @@
             Returns the UTM Latitude Zone Letter
             </summary>
         </member>
-        <member name="T:CoordLib.Foo">
-            <summary>
-            Extension ToRadians / ToDegrees for double type
-            </summary>
-        </member>
-        <member name="M:CoordLib.Foo.ToRadians(System.Double)">
-            <summary>
-            Returns the angle in radians
-            </summary>
-        </member>
-        <member name="M:CoordLib.Foo.ToDegrees(System.Double)">
-            <summary>
-            Returns the angle in Degrees
-            </summary>
-        </member>
         <member name="T:CoordLib.LLA">
             <summary>
             Handle MS FSim LLA items
@@ -1104,6 +1134,841 @@
             <summary>
             Creates a human-readable string that represents this Size structure.
             </summary>
+        </member>
+        <member name="T:CoordLib.MercatorTiles.MapPixel">
+            <summary>
+            A MapPixel for Mercator Tile Projections
+            </summary>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.MapPixel.Empty">
+            <summary>
+            An emtpy (unusable) MapPixel at -1/-1
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.LatLonToMapPixel(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            Returns the MapPixel for a coordinate on the tile at zoom level
+            </summary>
+            <param name="latLon,,">A coordinate</param>
+            <param name="zoom">A zoomlevel</param>
+            <returns>The MapPixel for the coordiate</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.LatLonToMapPixel(System.Double,System.Double,System.UInt16)">
+            <summary>
+            Returns the MapPixel for a coordinate on the tile at zoom level
+            </summary>
+            <param name="lat,,">Latitude</param>
+            <param name="lon,,">Longitude</param>
+            <param name="zoom">A zoomlevel</param>
+            <returns>The MapPixel for the coordiate</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.#ctor(System.Int32,System.Int32)">
+            <summary>
+            cTor: From X,Y
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.#ctor(CoordLib.MercatorTiles.MapPixel)">
+            <summary>
+            cTor: Copy constructor
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.#ctor(System.Drawing.Point)">
+            <summary>
+            cTor: From a Point
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.#ctor(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            cTor: From LatLon at Zoom Level
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.#ctor(System.Double,System.Double,System.UInt16)">
+            <summary>
+            cTor: From Latitude, Longitude at Zoom Level
+            </summary>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.MapPixel.X">
+            <summary>
+            The MapPixel X value
+            </summary>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.MapPixel.Y">
+            <summary>
+            The MapPixel Y value
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.AsPoint">
+            <summary>
+            Returns the MapPixel as Point
+            </summary>
+            <returns>A Point</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.op_Equality(CoordLib.MercatorTiles.MapPixel,CoordLib.MercatorTiles.MapPixel)">
+            <summary>
+            Equality operator
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.op_Inequality(CoordLib.MercatorTiles.MapPixel,CoordLib.MercatorTiles.MapPixel)">
+            <summary>
+            Inequality operator
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.Equals(System.Object)">
+            <summary>
+            Equality towads another object
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.GetHashCode">
+            <summary>
+            Returns a Hashcode for this object
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.Offset(System.Int32,System.Int32)">
+            <summary>
+            Translates this MapPixel by the specified amount
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.ToTileXY">
+            <summary>
+            Tile coordinate from MapPixel coordinates
+            </summary>
+            <returns>A TileXY</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.Quadrant">
+            <summary>
+            Returns the Quadrant on a Tile where a MapPixel lies
+            </summary>
+            <returns>A Quadrant</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.ToLatLon(System.UInt16)">
+            <summary>
+            Get lat/lon coordinates from pixel coordinates
+            </summary>
+            <param name="zoom">A zoom level</param>
+            <returns>A Coordinate</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.Resolution_m(System.UInt16)">
+            <summary>
+            Returns resolution of this pixel at a zoom level in meters
+            - square pixels i.e. both sides have the same Resolution
+            </summary>
+            <param name="zoom"></param>
+            <returns>Meters</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.MapPixel.Size_m(System.UInt16)">
+            <summary>
+            Returns SizeF of this pixel at a zoom level in meters
+            </summary>
+            <param name="zoom"></param>
+            <returns>A SizeF in meters</returns>
+        </member>
+        <member name="T:CoordLib.MercatorTiles.Projection">
+            <summary>
+            Mercator Tile Projection base items
+            </summary>
+        </member>
+        <member name="F:CoordLib.MercatorTiles.Projection.MinLatitude">
+            <summary>
+            Minimum Latitude (limited around the S-Pole)
+            </summary>
+        </member>
+        <member name="F:CoordLib.MercatorTiles.Projection.MaxLatitude">
+            <summary>
+            Maximum Latitude (limited around the N-Pole)
+            </summary>
+        </member>
+        <member name="F:CoordLib.MercatorTiles.Projection.MinLongitude">
+            <summary>
+            Minimum Longitude
+            </summary>
+        </member>
+        <member name="F:CoordLib.MercatorTiles.Projection.MaxLongitude">
+            <summary>
+            Maximum Longitude
+            </summary>
+        </member>
+        <member name="F:CoordLib.MercatorTiles.Projection.MinZoom">
+            <summary>
+            Minimum ZoomLevel
+            </summary>
+        </member>
+        <member name="F:CoordLib.MercatorTiles.Projection.MaxZoom">
+            <summary>
+            Maximum ZoomLevel
+            </summary>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.Projection.TileSize">
+            <summary>
+            Size of tile
+            </summary>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.Projection.Axis">
+            <summary>
+            Semi-major axis of ellipsoid, in meters
+            </summary>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.Projection.Flattening">
+            <summary>
+            Flattening of ellipsoid
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Projection.MapMinTileXY(System.UInt16)">
+            <summary>
+            Min. tile in tiles at custom zoom level
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Projection.MapMaxTileXY(System.UInt16)">
+            <summary>
+            Max. tile in tiles at custom zoom level
+            </summary>
+            <param name="zoom">A zoom level</param>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Projection.MapSizeTileXY(System.UInt16)">
+            <summary>
+            Gets whole Map size in TileXY units
+            </summary>
+            <param name="zoom">A zoom level</param>
+            <returns>A Size of [TileXY]</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Projection.MapPixelSize(System.UInt16)">
+            <summary>
+            Returns MapPixel Size of the whole Map at zoom level
+            </summary>
+            <param name="zoom">A zoom level</param>
+            <returns>Size of MapPixels</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Projection.MapResolution_mPerPixel(System.UInt16,System.Double)">
+            <summary>
+            The resolution in meters of a single pixel at a Latitude
+            </summary>
+            <param name="zoom">A zoom level</param>
+            <param name="latitude">Latitude degrees</param>
+            <returns>Meters</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Projection.MapResolution_mPerTile(System.UInt16,System.Double)">
+            <summary>
+            The resolution in meters of a single Tile at a Latitude
+            </summary>
+            <param name="zoom">A zoom level</param>
+            <param name="latitude">Latitude degrees</param>
+            <returns>Meters</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Projection.LatLonToMapPixel(System.Double,System.Double,System.UInt16)">
+            <summary>
+            Get pixel coordinates from lat/lon as Mercator Projection
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Projection.MapPixelToLatLon(System.Int32,System.Int32,System.UInt16)">
+            <summary>
+            Gets lat/lon coordinates from pixel coordinates
+            </summary>
+        </member>
+        <member name="T:CoordLib.MercatorTiles.Quad">
+            <summary>
+            Quad Tree Item
+            Based on the Mercator Projection Grid with a Quad Square Tile of 256x256
+            see also: https://docs.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
+            
+            The Quad at a ZoomLevel 1..23 is composed of digits base4 (0,1,2,3) other digits or characters are invalid
+            Min Zoom is 1; Max Zoom is 23
+            Note: a Quad which is empty (ZoomLevel 0) would represent the entire map 
+            
+            </summary>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.Quad.Empty">
+            <summary>
+            An empty quad
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.LatLonToQuad(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            Returns a Quad from a coordinate at zoom
+            </summary>
+            <param name="latLon">Coordinate</param>
+            <param name="zoom">Zoomlevel</param>
+            <returns>A Quadkey as String</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.LatLonToQuad(System.Double,System.Double,System.UInt16)">
+            <summary>
+            Returns a Quad from a coordinate at zoom
+            </summary>
+            <param name="lat">Latitude</param>
+            <param name="lon">Longitude</param>
+            <param name="zoom">Zoomlevel</param>
+            <returns>A Quadkey as String</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.AtZoom(System.UInt16)">
+            <summary>
+            Returns a reduced Quad at the desired zoom
+            If reduction not possible it returns the argument
+            </summary>
+            <param name="zoom">Zoomlevel</param>
+            <returns>A Quad Key</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.Around(System.Double,System.Double,System.UInt16)">
+            <summary>
+            Returns 4 Quads that are the closest neighbours of the argument
+            including the one that includes the argument
+            </summary>
+            <param name="lat">Latitude</param>
+            <param name="lon">Longitude</param>
+            <param name="zoom">Zoomlevel</param>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.Around(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            Returns 4 Quads that are the closest neighbours of the argument
+            including the one that includes the argument
+            </summary>
+            <param name="latLon">A LatLon</param>
+            <param name="zoom">Zoomlevel</param>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.#ctor(System.String)">
+            <summary>
+            cTor: Initialize from string (beware, no validity checks are made 
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.#ctor(CoordLib.MercatorTiles.Quad)">
+            <summary>
+            cTor: As copy of the argument
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.#ctor(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            cTor: From a LatLon coordinate at a zoom level
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.#ctor(System.Double,System.Double,System.UInt16)">
+            <summary>
+            cTor: From a Latitude, Longitude coordinate at a zoom level
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.#ctor(System.Drawing.Point,System.UInt16)">
+            <summary>
+            cTor: From a TileXY coordinate at a zoom level
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.ToString">
+            <summary>
+            Returns the string representation
+            </summary>
+            <returns>A string</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.op_Equality(CoordLib.MercatorTiles.Quad,CoordLib.MercatorTiles.Quad)">
+            <summary>
+            Equality operator
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.op_Inequality(CoordLib.MercatorTiles.Quad,CoordLib.MercatorTiles.Quad)">
+            <summary>
+            Inequality operator
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.Equals(System.Object)">
+            <summary>
+            Equality towads another object
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.GetHashCode">
+            <summary>
+            Returns a Hashcode for this object
+            </summary>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.Quad.ZoomLevel">
+            <summary>
+            returns the ZoomLevel of this Quad
+            Note: ZoomLevel 0 means an empty Quad.
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.HigherLevel">
+            <summary>
+            Returns the QuadKey of the zoomed out level of the argument
+            can resolve in an empty string which is not really a Quad anymore
+            </summary>
+            <returns>A Quad Key</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.LastQ">
+            <summary>
+            Returns the rightmost Quad Item (character)
+            can resolve in an empty string which is not really a Quad cahr anymore
+            </summary>
+            <returns>The rightmost Quad Digit as string</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.LeftQ">
+            <summary>
+            Get the QuadKey left of the current one
+            </summary>
+            <returns>A Quad Key</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.RightQ">
+            <summary>
+            Get the QuadKey right of the current one
+            </summary>
+            <returns>A Quad Key</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.AboveQ">
+            <summary>
+            Get the QuadKey above of the current one
+            </summary>
+            <returns>A Quad Key</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.BelowQ">
+            <summary>
+            Get the QuadKey below of the current one
+            </summary>
+            <returns>A Quad Key</returns>
+        </member>
+        <member name="T:CoordLib.MercatorTiles.QuadOp">
+            <summary>
+            Quad Tree Helper
+            Based on the Mercator Projection Grid with a Quad Square Tile of 256x256
+            see also: https://docs.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
+             
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.CheckQuad(System.String)">
+            <summary>
+            Checks a Quad for validity
+            </summary>
+            <param name="quad">A Quad string</param>
+            <returns>True if valid</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.ZoomLevel(System.String)">
+            <summary>
+            returns the ZoomLevel of the argument
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.QuadAtZoom(System.String,System.UInt16)">
+            <summary>
+            Returns a reduced Quad at the desired zoom
+            If reduction not possible it returns the argument
+            </summary>
+            <param name="quad">A quad</param>
+            <param name="zoom">Zoomlevel 1..23 </param>
+            <returns>A Quad Key (empty if zoom=0)</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.LatLonToQuad(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            Returns a Quad as String
+            </summary>
+            <param name="latLon">Coordinate</param>
+            <param name="zoom">Zoomlevel</param>
+            <returns>A Quadkey as String</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.LatLonToQuad(System.Double,System.Double,System.UInt16)">
+            <summary>
+            Returns a Quad as String
+            </summary>
+            <param name="lat">Latitude</param>
+            <param name="lon">Longitude</param>
+            <param name="zoom">Zoomlevel</param>
+            <returns>A Quadkey as String</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.TileXYToQuad(System.Drawing.Point,System.UInt16)">
+            <summary>
+            Converts TileXY coordinates into a QuadKey at a specified level of detail.
+            see also: https://docs.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
+            </summary>
+            <param name="tileXY">Tile XY coordinate.</param>
+            <param name="zoom">
+                Level of detail, from 1 (lowest detail)
+                to 22 (highest detail).
+            </param>
+            <returns>A string containing the QuadKey.</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.HigherLevel(System.String)">
+            <summary>
+            Returns the QuadKey of the zoomed out level of the argument
+             if at top returns an empty one (whole Map at Zoom 0)
+            </summary>
+            <param name="quadKey">A Quad Key</param>
+            <returns>A Quad Key</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.LastQ(System.String)">
+            <summary>
+            Returns the rightmost Quad Item (character)
+             if at top returns an empty one (whole Map at Zoom 0)
+            </summary>
+            <param name="quadKey">A Quad Key</param>
+            <returns>The rightmost Quad Digit as string</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.LeftQ(System.String)">
+            <summary>
+            Get the QuadKey left of the current one
+            </summary>
+            <param name="quadKey">A Quad Key</param>
+            <returns>A Quad Key</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.RightQ(System.String)">
+            <summary>
+            Get the QuadKey right of the current one
+            </summary>
+            <param name="quadKey">A Quad Key</param>
+            <returns>A Quad Key</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.AboveQ(System.String)">
+            <summary>
+            Get the QuadKey above of the current one
+            </summary>
+            <param name="quadKey">A Quad Key</param>
+            <returns>A Quad Key</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.BelowQ(System.String)">
+            <summary>
+            Get the QuadKey below of the current one
+            </summary>
+            <param name="quadKey">A Quad Key</param>
+            <returns>A Quad Key</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.Around(System.Drawing.Point,System.UInt16)">
+            <summary>
+            Returns 4 Quads that are the closest neighbours of the argument
+            </summary>
+            <param name="mapPixel">A MapPixel</param>
+            <param name="zoom">Zoomlevel</param>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.Around(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            Returns 4 Quads that are the closest neighbours of the argument
+            </summary>
+            <param name="latLon">A LatLon</param>
+            <param name="zoom">Zoomlevel</param>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.Around(System.Double,System.Double,System.UInt16)">
+            <summary>
+            Returns 4 Quads that are the closest neighbours of the argument
+            </summary>
+            <param name="lat">Latitude</param>
+            <param name="lon">Longitude</param>
+            <param name="zoom">Zoomlevel</param>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="T:CoordLib.MercatorTiles.TileOp">
+            <summary>
+            Simple Mercator Projection Tiles Method set
+            based on 256x256 Tiles
+            where each tile has an XY Coord at a certain Zoom Level
+            The complete map is layed out in MapPixels
+            
+            see also: https://docs.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
+             
+            Level of Detail Map Width and      Ground              Map Scale    Tile Area ( at 96 dpi)
+                             Height( pixels)   Resolution
+                                              ( meters / pixel)
+                   ..
+                   10         262,144         152.8741           1 : 577,791.71      ~40km^2
+                   11         524,288          76.4370           1 : 288,895.85      ~20km^2
+                   12       1,048,576          38.2185           1 : 144,447.93      ~10km^2
+                   13       2,097,152          19.1093           1 : 72,223.96        ~5km^2
+                   14       4,194,304           9.5546           1 : 36,111.98      ~2.5km^2
+                   15       8,388,608           4.7773           1 : 18,055.99     ~1.25km^2
+                   
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileOp.MapPixelToLatLon(System.Drawing.Point,System.UInt16)">
+            <summary>
+            Get lat/lon coordinates from pixel coordinates
+            </summary>
+            <param name="mapPixel"></param>
+            <param name="zoom">A zoom level</param>
+            <returns>A Coordinate</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileOp.MapPixelToTileXY(System.Drawing.Point)">
+            <summary>
+            Tile coordinate from MapPixel coordinates
+            </summary>
+            <param name="mapPixel">A MapPixel</param>
+            <returns>A TileXY</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileOp.QuadrantFromMapPixel(System.Drawing.Point)">
+            <summary>
+            Returns the Quadrant on a Tile where a MapPixel lies
+            </summary>
+            <returns>A Quadrant</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileOp.TileLtMapPixel(System.Drawing.Point)">
+            <summary>
+            MapPixel coordinate from tile coordinate (left/top corner)
+            </summary>
+            <param name="tileXY">A tileXY</param>
+            <returns>a MapPixel (left/top corner)</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileOp.TileRtMapPixel(System.Drawing.Point)">
+            <summary>
+            MapPixel coordinate from tile coordinate (right/top corner)
+            </summary>
+            <param name="tileXY">A tileXY</param>
+            <returns>a MapPixel (right/top corner)</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileOp.TileRbMapPixel(System.Drawing.Point)">
+            <summary>
+            MapPixel coordinate from tile coordinate (right/bottom corner)
+            </summary>
+            <param name="tileXY">A tileXY</param>
+            <returns>a MapPixel (right/bottom corner)</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileOp.TileLbMapPixel(System.Drawing.Point)">
+            <summary>
+            MapPixel coordinate from tile coordinate (left/bottom corner)
+            </summary>
+            <param name="tileXY">A tileXY</param>
+            <returns>a MapPixel (left/bottom corner)</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileOp.TileCenterMapPixel(System.Drawing.Point)">
+            <summary>
+            MapPixel coordinate from tile coordinate (top/left corner)
+            </summary>
+            <param name="tileXY">A tileXY</param>
+            <returns>a MapPixel (top/left corner)</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileOp.TileLtLatLon(System.Drawing.Point,System.UInt16)">
+            <summary>
+            Returns the coordinate of the left top of the tileXY at zoom level
+            </summary>
+            <param name="tileXY">A tileXY</param>
+            <param name="zoom">A zoom level</param>
+            <returns>The coordinate of the left top</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileOp.TileCenterLatLon(System.Drawing.Point,System.UInt16)">
+            <summary>
+            Returns the coordinate of the center of the tileXY at zoom level
+            </summary>
+            <param name="tileXY">A tileXY</param>
+            <param name="zoom">A zoom level</param>
+            <returns>The coordinate of the center</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileOp.LatLonToTileXY(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            Returns the TileXY for a coordinate on the tile at zoom level
+            </summary>
+            <param name="coord">A coordinate</param>
+            <param name="zoom">A zoomlevel</param>
+            <returns>The TileXY where the coordiate is located on</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileOp.LatLonToMapPixel(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            Get pixel coordinates from lat/lon
+            </summary>
+            <param name="coord"></param>
+            <param name="zoom">A zoom level</param>
+            <returns>A MapPixel</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileOp.QuadrantFromLatLon(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            Returns the Quadrant on a Tile where a coordinate lies
+            </summary>
+            <returns>A Quadrant</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileOp.LatLonToMapPixel(System.Double,System.Double,System.UInt16)">
+            <summary>
+            Get pixel coordinates from lat/lon as Mercator Projection
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileOp.MapPixelToLatLon(System.Int32,System.Int32,System.UInt16)">
+            <summary>
+            Gets lat/lon coordinates from pixel coordinates
+            </summary>
+        </member>
+        <member name="T:CoordLib.MercatorTiles.TileQuadrant">
+            <summary>
+            A Tile Quadrant designation
+            </summary>
+        </member>
+        <member name="T:CoordLib.MercatorTiles.TileXY">
+            <summary>
+            Simple Mercator Projection Tiles Method set
+            based on 256x256 Tiles
+            where each tile has an XY Coord at a certain Zoom Level
+            The complete map is layed out in MapPixels
+            
+            see also: https://docs.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
+             
+            Level of Detail Map Width and      Ground              Map Scale    Tile Area ( at 96 dpi)
+                             Height( pixels)   Resolution
+                                              ( meters / pixel)
+                   ..
+                   10         262,144         152.8741           1 : 577,791.71      ~40km^2
+                   11         524,288          76.4370           1 : 288,895.85      ~20km^2
+                   12       1,048,576          38.2185           1 : 144,447.93      ~10km^2
+                   13       2,097,152          19.1093           1 : 72,223.96        ~5km^2
+                   14       4,194,304           9.5546           1 : 36,111.98      ~2.5km^2
+                   15       8,388,608           4.7773           1 : 18,055.99     ~1.25km^2
+                   
+            </summary>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.TileXY.Empty">
+            <summary>
+            An emtpy (unusable) TileXY at -1/-1
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.LatLonToTileXY(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            Returns the TileXY for a coordinate on the tile at zoom level
+            </summary>
+            <param name="latLon,,">A coordinate</param>
+            <param name="zoom">A zoomlevel</param>
+            <returns>The TileXY where the coordiate is located on</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.LatLonToTileXY(System.Double,System.Double,System.UInt16)">
+            <summary>
+            Returns the TileXY for a coordinate on the tile at zoom level
+            </summary>
+            <param name="lat,,">Latitude</param>
+            <param name="lon,,">Longitude</param>
+            <param name="zoom">A zoomlevel</param>
+            <returns>The TileXY where the coordiate is located on</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.QuadrantFromLatLon(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            Returns the Quadrant on a Tile where a coordinate lies
+            </summary>
+            <param name="latLon,,">A coordinate</param>
+            <param name="zoom">A zoomlevel</param>
+            <returns>A Quadrant</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.QuadrantFromLatLon(System.Double,System.Double,System.UInt16)">
+            <summary>
+            Returns the Quadrant on a Tile where a coordinate lies
+            </summary>
+            <param name="lat,,">Latitude</param>
+            <param name="lon,,">Longitude</param>
+            <param name="zoom">A zoomlevel</param>
+            <returns>A Quadrant</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.#ctor(System.Int32,System.Int32)">
+            <summary>
+            cTor: From X,Y (defaults to 0/0)
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.#ctor(CoordLib.MercatorTiles.TileXY)">
+            <summary>
+            cTor: Copy constructor
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.#ctor(System.Drawing.Point)">
+            <summary>
+            cTor: From a Point
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.#ctor(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            cTor: From LatLon at Zoom Level
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.#ctor(System.Double,System.Double,System.UInt16)">
+            <summary>
+            cTor: From Latitude, Longitude at Zoom Level
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.op_Equality(CoordLib.MercatorTiles.TileXY,CoordLib.MercatorTiles.TileXY)">
+            <summary>
+            Equality operator
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.op_Inequality(CoordLib.MercatorTiles.TileXY,CoordLib.MercatorTiles.TileXY)">
+            <summary>
+            Inequality operator
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.Equals(System.Object)">
+            <summary>
+            Equality towads another object
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.GetHashCode">
+            <summary>
+            Returns a Hashcode for this object
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.Offset(System.Int32,System.Int32)">
+            <summary>
+            Translates this Tile by the specified amount
+            </summary>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.TileXY.X">
+            <summary>
+            The tiles X value
+            </summary>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.TileXY.Y">
+            <summary>
+            The tiles Y value
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.AsPoint">
+            <summary>
+            Returns the TileXY as Point
+            </summary>
+            <returns>A Point</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.QuadKey(System.UInt16)">
+            <summary>
+            Returns a Quad(Key) for this Tile at Zoom Level
+            </summary>
+            <param name="zoom">A ZoomLevel</param>
+            <returns>A Quad</returns>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.TileXY.LeftTopMapPixel">
+            <summary>
+            MapPixel coordinate from tile coordinate (left/top corner)
+            </summary>
+            <returns>a MapPixel (left/top corner)</returns>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.TileXY.RightTopMapPixel">
+            <summary>
+            MapPixel coordinate from tile coordinate (right/top corner)
+            </summary>
+            <returns>a MapPixel (right/top corner)</returns>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.TileXY.RightBottomMapPixel">
+            <summary>
+            MapPixel coordinate from tile coordinate (right/bottom corner)
+            </summary>
+            <returns>a MapPixel (right/bottom corner)</returns>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.TileXY.LeftBottomMapPixel">
+            <summary>
+            MapPixel coordinate from tile coordinate (left/bottom corner)
+            </summary>
+            <returns>a MapPixel (left/bottom corner)</returns>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.TileXY.CenterMapPixel">
+            <summary>
+            MapPixel coordinate from tile coordinate (left/top corner)
+            </summary>
+            <returns>a MapPixel (left/top corner)</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.LeftTopLatLon(System.UInt16)">
+            <summary>
+            Returns the coordinate of the left top corner of the tileXY at zoom level
+            </summary>
+            <param name="zoom">A zoom level</param>
+            <returns>The coordinate of the left top corner</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.CenterLatLon(System.UInt16)">
+            <summary>
+            Returns the coordinate of the center of the tileXY at zoom level
+            </summary>
+            <param name="zoom">A zoom level</param>
+            <returns>The coordinate of the center</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.Resolution_m(System.UInt16)">
+            <summary>
+            Returns resolution of this tile at a zoom level in meters
+            - square tiles i.e. both sides have the same Resolution
+            </summary>
+            <param name="zoom"></param>
+            <returns>Meters</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.Size_m(System.UInt16)">
+            <summary>
+            Returns SizeF of this tile at a zoom level in meters
+            </summary>
+            <param name="zoom"></param>
+            <returns>A SizeF in meters</returns>
         </member>
     </members>
 </doc>

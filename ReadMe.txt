@@ -1,5 +1,5 @@
-CoordLib V 1.0 - Build 5
-(c) M. Burri - 13-Aug-2021
+CoordLib V 1.2 - Build 10
+(c) M. Burri - 20-Aug-2022
 
 Contains files:
 
@@ -11,8 +11,15 @@ https://github.com/bm98/CoordLib
 
 
 Scanned for viruses before packing... 
-cassini@burri-web.org
+github@burri-web.org
 
 Changelog:
+
+V 1.2:
+-Add Mercator Tile Projection MapPixel, TileXY, and Quad
+
+V 1.1:
+-Update LatLon is now a struct rather than a class
+-Add LatLon Primitives (Point, Size, Rectangle)
 
 V 1.0 initial 

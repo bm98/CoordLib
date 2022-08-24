@@ -461,36 +461,10 @@ namespace CoordLib
     /// </summary>
     public string UtmZoneLetter => _utmLetterDesignator( this );
 
+
     #endregion
 
   }
-
-
-  #region Extension
-
-  /// <summary>
-  /// Extension ToRadians / ToDegrees for double type
-  /// </summary>
-  internal static class Foo
-  {
-    /// <summary>
-    /// Returns the angle in radians
-    /// </summary>
-    public static double ToRadians( this double angleInDegree )
-    {
-      return (angleInDegree * Math.PI) / 180.0;
-    }
-    /// <summary>
-    /// Returns the angle in Degrees
-    /// </summary>
-    public static double ToDegrees( this double angleInRadians )
-    {
-      return angleInRadians * (180.0 / Math.PI);
-    }
-
-
-  }
-  #endregion
 
 }
 
