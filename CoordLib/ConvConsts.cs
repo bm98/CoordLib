@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using CoordLib.Extensions;
+
 namespace CoordLib
 {
   /// <summary>

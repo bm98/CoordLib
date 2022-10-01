@@ -141,15 +141,20 @@
             1:1 C# translation from above
             </summary>
         </member>
+        <member name="F:CoordLib.Dms.NbSpace">
+            <summary>
+            Non Breaking Space char
+            </summary>
+        </member>
         <member name="F:CoordLib.Dms.Separator">
             <summary>
             Separator character to be used to separate degrees, minutes, seconds, and cardinal directions.
             
             Set to '\u202f' (narrow no-break space) for improved formatting.
-                 * @example
-                 * var p = new LatLon(51.2, 0.33);  // 51°12′00.0″N, 000°19′48.0″E
-                 *   Dms.separator = '\u202f';        // narrow no-break space
-                 *   var pʹ = new LatLon( 51.2, 0.33 ); // 51° 12′ 00.0″ N, 000° 19′ 48.0″ E
+            
+            var p = new LatLon(51.2, 0.33);    N51°12′00.0″, E000°19′48.0″
+            Dms.separator = '\u202f';          narrow no-break space
+            var pʹ = new LatLon( 51.2, 0.33 ); N 51° 12′ 00.0″, E 000° 19′ 48.0″
             </summary>
         </member>
         <member name="M:CoordLib.Dms.ParseDMS(System.String)">
@@ -160,10 +165,9 @@
             suffixed by compass direction( NSEW). A variety of separators are accepted( eg 3° 37′ 09″W).
             Seconds and minutes may be omitted.
             
-                 * @example
-                 * var lat = Dms.parseDMS("N51° 28' 40.12\"");
-                 *     var lon = Dms.parseDMS( "W0° 00' 5.31\"" );
-                 *     var p1 = new LatLon( lat, lon ); // N51.4778°, W0.0015°
+             var lat = Dms.parseDMS("N51° 28' 40.12\"");
+             var lon = Dms.parseDMS( "W0° 00' 5.31\"" );
+             var p1 = new LatLon( lat, lon ); N51.4778°, W0.0015°
             </summary>
             <param name="dmsStr">{string|number} dmsStr - Degrees or deg/min/sec in variety of formats.</param>
             <returns>{number} Degrees as double number.</returns>
@@ -218,22 +222,36 @@
             <param name="precision">{number} [precision=3] - Precision (1:cardinal / 2:intercardinal / 3:secondary-intercardinal).</param>
             <returns>{string} Compass point for supplied bearing.</returns>
         </member>
-        <member name="T:CoordLib.Extensions">
+        <member name="T:CoordLib.Extensions.Extensions">
             <summary>
-            Helper Extensions 
+            CoordLib Extensions available via
+            
+              using CoordLib.Extensions;
+              
+            
             </summary>
         </member>
-        <member name="M:CoordLib.Extensions.ToRadians(System.Double)">
+        <member name="M:CoordLib.Extensions.Extensions.ToRadians(System.Single)">
             <summary>
             Returns the angle in radians
             </summary>
         </member>
-        <member name="M:CoordLib.Extensions.ToDegrees(System.Double)">
+        <member name="M:CoordLib.Extensions.Extensions.ToDegrees(System.Single)">
             <summary>
             Returns the angle in Degrees
             </summary>
         </member>
-        <member name="M:CoordLib.Extensions.Clip(System.Double,System.Double,System.Double)">
+        <member name="M:CoordLib.Extensions.Extensions.ToRadians(System.Double)">
+            <summary>
+            Returns the angle in radians
+            </summary>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.ToDegrees(System.Double)">
+            <summary>
+            Returns the angle in Degrees
+            </summary>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.Clip(System.Double,System.Double,System.Double)">
             <summary>
             Clips a number to the specified minimum and maximum values.
             Returns the clipped value
@@ -243,7 +261,7 @@
             <param name="maxValue">Maximum allowable value.</param>
             <returns>The clipped value.</returns>
         </member>
-        <member name="M:CoordLib.Extensions.Clip(System.Int32,System.Double,System.Double)">
+        <member name="M:CoordLib.Extensions.Extensions.Clip(System.Single,System.Double,System.Double)">
             <summary>
             Clips a number to the specified minimum and maximum values.
             Returns the clipped value
@@ -253,7 +271,7 @@
             <param name="maxValue">Maximum allowable value.</param>
             <returns>The clipped value.</returns>
         </member>
-        <member name="M:CoordLib.Extensions.Clip(System.Int32,System.Int32,System.Int32)">
+        <member name="M:CoordLib.Extensions.Extensions.Clip(System.Int32,System.Double,System.Double)">
             <summary>
             Clips a number to the specified minimum and maximum values.
             Returns the clipped value
@@ -262,6 +280,46 @@
             <param name="minValue">Minimum allowable value.</param>
             <param name="maxValue">Maximum allowable value.</param>
             <returns>The clipped value.</returns>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.Clip(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Clips a number to the specified minimum and maximum values.
+            Returns the clipped value
+            </summary>
+            <param name="_i"></param>
+            <param name="minValue">Minimum allowable value.</param>
+            <param name="maxValue">Maximum allowable value.</param>
+            <returns>The clipped value.</returns>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.AsMapPixel(System.Drawing.Point)">
+            <summary>
+            Returns the Point as MapPixel Type
+            </summary>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.AsTileXY(System.Drawing.Point)">
+            <summary>
+            Returns a Point as TileXY Type
+            </summary>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.AsQuadMax(CoordLib.LatLon)">
+            <summary>
+            Returns a Quad @ max Zoom Level
+            </summary>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.UtmZone(CoordLib.LatLon)">
+            <summary>
+            Returns the UtmZone Designator NNC 
+            </summary>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.UtmZoneNumber(CoordLib.LatLon)">
+            <summary>
+            Returns the UTM Longitude Zone Number
+            </summary>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.UtmZoneLetter(CoordLib.LatLon)">
+            <summary>
+            Returns the UTM Latitude Zone Letter
+            </summary>
         </member>
         <member name="T:CoordLib.Geo">
             <summary>
@@ -409,25 +467,25 @@
             <returns>{Object|null} Object containing { lon1, lon2 } or null if given latitude not reached.</returns>
         </member>
         <member name="M:CoordLib.Geo.Wrap90(System.Double)">
-             Constrain degrees to range -90..+90 (for latitude); e.g. -91 => -89, 91 => 89.
-            
-             @private
-             @param {number} degrees
-             @returns degrees within range -90..+90.
+            <summary>
+            Constrain degrees to range -90..+90 (for latitude); e.g. -91 => -89, 91 => 89.
+            </summary>
+            <param name="degrees">Latitude degrees</param>
+            <returns>degrees within range -90..+90.</returns>
         </member>
         <member name="M:CoordLib.Geo.Wrap180(System.Double)">
-             Constrain degrees to range -180..+180 (for longitude); e.g. -181 => 179, 181 => -179.
-            
-             @private
-             @param {number} degrees
-             @returns degrees within range -180..+180.
+            <summary>
+            Constrain degrees to range -180..+180 (for longitude); e.g. -181 => 179, 181 => -179.
+            </summary>
+            <param name="degrees">Longitude degrees</param>
+            <returns>degrees within range -180..+180.</returns>
         </member>
         <member name="M:CoordLib.Geo.Wrap360(System.Double)">
-             Constrain degrees to range 0..360 (for bearings); e.g. -1 => 359, 361 => 1.
-            
-             @private
-             @param {number} degrees
-             @returns degrees within range 0..360.
+            <summary>
+            Constrain degrees to range 0..360 (for bearings); e.g. -1 => 359, 361 => 1.
+            </summary>
+            <param name="degrees">Compass degrees (360°)</param>
+            <returns>degrees within range 0..360.</returns>
         </member>
         <member name="T:CoordLib.LatLon">
             <summary>
@@ -459,7 +517,8 @@
         </member>
         <member name="F:CoordLib.LatLon._altitude">
             <summary>
-            Altitude metres above ellipsoid
+            Altitude above ellipsoid (meter preferred)
+            Is set to 0 if not provided
             </summary>
         </member>
         <member name="P:CoordLib.LatLon.Lat">
@@ -480,6 +539,11 @@
         <member name="P:CoordLib.LatLon.IsEmpty">
             <summary>
             True if Lat or Lon are not assigned
+            </summary>
+        </member>
+        <member name="P:CoordLib.LatLon.HasAltitude">
+            <summary>
+            True if Alt is set (not NaN)
             </summary>
         </member>
         <member name="M:CoordLib.LatLon.#ctor(System.Boolean)">
@@ -516,6 +580,39 @@
               as copy of the given LatLon
             </summary>
             <param name="other">LatLon to copy from</param>
+        </member>
+        <member name="M:CoordLib.LatLon.op_Equality(CoordLib.LatLon,CoordLib.LatLon)">
+            <summary>
+            Equality of a LatLon (lat, lon, alt)
+            </summary>
+        </member>
+        <member name="M:CoordLib.LatLon.op_Inequality(CoordLib.LatLon,CoordLib.LatLon)">
+            <summary>
+            Inequality of a LatLon (lat, lon, alt)
+            </summary>
+        </member>
+        <member name="M:CoordLib.LatLon.Equals(CoordLib.LatLon)">
+            <summary>
+            Checks if another point is equal to ‘this’ point.
+            
+                 * @example
+                 *   var p1 = new LatLon( 52.205, 0.119 );
+                 *   var p2 = new LatLon( 52.205, 0.119 );
+                 *   var equal = p1.equals( p2 ); // true
+            </summary>
+            <param name="other">{LatLon} point - Point to be compared against this point.</param>
+            <returns>{bool}   True if points are identical.</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.Equals(System.Object)">
+            <summary>
+            Indicates whether this instance and a specified object are equal.
+            </summary>
+            <param name="obj">An object</param>
+        </member>
+        <member name="M:CoordLib.LatLon.GetHashCode">
+            <summary>
+            Returns the hash code for this instance
+            </summary>
         </member>
         <member name="M:CoordLib.LatLon.DistanceTo(CoordLib.LatLon,System.Double)">
             <summary>
@@ -662,18 +759,6 @@
             <param name="latitude">{number} latitude - Latitude crossings are to be determined for.</param>
             <returns>{Object|null} Object containing { lon1, lon2 } or null if given latitude not reached.</returns>
         </member>
-        <member name="M:CoordLib.LatLon.Equals(CoordLib.LatLon)">
-            <summary>
-            Checks if another point is equal to ‘this’ point.
-            
-                 * @example
-                 *   var p1 = new LatLon( 52.205, 0.119 );
-                 *   var p2 = new LatLon( 52.205, 0.119 );
-                 *   var equal = p1.equals( p2 ); // true
-            </summary>
-            <param name="point">{LatLon} point - Point to be compared against this point.</param>
-            <returns>{bool}   True if points are identical.</returns>
-        </member>
         <member name="M:CoordLib.LatLon.ToString(System.String,System.Int32)">
             <summary>
             Returns a string representation of ‘this’ point, formatted as degrees, degrees+minutes, or
@@ -688,37 +773,6 @@
             Returns the default string representation 
             </summary>
             <returns>A string</returns>
-        </member>
-        <member name="M:CoordLib.LatLon._utmZoneNo(CoordLib.LatLon)">
-            <summary>
-            Returns the UTM Zone Number with Norway exceptions handled
-            </summary>
-            <param name="ll">A LatLon item</param>
-            <returns>The ZoneNumber</returns>
-        </member>
-        <member name="M:CoordLib.LatLon._utmLetterDesignator(CoordLib.LatLon)">
-            <summary>
-            Calculates the MGRS letter designator for the given latitude.
-            latitude The latitude in WGS84 to get the letter designator for.
-            The letter designator.
-            </summary>
-            <param name="latLon">LatLon obj</param>
-            <returns>The ZoneLetter</returns>
-        </member>
-        <member name="P:CoordLib.LatLon.UtmZone">
-            <summary>
-            Returns the UtmZone Designator NNC 
-            </summary>
-        </member>
-        <member name="P:CoordLib.LatLon.UtmZoneNumber">
-            <summary>
-            Returns the UTM Longitude Zone Number
-            </summary>
-        </member>
-        <member name="P:CoordLib.LatLon.UtmZoneLetter">
-            <summary>
-            Returns the UTM Latitude Zone Letter
-            </summary>
         </member>
         <member name="T:CoordLib.LLA">
             <summary>
@@ -765,372 +819,372 @@
             <param name="alt">out Alt</param>
             <returns>True if successfull</returns>
         </member>
-        <member name="T:CoordLib.LLPoint">
+        <member name="T:CoordLib.LLShapes.LLPoint">
             <summary>
             Point Struct with LatLon items as Points
             Note: Math operations are performed on the numbers and not in any particular projection
             </summary>
         </member>
-        <member name="F:CoordLib.LLPoint.Empty">
+        <member name="F:CoordLib.LLShapes.LLPoint.Empty">
             <summary>
             Represents a Point that has X and Y values set to zero.
             </summary>
         </member>
-        <member name="M:CoordLib.LLPoint.#ctor(System.Double,System.Double)">
+        <member name="M:CoordLib.LLShapes.LLPoint.#ctor(System.Double,System.Double)">
             <summary>
             Initializes a new instance of the Point struct with the specified coordinates.
             </summary>
             <param name="lat">Latitude</param>
             <param name="lon">Longitude</param>
         </member>
-        <member name="M:CoordLib.LLPoint.#ctor(CoordLib.LatLon)">
+        <member name="M:CoordLib.LLShapes.LLPoint.#ctor(CoordLib.LatLon)">
             <summary>
             Initializes a new instance of the Point struct with the specified LatLon obj
             </summary>
             <param name="latLon">A LatLon Item</param>
         </member>
-        <member name="M:CoordLib.LLPoint.AsLatLon">
+        <member name="M:CoordLib.LLShapes.LLPoint.AsLatLon">
             <summary>
             Returns the Point as LatLon Type
             </summary>
         </member>
-        <member name="P:CoordLib.LLPoint.IsEmpty">
+        <member name="P:CoordLib.LLShapes.LLPoint.IsEmpty">
             <summary>
             returns true if coordinates wasn't assigned
             </summary>
         </member>
-        <member name="P:CoordLib.LLPoint.Lat">
+        <member name="P:CoordLib.LLShapes.LLPoint.Lat">
             <summary>
             Latitude of this Point
             </summary>
         </member>
-        <member name="P:CoordLib.LLPoint.Lon">
+        <member name="P:CoordLib.LLShapes.LLPoint.Lon">
             <summary>
             Longitude of this Point
             </summary>
         </member>
-        <member name="M:CoordLib.LLPoint.op_Explicit(CoordLib.LLPoint)~CoordLib.LatLon">
+        <member name="M:CoordLib.LLShapes.LLPoint.op_Explicit(CoordLib.LLShapes.LLPoint)~CoordLib.LatLon">
             <summary>
             Returns the Point as LatLon Type
             </summary>
         </member>
-        <member name="M:CoordLib.LLPoint.op_Addition(CoordLib.LLPoint,CoordLib.LLSize)">
+        <member name="M:CoordLib.LLShapes.LLPoint.op_Addition(CoordLib.LLShapes.LLPoint,CoordLib.LLShapes.LLSize)">
             <summary>
             Translates a Point by a given Size.
             </summary>
         </member>
-        <member name="M:CoordLib.LLPoint.op_Subtraction(CoordLib.LLPoint,CoordLib.LLSize)">
+        <member name="M:CoordLib.LLShapes.LLPoint.op_Subtraction(CoordLib.LLShapes.LLPoint,CoordLib.LLShapes.LLSize)">
             <summary>
             Translates a Point by the negative of a given Size.
             </summary>
         </member>
-        <member name="M:CoordLib.LLPoint.op_Subtraction(CoordLib.LLPoint,CoordLib.LLPoint)">
+        <member name="M:CoordLib.LLShapes.LLPoint.op_Subtraction(CoordLib.LLShapes.LLPoint,CoordLib.LLShapes.LLPoint)">
             <summary>
             Translates a Point by the negative of a given Point
             </summary>
         </member>
-        <member name="M:CoordLib.LLPoint.op_Equality(CoordLib.LLPoint,CoordLib.LLPoint)">
+        <member name="M:CoordLib.LLShapes.LLPoint.op_Equality(CoordLib.LLShapes.LLPoint,CoordLib.LLShapes.LLPoint)">
             <summary>
             Compares two Point objects. The result specifies whether the values of the X and Y properties of the two Point objects are equal.
             </summary>
         </member>
-        <member name="M:CoordLib.LLPoint.op_Inequality(CoordLib.LLPoint,CoordLib.LLPoint)">
+        <member name="M:CoordLib.LLShapes.LLPoint.op_Inequality(CoordLib.LLShapes.LLPoint,CoordLib.LLShapes.LLPoint)">
             <summary>
             Compares two Point objects. The result specifies whether the values of the X or Y properties of the two Point objects are unequal.
             </summary>
         </member>
-        <member name="M:CoordLib.LLPoint.Add(CoordLib.LLPoint,CoordLib.LLSize)">
+        <member name="M:CoordLib.LLShapes.LLPoint.Add(CoordLib.LLShapes.LLPoint,CoordLib.LLShapes.LLSize)">
             <summary>
             Adds the specified Size to the specified Point.
             </summary>
         </member>
-        <member name="M:CoordLib.LLPoint.Subtract(CoordLib.LLPoint,CoordLib.LLSize)">
+        <member name="M:CoordLib.LLShapes.LLPoint.Subtract(CoordLib.LLShapes.LLPoint,CoordLib.LLShapes.LLSize)">
             <summary>
             Returns the result of subtracting specified Size from the specified Point.
             </summary>
         </member>
-        <member name="M:CoordLib.LLPoint.Equals(System.Object)">
+        <member name="M:CoordLib.LLShapes.LLPoint.Equals(System.Object)">
             <summary>
             Specifies whether this point instance contains the same coordinates as the specified object.
             </summary>
         </member>
-        <member name="M:CoordLib.LLPoint.Offset(CoordLib.LLPoint)">
+        <member name="M:CoordLib.LLShapes.LLPoint.Offset(CoordLib.LLShapes.LLPoint)">
             <summary>
             Translates this Point by the specified Point.
             </summary>
         </member>
-        <member name="M:CoordLib.LLPoint.Offset(System.Double,System.Double)">
+        <member name="M:CoordLib.LLShapes.LLPoint.Offset(System.Double,System.Double)">
             <summary>
             Translates this Point by the specified amount.
             </summary>
         </member>
-        <member name="M:CoordLib.LLPoint.GetHashCode">
+        <member name="M:CoordLib.LLShapes.LLPoint.GetHashCode">
             <summary>
             Returns a hash code for this Point.
             </summary>
         </member>
-        <member name="M:CoordLib.LLPoint.ToString">
+        <member name="M:CoordLib.LLShapes.LLPoint.ToString">
             <summary>
             Converts this Point to a human-readable string.
             </summary>
         </member>
-        <member name="T:CoordLib.LLRectangle">
+        <member name="T:CoordLib.LLShapes.LLRectangle">
             <summary>
             Rectangle made from LatLon Coordinate Items
             Note: Math operations are performed on the numbers and not in any particular projection
             </summary>
         </member>
-        <member name="M:CoordLib.LLRectangle.#cctor">
+        <member name="M:CoordLib.LLShapes.LLRectangle.#cctor">
             <summary>
             static cTor: init empty field
             </summary>
         </member>
-        <member name="F:CoordLib.LLRectangle.Empty">
+        <member name="F:CoordLib.LLShapes.LLRectangle.Empty">
             <summary>
             Represents a Rectangle structure with its properties left uninitialized.
             </summary>
         </member>
-        <member name="P:CoordLib.LLRectangle.Lon">
+        <member name="P:CoordLib.LLShapes.LLRectangle.Lon">
             <summary>
             Longitude (X) Part
             </summary>
         </member>
-        <member name="P:CoordLib.LLRectangle.Lat">
+        <member name="P:CoordLib.LLShapes.LLRectangle.Lat">
             <summary>
             Latitude (Y) Part
             </summary>
         </member>
-        <member name="P:CoordLib.LLRectangle.WidthLon">
+        <member name="P:CoordLib.LLShapes.LLRectangle.WidthLon">
             <summary>
             Radial Distance as angle (deg)
             </summary>
         </member>
-        <member name="P:CoordLib.LLRectangle.HeightLat">
+        <member name="P:CoordLib.LLShapes.LLRectangle.HeightLat">
             <summary>
             Radial Distance as angle (deg)
             </summary>
         </member>
-        <member name="P:CoordLib.LLRectangle.IsEmpty">
+        <member name="P:CoordLib.LLShapes.LLRectangle.IsEmpty">
             <summary>
             Returns true if coordinates are not assigned
             </summary>
         </member>
-        <member name="M:CoordLib.LLRectangle.#ctor(System.Boolean)">
+        <member name="M:CoordLib.LLShapes.LLRectangle.#ctor(System.Boolean)">
             <summary>
             cTor: Empty (init as Empty)
             </summary>
         </member>
-        <member name="M:CoordLib.LLRectangle.#ctor(System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:CoordLib.LLShapes.LLRectangle.#ctor(System.Double,System.Double,System.Double,System.Double)">
             <summary>
             cTor: from valued
             </summary>
         </member>
-        <member name="M:CoordLib.LLRectangle.#ctor(CoordLib.LLPoint,CoordLib.LLSize)">
+        <member name="M:CoordLib.LLShapes.LLRectangle.#ctor(CoordLib.LLShapes.LLPoint,CoordLib.LLShapes.LLSize)">
             <summary>
             cTor: from point and size
             </summary>
             <param name="location"></param>
             <param name="size"></param>
         </member>
-        <member name="M:CoordLib.LLRectangle.FromLTRB(System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:CoordLib.LLShapes.LLRectangle.FromLTRB(System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Returns an LLRectangle from Left,Top,Right,Bottom points
             </summary>
         </member>
-        <member name="P:CoordLib.LLRectangle.LocationTopLeft">
+        <member name="P:CoordLib.LLShapes.LLRectangle.LocationTopLeft">
             <summary>
             TopLeft Point
             </summary>
         </member>
-        <member name="P:CoordLib.LLRectangle.LocationRightBottom">
+        <member name="P:CoordLib.LLShapes.LLRectangle.LocationRightBottom">
             <summary>
             Right Bottom Point
             </summary>
         </member>
-        <member name="P:CoordLib.LLRectangle.LocationMiddle">
+        <member name="P:CoordLib.LLShapes.LLRectangle.LocationMiddle">
             <summary>
             Center Point
             </summary>
         </member>
-        <member name="P:CoordLib.LLRectangle.Size">
+        <member name="P:CoordLib.LLShapes.LLRectangle.Size">
             <summary>
             Gets or sets the size of this Rectangle.
             </summary>
         </member>
-        <member name="P:CoordLib.LLRectangle.Left">
+        <member name="P:CoordLib.LLShapes.LLRectangle.Left">
             <summary>
             Left (Longitude)
             </summary>
         </member>
-        <member name="P:CoordLib.LLRectangle.Top">
+        <member name="P:CoordLib.LLShapes.LLRectangle.Top">
             <summary>
             Top (Latitude)
             </summary>
         </member>
-        <member name="P:CoordLib.LLRectangle.Right">
+        <member name="P:CoordLib.LLShapes.LLRectangle.Right">
             <summary>
             Right (Lon + WidthDeg)
             </summary>
         </member>
-        <member name="P:CoordLib.LLRectangle.Bottom">
+        <member name="P:CoordLib.LLShapes.LLRectangle.Bottom">
             <summary>
             Bottom (Lat-Height)
             </summary>
         </member>
-        <member name="M:CoordLib.LLRectangle.Equals(System.Object)">
+        <member name="M:CoordLib.LLShapes.LLRectangle.Equals(System.Object)">
             <summary>
             Tests whether obj is a Rectangle structure with the same location and size of this Rectangle structure.
             </summary>
         </member>
-        <member name="M:CoordLib.LLRectangle.op_Equality(CoordLib.LLRectangle,CoordLib.LLRectangle)">
+        <member name="M:CoordLib.LLShapes.LLRectangle.op_Equality(CoordLib.LLShapes.LLRectangle,CoordLib.LLShapes.LLRectangle)">
             <summary>
             Equality: Tests whether two Rectangle structures have equal location and size.
             </summary>
         </member>
-        <member name="M:CoordLib.LLRectangle.op_Inequality(CoordLib.LLRectangle,CoordLib.LLRectangle)">
+        <member name="M:CoordLib.LLShapes.LLRectangle.op_Inequality(CoordLib.LLShapes.LLRectangle,CoordLib.LLShapes.LLRectangle)">
             <summary>
             Inequality: Tests whether two Rectangle structures differ in location or size.
             </summary>
         </member>
-        <member name="M:CoordLib.LLRectangle.Contains(System.Double,System.Double)">
+        <member name="M:CoordLib.LLShapes.LLRectangle.Contains(System.Double,System.Double)">
             <summary>
             Determines if the specified point is contained within this Rectangle structure.
             </summary>
         </member>
-        <member name="M:CoordLib.LLRectangle.Contains(CoordLib.LLPoint)">
+        <member name="M:CoordLib.LLShapes.LLRectangle.Contains(CoordLib.LLShapes.LLPoint)">
             <summary>
             Determines if the specified point is contained within this Rectangle structure.
             </summary>
         </member>
-        <member name="M:CoordLib.LLRectangle.Contains(CoordLib.LLRectangle)">
+        <member name="M:CoordLib.LLShapes.LLRectangle.Contains(CoordLib.LLShapes.LLRectangle)">
             <summary>
             Determines if the rectangular region represented by rect is entirely contained within this Rectangle structure.
             </summary>
         </member>
-        <member name="M:CoordLib.LLRectangle.GetHashCode">
+        <member name="M:CoordLib.LLShapes.LLRectangle.GetHashCode">
             <summary>
             Returns the hash code for this Rectangle structure. For information about the use of hash codes, see GetHashCode() .
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CoordLib.LLRectangle.Offset(CoordLib.LLPoint)">
+        <member name="M:CoordLib.LLShapes.LLRectangle.Offset(CoordLib.LLShapes.LLPoint)">
             <summary>
             Adjusts the location of this rectangle by the specified amount.
             </summary>
         </member>
-        <member name="M:CoordLib.LLRectangle.Offset(System.Double,System.Double)">
+        <member name="M:CoordLib.LLShapes.LLRectangle.Offset(System.Double,System.Double)">
             <summary>
             Adjusts the location of this rectangle by the specified amount.
             </summary>
         </member>
-        <member name="M:CoordLib.LLRectangle.ToString">
+        <member name="M:CoordLib.LLShapes.LLRectangle.ToString">
             <summary>
             Converts the attributes of this Rectangle to a human-readable string.
             </summary>
         </member>
-        <member name="T:CoordLib.LLSize">
+        <member name="T:CoordLib.LLShapes.LLSize">
             <summary>
             Size Struct with LatLon items as Points
             Note: Math operations are performed on the numbers and not in any particular projection
             </summary>
         </member>
-        <member name="M:CoordLib.LLSize.#cctor">
+        <member name="M:CoordLib.LLShapes.LLSize.#cctor">
             <summary>
             static cTor:
             </summary>
         </member>
-        <member name="F:CoordLib.LLSize.Empty">
+        <member name="F:CoordLib.LLShapes.LLSize.Empty">
             <summary>
             An Empty LLSize
             </summary>
         </member>
-        <member name="P:CoordLib.LLSize.IsEmpty">
+        <member name="P:CoordLib.LLShapes.LLSize.IsEmpty">
             <summary>
             Get: true if it is empty (Height and Width value of 0)
             </summary>
         </member>
-        <member name="P:CoordLib.LLSize.WidthLon">
+        <member name="P:CoordLib.LLShapes.LLSize.WidthLon">
             <summary>
             Width or Longitude degrees
             </summary>
         </member>
-        <member name="P:CoordLib.LLSize.HeightLat">
+        <member name="P:CoordLib.LLShapes.LLSize.HeightLat">
             <summary>
             Height or Latitude degrees
             </summary>
         </member>
-        <member name="M:CoordLib.LLSize.#ctor(System.Boolean)">
+        <member name="M:CoordLib.LLShapes.LLSize.#ctor(System.Boolean)">
             <summary>
             cTor: empty (will always init with 0 Values
             </summary>
         </member>
-        <member name="M:CoordLib.LLSize.#ctor(CoordLib.LLSize)">
+        <member name="M:CoordLib.LLShapes.LLSize.#ctor(CoordLib.LLShapes.LLSize)">
             <summary>
             cTor: copy
             </summary>
         </member>
-        <member name="M:CoordLib.LLSize.#ctor(CoordLib.LLPoint)">
+        <member name="M:CoordLib.LLShapes.LLSize.#ctor(CoordLib.LLShapes.LLPoint)">
             <summary>
             cTor: From LLPoint values
             </summary>
         </member>
-        <member name="M:CoordLib.LLSize.#ctor(System.Double,System.Double)">
+        <member name="M:CoordLib.LLShapes.LLSize.#ctor(System.Double,System.Double)">
             <summary>
             cTor: from height (latitude) and width (longitude) as coordinates [deg]
             </summary>
         </member>
-        <member name="M:CoordLib.LLSize.op_Addition(CoordLib.LLSize,CoordLib.LLSize)">
+        <member name="M:CoordLib.LLShapes.LLSize.op_Addition(CoordLib.LLShapes.LLSize,CoordLib.LLShapes.LLSize)">
             <summary>
             Addition: Adds the width and height of one Size structure to the width and height of another Size structure.
             </summary>
         </member>
-        <member name="M:CoordLib.LLSize.op_Subtraction(CoordLib.LLSize,CoordLib.LLSize)">
+        <member name="M:CoordLib.LLShapes.LLSize.op_Subtraction(CoordLib.LLShapes.LLSize,CoordLib.LLShapes.LLSize)">
             <summary>
             Subtraction: Subtracts the width and height of one Size structure from the width and height of another Size structure.
             </summary>
         </member>
-        <member name="M:CoordLib.LLSize.op_Equality(CoordLib.LLSize,CoordLib.LLSize)">
+        <member name="M:CoordLib.LLShapes.LLSize.op_Equality(CoordLib.LLShapes.LLSize,CoordLib.LLShapes.LLSize)">
             <summary>
             Equality: Tests whether two Size structures are equal.
             </summary>
         </member>
-        <member name="M:CoordLib.LLSize.op_Inequality(CoordLib.LLSize,CoordLib.LLSize)">
+        <member name="M:CoordLib.LLShapes.LLSize.op_Inequality(CoordLib.LLShapes.LLSize,CoordLib.LLShapes.LLSize)">
             <summary>
             Inequality: Tests whether two Size structures are different.
             </summary>
         </member>
-        <member name="M:CoordLib.LLSize.op_Explicit(CoordLib.LLSize)~CoordLib.LLPoint">
+        <member name="M:CoordLib.LLShapes.LLSize.op_Explicit(CoordLib.LLShapes.LLSize)~CoordLib.LLShapes.LLPoint">
             <summary>
             Conversion: Returns an LLPoint from the values (X=Height,Lat / Y=Width,Lon)
             </summary>
             <param name="size"></param>
         </member>
-        <member name="M:CoordLib.LLSize.Add(CoordLib.LLSize,CoordLib.LLSize)">
+        <member name="M:CoordLib.LLShapes.LLSize.Add(CoordLib.LLShapes.LLSize,CoordLib.LLShapes.LLSize)">
             <summary>
             Adds the width and height of one Size structure to the width and height of another Size structure.
             </summary>
         </member>
-        <member name="M:CoordLib.LLSize.Subtract(CoordLib.LLSize,CoordLib.LLSize)">
+        <member name="M:CoordLib.LLShapes.LLSize.Subtract(CoordLib.LLShapes.LLSize,CoordLib.LLShapes.LLSize)">
             <summary>
             Subtracts the width and height of one Size structure from the width and height of another Size structure.
             </summary>
         </member>
-        <member name="M:CoordLib.LLSize.Equals(System.Object)">
+        <member name="M:CoordLib.LLShapes.LLSize.Equals(System.Object)">
             <summary>
             Tests to see whether the specified object is a Size structure with the same dimensions as this Size structure.
             </summary>
         </member>
-        <member name="M:CoordLib.LLSize.GetHashCode">
+        <member name="M:CoordLib.LLShapes.LLSize.GetHashCode">
             <summary>
             Returns a hash code for this Size structure.
             </summary>
         </member>
-        <member name="M:CoordLib.LLSize.ToLLPoint">
+        <member name="M:CoordLib.LLShapes.LLSize.ToLLPoint">
             <summary>
             Returns the Values as LLPoint Struct
             </summary>
         </member>
-        <member name="M:CoordLib.LLSize.ToString">
+        <member name="M:CoordLib.LLShapes.LLSize.ToString">
             <summary>
             Creates a human-readable string that represents this Size structure.
             </summary>
@@ -1264,7 +1318,37 @@
         </member>
         <member name="T:CoordLib.MercatorTiles.Projection">
             <summary>
-            Mercator Tile Projection base items
+            Web Mercator projection  for Tile based items
+            
+            The projection covers the Earth from −180° to 180° longitude, and 85.05° north and south. 
+            
+            https://en.wikipedia.org/wiki/Web_Mercator_projection
+            
+            PROJCRS["WGS 84 / Pseudo-Mercator",
+               BASEGEOGCRS["WGS 84",
+                   ENSEMBLE["World Geodetic System 1984 ensemble",
+                       MEMBER["World Geodetic System 1984 (Transit)", ID["EPSG",1166]],
+                       MEMBER["World Geodetic System 1984 (G730)",    ID["EPSG",1152]],
+                       MEMBER["World Geodetic System 1984 (G873)",    ID["EPSG",1153]],
+                       MEMBER["World Geodetic System 1984 (G1150)",   ID["EPSG",1154]],
+                       MEMBER["World Geodetic System 1984 (G1674)",   ID["EPSG",1155]],
+                       MEMBER["World Geodetic System 1984 (G1762)",   ID["EPSG",1156]],
+                       MEMBER["World Geodetic System 1984 (G2139)",   ID["EPSG",1309]],
+                       ELLIPSOID["WGS 84", 6378137, 298.257223563, LENGTHUNIT["metre", 1, ID["EPSG",9001]], ID["EPSG",7030]],
+                       ENSEMBLEACCURACY[2], ID["EPSG",6326]],
+                   ID["EPSG",4326]],
+               CONVERSION["Popular Visualisation Pseudo-Mercator",
+                   METHOD["Popular Visualisation Pseudo Mercator", ID["EPSG",1024]],
+                   PARAMETER["Latitude of natural origin",  0, ANGLEUNIT["degree", 0.0174532925199433, ID["EPSG",9102]], ID["EPSG",8801]],
+                   PARAMETER["Longitude of natural origin", 0, ANGLEUNIT["degree", 0.0174532925199433, ID["EPSG",9102]], ID["EPSG",8802]],
+                   PARAMETER["False easting",               0, LENGTHUNIT["metre", 1,                  ID["EPSG",9001]], ID["EPSG",8806]],
+                   PARAMETER["False northing",              0, LENGTHUNIT["metre", 1,                  ID["EPSG",9001]], ID["EPSG",8807]],
+                   ID["EPSG",3856]],
+               CS[Cartesian, 2, ID["EPSG",4499]],
+               AXIS["Easting (X)", east],
+               AXIS["Northing (Y)", north],
+               LENGTHUNIT["metre", 1, ID["EPSG",9001]],
+               ID["EPSG",3857]]
             </summary>
         </member>
         <member name="F:CoordLib.MercatorTiles.Projection.MinLatitude">
@@ -1369,8 +1453,8 @@
             Based on the Mercator Projection Grid with a Quad Square Tile of 256x256
             see also: https://docs.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
             
-            The Quad at a ZoomLevel 1..23 is composed of digits base4 (0,1,2,3) other digits or characters are invalid
-            Min Zoom is 1; Max Zoom is 23
+            The Quad at a ZoomLevel 1..22 is composed of digits base4 (0,1,2,3) other digits or characters are invalid
+            Min Zoom is 1; Max Zoom is 22
             Note: a Quad which is empty (ZoomLevel 0) would represent the entire map 
             
             </summary>
@@ -1397,15 +1481,16 @@
             <param name="zoom">Zoomlevel</param>
             <returns>A Quadkey as String</returns>
         </member>
-        <member name="M:CoordLib.MercatorTiles.Quad.AtZoom(System.UInt16)">
+        <member name="M:CoordLib.MercatorTiles.Quad.Around(CoordLib.MercatorTiles.Quad)">
             <summary>
-            Returns a reduced Quad at the desired zoom
-            If reduction not possible it returns the argument
+            Returns 4 Quads that are the closest neighbours of the argument
+            assuming the argument represents a left,top entity
+            the returned ones are then the ones to the left and above
             </summary>
-            <param name="zoom">Zoomlevel</param>
-            <returns>A Quad Key</returns>
+            <param name="quad">A Quad</param>
+            <returns>Array of neighbours -includes the argument</returns>
         </member>
-        <member name="M:CoordLib.MercatorTiles.Quad.Around(System.Double,System.Double,System.UInt16)">
+        <member name="M:CoordLib.MercatorTiles.Quad.Around4(System.Double,System.Double,System.UInt16)">
             <summary>
             Returns 4 Quads that are the closest neighbours of the argument
             including the one that includes the argument
@@ -1415,13 +1500,53 @@
             <param name="zoom">Zoomlevel</param>
             <returns>Array of neighbours -includes the argument</returns>
         </member>
-        <member name="M:CoordLib.MercatorTiles.Quad.Around(CoordLib.LatLon,System.UInt16)">
+        <member name="M:CoordLib.MercatorTiles.Quad.Around4(CoordLib.LatLon,System.UInt16)">
             <summary>
             Returns 4 Quads that are the closest neighbours of the argument
             including the one that includes the argument
             </summary>
             <param name="latLon">A LatLon</param>
             <param name="zoom">Zoomlevel</param>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.Around9(CoordLib.MercatorTiles.Quad)">
+            <summary>
+            Returns 8 surounding Quad of the argument + the argument as center [0]
+            </summary>
+            <param name="quad">A QuadKey at zoom</param>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.Around9(System.Double,System.Double,System.UInt16)">
+            <summary>
+            Returns 8 surounding Quad of the argument + the argument as center [0]
+            </summary>
+            <param name="lat">Latitude</param>
+            <param name="lon">Longitude</param>
+            <param name="zoom">Zoomlevel</param>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.Around9(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            Returns 8 surounding Quad of the argument + the argument as center [0]
+            </summary>
+            <param name="latLon">A LatLon</param>
+            <param name="zoom">Zoomlevel</param>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.Around49EX(CoordLib.MercatorTiles.Quad)">
+            <summary>
+            Very dedicated use in Map Displays of 7x7 Tile Maps
+             (it returns essentially a 8x8 Tile Map)
+            Intended to return a Quadlist to lookup items for such a Map.
+            It would need to lookup items in 49 Quads to complete all on this Map.
+            
+            It returns however only 15 surounding Quads of the argument + the argument as center [0]
+            Instead of returning 49 quads it will reduce the zoom out by one level and return
+            the surounding ones + extending on the short side
+            results in an overflow of 15 original zoom quad areas 
+            but saves to scan 49 items (i.e. 34 less)
+            </summary>
+            <param name="quad">A Quad at  original zoom</param>
             <returns>Array of neighbours -includes the argument</returns>
         </member>
         <member name="M:CoordLib.MercatorTiles.Quad.#ctor(System.String)">
@@ -1454,6 +1579,26 @@
             Returns the string representation
             </summary>
             <returns>A string</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.AtZoom(System.UInt16)">
+            <summary>
+            Returns a reduced Quad at the desired zoom
+            If reduction not possible it returns the argument
+            </summary>
+            <param name="zoom">Zoomlevel</param>
+            <returns>A Quad</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.Includes(CoordLib.MercatorTiles.Quad)">
+            <summary>
+            True if the argument Quad is included in this Quad
+            Implies that the argument is at the same or a higher zoom level
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.IsPartOf(CoordLib.MercatorTiles.Quad)">
+            <summary>
+            True if this Quad is part of the argument
+            Implies that the argument is at the same or a lower zoom level
+            </summary>
         </member>
         <member name="M:CoordLib.MercatorTiles.Quad.op_Equality(CoordLib.MercatorTiles.Quad,CoordLib.MercatorTiles.Quad)">
             <summary>
@@ -1519,9 +1664,178 @@
             </summary>
             <returns>A Quad Key</returns>
         </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.Around">
+            <summary>
+            Returns 4 Quads that are the closest neighbours of this quad
+            assuming this quad represents a left,top entity
+            the returned ones are then the ones to the left and above
+            </summary>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.Around9">
+            <summary>
+            Returns 8 surounding Quad of this quad + this quad as center [0]
+            </summary>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.Around49EX">
+            <summary>
+            Very dedicated use in Map Displays of 7x7 Tile Maps
+             (it returns essentially a 8x8 Tile Map)
+            Intended to return a Quadlist to lookup items for such a Map.
+            It would need to lookup items in 49 Quads to complete all on this Map.
+            
+            It returns however only 15 surounding Quads of this quad + this quad as center [0]
+            Instead of returning 49 quads it will reduce the zoom out by one level and return
+            the surounding ones + extending on the short side
+            results in an overflow of 15 original zoom quad areas 
+            but saves to scan 49 items (i.e. 34 less)
+            </summary>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="T:CoordLib.MercatorTiles.QuadLookup`1">
+            <summary>
+            Lookup tree for Quad tagged items
+            
+             The lookup is defined by the minimum and maximum zoom level and the branch limit
+             
+             Mimimum zoom omits traversing the first levels on the cost of searching the first
+             entry point by the number of items of this level (max - see comment below)
+             i.e. starting at L4 would result in a maximum of 256 entry points which need to 
+             be found by a linear albeit indexed search (Dictionary Key lookup)
+             
+             The tree will expand to a next level when the max number of leave items (branch limit) is exceeded
+             except if we have reached the maximum zoom, there all items will be stored regardless
+             of its count.
+             
+             Geo features are seldom distributed evenly accross the globe
+              so the tree will never be a balanced one
+              hence a deeper level than the anticipated max number of items
+              would suggest is needed in order to balance the linear search at 
+              the end element versus another level of depth
+            
+             Quads are base4 items
+             L1           4
+             L2          16
+             L3          64
+             L4         256
+             L5       1'024
+             L6       4'096
+             L7      16'384
+             L8      65'536
+             L9     262'144
+             L10  1'048'576
+             L11  4'194'304
+             L12 16'777'216
+             L13 67'108'864
+             Ln       4^n
+             
+            From testing the complete MSFS Aiport DB (~40'677 items Added and ~22'612 PartOf Querys at zoom 12 to find an Airport)
+            with a QLookup(3,11,  32) will reach maximum depth at L11 / Add:  0.68% PartOf: 0.53% - TOT 1.21% CPU time
+            with a QLookup(3,10,  64) will reach maximum depth at L10 / Add:  0.69% PartOf: 0.67% - TOT 1.36% CPU time
+            with a QLookup(3,10, 128) will reach maximum depth at L9  / Add:  0.63% PartOf: 0.98% - TOT 1.61% CPU time
+            with a QLookup(3,10, 256) will reach maximum depth at L9  / Add:  0.61% PartOf: 1.61% - TOT 2.22% CPU time
+            with a QLookup(3,10, 512) will reach maximum depth at L8  / Add:  0.43% PartOf: 2.28% - TOT 2.71% CPU time
+            with a QLookup(3,10,1024) will reach maximum depth at L7  / Add:  0.37% PartOf: 4.89% - TOT 5.26% CPU time
+            
+            ~450 kByte was allocated for the Lookup Tables 
+              each Item record contains a quad string of 22 chars + Airport reference
+              + Level Dictionary overhead
+            
+            </summary>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.QuadLookup`1.Count">
+            <summary>
+            Returns the number of items stored
+            </summary>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.QuadLookup`1.MaxLevel">
+            <summary>
+            Returns the maximum zoom level used
+            </summary>
+        </member>
+        <member name="T:CoordLib.MercatorTiles.QuadLookup`1.LookupItem">
+            <summary>
+            A lookup item
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadLookup`1.QLevel.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Create a Tree up to Max with Step increments to the next level
+             e.g. start 1, max 5, step 2 -> 1,3,5 
+            </summary>
+            <param name="thisZoom">Zoom for this level</param>
+            <param name="maxZoom">MaxZoom where content is stored</param>
+            <param name="branchLimit">Max number of items in intermediate branches (MaxZoom..4^MaxZoom)</param>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.QuadLookup`1.QLevel.Items">
+            <summary>
+            Return ALL items know to this Level
+            which includes all sublevels
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadLookup`1.QLevel.Add(CoordLib.MercatorTiles.Quad,`0)">
+            <summary>
+            Add an item based on a Quad
+            </summary>
+            <param name="quad">Quad tag</param>
+            <param name="item">The item to store</param>
+            <returns>The zoom level where the item was stored</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadLookup`1.QLevel.GetItemsWhichArePartOf(CoordLib.MercatorTiles.Quad)">
+            <summary>
+            Attempts to retrieve items that are part of the argument
+            Implies that the argument is at a lower or equal level than the maxZoom of the tree
+            </summary>
+            <param name="queryQ">A Quad, cannot be more detailed than the MaxZoom</param>
+            <returns>A list of items</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadLookup`1.QLevel.GetItemWhichIncludes(CoordLib.MercatorTiles.Quad)">
+            <summary>
+            Attempts to return an item where the argument is included
+            Implies that the argument is at a higher or equal zoom level than the maxZoom of the tree
+            </summary>
+            <param name="queryQ">A Quad, must be more detailed than the MaxZoom</param>
+            <returns>An Item that includes the query Quad or null</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadLookup`1.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Create a Tree from Min up to Max zoom levels
+            </summary>
+            <param name="startZoom">Zoom for this level (1..Projection.MaxZoom) </param>
+            <param name="maxZoom">MaxZoom where content is stored (1..Projection.MaxZoom)</param>
+            <param name="branchLimit">Max number of items in intermediate branches (MaxZoom..4^MaxZoom)</param>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadLookup`1.Add(CoordLib.MercatorTiles.Quad,`0)">
+            <summary>
+            Add an item based on a Quad
+            NOTE: the Quad depth (zoom level) must be >= MaxZoom of the tree - will throw an ArgumentException
+            </summary>
+            <param name="quad">Quad tag</param>
+            <param name="itemRef">The item to store, must be a class (ref only)</param>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadLookup`1.GetItemsWhichArePartOf(CoordLib.MercatorTiles.Quad)">
+            <summary>
+            Attempts to retrieve items that are part of the argument
+            Implies that the argument is at a lower or equal level than the maxZoom of the tree
+            </summary>
+            <param name="queryQ">A Quad, cannot be more detailed than the MaxZoom</param>
+            <returns>A list of items</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadLookup`1.GetItemWhichIncludes(CoordLib.MercatorTiles.Quad)">
+            <summary>
+            Attempts to return a list of items where the argument is included
+            Implies that the argument is at a higher or equal zoom level than the maxZoom of the tree
+            </summary>
+            <param name="queryQ">A Quad, must be more detailed than the MaxZoom</param>
+            <returns>An Item that includes the query Quad or null</returns>
+        </member>
         <member name="T:CoordLib.MercatorTiles.QuadOp">
             <summary>
-            Quad Tree Helper
+            Internal Quad Tree Helper based on:
+              Quad strings as in/output (quadKey)
+              Zoom is always ushort
+            
             Based on the Mercator Projection Grid with a Quad Square Tile of 256x256
             see also: https://docs.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
              
@@ -1531,7 +1845,7 @@
             <summary>
             Checks a Quad for validity
             </summary>
-            <param name="quad">A Quad string</param>
+            <param name="quadKey">A Quad string</param>
             <returns>True if valid</returns>
         </member>
         <member name="M:CoordLib.MercatorTiles.QuadOp.ZoomLevel(System.String)">
@@ -1544,30 +1858,30 @@
             Returns a reduced Quad at the desired zoom
             If reduction not possible it returns the argument
             </summary>
-            <param name="quad">A quad</param>
+            <param name="quadKey">A quadKey</param>
             <param name="zoom">Zoomlevel 1..23 </param>
             <returns>A Quad Key (empty if zoom=0)</returns>
         </member>
         <member name="M:CoordLib.MercatorTiles.QuadOp.LatLonToQuad(CoordLib.LatLon,System.UInt16)">
             <summary>
-            Returns a Quad as String
+            Converts a LatLon @zoom into a Quad and returns a QuadKey as String
             </summary>
             <param name="latLon">Coordinate</param>
             <param name="zoom">Zoomlevel</param>
-            <returns>A Quadkey as String</returns>
+            <returns>A QuadKey as String</returns>
         </member>
         <member name="M:CoordLib.MercatorTiles.QuadOp.LatLonToQuad(System.Double,System.Double,System.UInt16)">
             <summary>
-            Returns a Quad as String
+            Converts a Latitude, Longitude @zoom into a Quad and returns a QuadKey as String
             </summary>
             <param name="lat">Latitude</param>
             <param name="lon">Longitude</param>
             <param name="zoom">Zoomlevel</param>
-            <returns>A Quadkey as String</returns>
+            <returns>A QuadKey as String</returns>
         </member>
         <member name="M:CoordLib.MercatorTiles.QuadOp.TileXYToQuad(System.Drawing.Point,System.UInt16)">
             <summary>
-            Converts TileXY coordinates into a QuadKey at a specified level of detail.
+            Converts TileXY coordinates @zoom into a QuadKey at a specified level of detail.
             see also: https://docs.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
             </summary>
             <param name="tileXY">Tile XY coordinate.</param>
@@ -1575,7 +1889,7 @@
                 Level of detail, from 1 (lowest detail)
                 to 22 (highest detail).
             </param>
-            <returns>A string containing the QuadKey.</returns>
+            <returns>A QuadKey as String</returns>
         </member>
         <member name="M:CoordLib.MercatorTiles.QuadOp.HigherLevel(System.String)">
             <summary>
@@ -1621,30 +1935,105 @@
             <param name="quadKey">A Quad Key</param>
             <returns>A Quad Key</returns>
         </member>
-        <member name="M:CoordLib.MercatorTiles.QuadOp.Around(System.Drawing.Point,System.UInt16)">
+        <member name="M:CoordLib.MercatorTiles.QuadOp.Includes(System.String,System.String)">
+            <summary>
+            True if the argument Quad is included in this Quad
+            Implies that the argument is at the same or a higher zoom level
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.IsPartOf(System.String,System.String)">
+            <summary>
+            True if this Quad is part of the argument
+            Implies that the argument is at the same or a lower zoom level
+            </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.Around(System.String)">
             <summary>
             Returns 4 Quads that are the closest neighbours of the argument
+            assuming the argument represents a left,top entity
+            the returned ones are then the ones to the left and above
+            </summary>
+            <param name="quadKey">A QuadKey</param>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.Around4(System.Drawing.Point,System.UInt16)">
+            <summary>
+            Returns 4 Quads that are the closest neighbours of the argument
+            The selected quad around depend on the quadrant position of 
+              the pixel which marks the center of the area
             </summary>
             <param name="mapPixel">A MapPixel</param>
             <param name="zoom">Zoomlevel</param>
             <returns>Array of neighbours -includes the argument</returns>
         </member>
-        <member name="M:CoordLib.MercatorTiles.QuadOp.Around(CoordLib.LatLon,System.UInt16)">
+        <member name="M:CoordLib.MercatorTiles.QuadOp.Around4(CoordLib.LatLon,System.UInt16)">
             <summary>
             Returns 4 Quads that are the closest neighbours of the argument
+            The selected quad around depend on the quadrant position of 
+              the coordinate which marks the center of the area
             </summary>
             <param name="latLon">A LatLon</param>
             <param name="zoom">Zoomlevel</param>
             <returns>Array of neighbours -includes the argument</returns>
         </member>
-        <member name="M:CoordLib.MercatorTiles.QuadOp.Around(System.Double,System.Double,System.UInt16)">
+        <member name="M:CoordLib.MercatorTiles.QuadOp.Around4(System.Double,System.Double,System.UInt16)">
             <summary>
             Returns 4 Quads that are the closest neighbours of the argument
+            The selected quad around depend on the quadrant position of 
+              the coordinate which marks the center of the area
             </summary>
             <param name="lat">Latitude</param>
             <param name="lon">Longitude</param>
             <param name="zoom">Zoomlevel</param>
             <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.Around9(System.String)">
+            <summary>
+            Returns 8 surounding Quad of the argument + the argument as center [0]
+            </summary>
+            <param name="quadKey">A QuadKey at zoom</param>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.Around9(System.Drawing.Point,System.UInt16)">
+            <summary>
+            Returns 8 surounding Quad of the argument + the argument as center [0]
+            </summary>
+            <param name="mapPixel">A MapPixel</param>
+            <param name="zoom">Zoomlevel</param>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.Around9(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            Returns 8 surounding Quad of the argument + the argument as center [0]
+            </summary>
+            <param name="latLon">A LatLon</param>
+            <param name="zoom">Zoomlevel</param>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.Around9(System.Double,System.Double,System.UInt16)">
+            <summary>
+            Returns 8 surounding Quad of the argument + the argument as center [0]
+            </summary>
+            <param name="lat">Latitude</param>
+            <param name="lon">Longitude</param>
+            <param name="zoom">Zoomlevel</param>
+            <returns>Array of neighbours -includes the argument</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.Around49EX(System.String)">
+            <summary>
+            Very dedicated use in Map Displays of 7x7 Tile Maps
+             (it returns essentially a 8x8 Tile Map)
+            Intended to return a Quadlist to lookup items for such a Map.
+            It would need to lookup items in 49 Quads to complete all on this Map.
+            
+            It returns however only 15 surounding Quads of the argument + the argument as center [0]
+            Instead of returning 49 quads it will reduce the zoom out by one level and return
+            the surounding ones + extending on the short side
+            results in an overflow of 15 original zoom quad areas 
+            but saves to scan 49 items (i.e. 34 less)
+            </summary>
+            <param name="quadKey">A QuadKey at zoom</param>
+            <returns>Array of neighbours -includes the argument (16 quads @ zoom-1 level)</returns>
         </member>
         <member name="T:CoordLib.MercatorTiles.TileOp">
             <summary>
@@ -1659,12 +2048,18 @@
                              Height( pixels)   Resolution
                                               ( meters / pixel)
                    ..
-                   10         262,144         152.8741           1 : 577,791.71      ~40km^2
-                   11         524,288          76.4370           1 : 288,895.85      ~20km^2
-                   12       1,048,576          38.2185           1 : 144,447.93      ~10km^2
-                   13       2,097,152          19.1093           1 : 72,223.96        ~5km^2
-                   14       4,194,304           9.5546           1 : 36,111.98      ~2.5km^2
-                   15       8,388,608           4.7773           1 : 18,055.99     ~1.25km^2
+                    4           4,096        9783.9424           1 : 36,978,669.44   ~2,560km^2
+                    5           8,192        4891.9712           1 : 18,489,334.72   ~1,280km^2
+                    6          16,384        2445.9856           1 : 9,244,667.36      ~640km^2
+                    7          32,768        1222.9928           1 : 4,622,333.68      ~320km^2
+                    8          65,536         611.4964           1 : 2,311,166.84      ~160km^2
+                    9         131,072         305.7482           1 : 1,155,583.42       ~80km^2
+                   10         262,144         152.8741           1 : 577,791.71         ~40km^2
+                   11         524,288          76.4370           1 : 288,895.85         ~20km^2
+                   12       1,048,576          38.2185           1 : 144,447.93         ~10km^2
+                   13       2,097,152          19.1093           1 : 72,223.96           ~5km^2
+                   14       4,194,304           9.5546           1 : 36,111.98         ~2.5km^2
+                   15       8,388,608           4.7773           1 : 18,055.99        ~1.25km^2
                    
             </summary>
         </member>
@@ -1790,12 +2185,18 @@
                              Height( pixels)   Resolution
                                               ( meters / pixel)
                    ..
-                   10         262,144         152.8741           1 : 577,791.71      ~40km^2
-                   11         524,288          76.4370           1 : 288,895.85      ~20km^2
-                   12       1,048,576          38.2185           1 : 144,447.93      ~10km^2
-                   13       2,097,152          19.1093           1 : 72,223.96        ~5km^2
-                   14       4,194,304           9.5546           1 : 36,111.98      ~2.5km^2
-                   15       8,388,608           4.7773           1 : 18,055.99     ~1.25km^2
+                    4           4,096        9783.9424           1 : 36,978,669.44   ~2,560km^2
+                    5           8,192        4891.9712           1 : 18,489,334.72   ~1,280km^2
+                    6          16,384        2445.9856           1 : 9,244,667.36      ~640km^2
+                    7          32,768        1222.9928           1 : 4,622,333.68      ~320km^2
+                    8          65,536         611.4964           1 : 2,311,166.84      ~160km^2
+                    9         131,072         305.7482           1 : 1,155,583.42       ~80km^2
+                   10         262,144         152.8741           1 : 577,791.71         ~40km^2
+                   11         524,288          76.4370           1 : 288,895.85         ~20km^2
+                   12       1,048,576          38.2185           1 : 144,447.93         ~10km^2
+                   13       2,097,152          19.1093           1 : 72,223.96           ~5km^2
+                   14       4,194,304           9.5546           1 : 36,111.98         ~2.5km^2
+                   15       8,388,608           4.7773           1 : 18,055.99        ~1.25km^2
                    
             </summary>
         </member>
@@ -1883,10 +2284,16 @@
             Returns a Hashcode for this object
             </summary>
         </member>
-        <member name="M:CoordLib.MercatorTiles.TileXY.Offset(System.Int32,System.Int32)">
+        <member name="M:CoordLib.MercatorTiles.TileXY.Offset(System.Int32,System.Int32,System.UInt16)">
             <summary>
-            Translates this Tile by the specified amount
+            Translates this Tile by the specified amount, wraps around
             </summary>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.TileXY.Wrap(System.UInt16)">
+            <summary>
+            Wraps the Tile for the zoom level
+            </summary>
+            <param name="zoom">A zoom level</param>
         </member>
         <member name="P:CoordLib.MercatorTiles.TileXY.X">
             <summary>
@@ -1969,6 +2376,59 @@
             </summary>
             <param name="zoom"></param>
             <returns>A SizeF in meters</returns>
+        </member>
+        <member name="T:CoordLib.UTMGrid.UtmOp">
+            <summary>
+            UTM conversions
+            https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system
+            </summary>
+        </member>
+        <member name="M:CoordLib.UTMGrid.UtmOp.UtmZoneNo(System.Double,System.Double)">
+            <summary>
+            Returns the UTM Zone Number with Norway exceptions handled
+            </summary>
+            <param name="lat">Latitude</param>
+            <param name="lon">Longitude</param>
+            <returns>The ZoneNumber</returns>
+        </member>
+        <member name="M:CoordLib.UTMGrid.UtmOp.UtmZoneNo(CoordLib.LatLon)">
+            <summary>
+            Returns the UTM Zone Number with Norway exceptions handled
+            </summary>
+            <param name="latLon">A LatLon item</param>
+            <returns>The ZoneNumber</returns>
+        </member>
+        <member name="M:CoordLib.UTMGrid.UtmOp.UtmLetterDesignator(System.Double,System.Double)">
+            <summary>
+            Calculates the MGRS letter designator for the given latitude.
+            latitude The latitude in WGS84 to get the letter designator for.
+            The letter designator.
+            </summary>
+            <param name="lat">Latitude</param>
+            <param name="lon">Longitude</param>
+            <returns>The ZoneLetter</returns>
+        </member>
+        <member name="M:CoordLib.UTMGrid.UtmOp.UtmLetterDesignator(CoordLib.LatLon)">
+            <summary>
+            Calculates the MGRS letter designator for the given latitude.
+            latitude The latitude in WGS84 to get the letter designator for.
+            The letter designator.
+            </summary>
+            <param name="latLon">LatLon obj</param>
+            <returns>The ZoneLetter</returns>
+        </member>
+        <member name="M:CoordLib.UTMGrid.UtmOp.UtmZone(System.Double,System.Double)">
+            <summary>
+            Returns the UtmZone Designator NNC 
+            <param name="lat">Latitude</param>
+            <param name="lon">Longitude</param>
+            </summary>
+        </member>
+        <member name="M:CoordLib.UTMGrid.UtmOp.UtmZone(CoordLib.LatLon)">
+            <summary>
+            Returns the UtmZone Designator NNC 
+            <param name="latLon">LatLon obj</param>
+            </summary>
         </member>
     </members>
 </doc>

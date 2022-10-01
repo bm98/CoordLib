@@ -28,15 +28,19 @@ namespace CoordLib
   /// </summary>
   public class Dms
   {
+    /// <summary>
+    /// Non Breaking Space char
+    /// </summary>
+    public const string NbSpace = "\u202F";
 
     /// <summary>
     /// Separator character to be used to separate degrees, minutes, seconds, and cardinal directions.
     /// 
     /// Set to '\u202f' (narrow no-break space) for improved formatting.
-    ///      * @example
-    ///      * var p = new LatLon(51.2, 0.33);  // 51°12′00.0″N, 000°19′48.0″E
-    ///      *   Dms.separator = '\u202f';        // narrow no-break space
-    ///      *   var pʹ = new LatLon( 51.2, 0.33 ); // 51° 12′ 00.0″ N, 000° 19′ 48.0″ E
+    /// 
+    /// var p = new LatLon(51.2, 0.33);    N51°12′00.0″, E000°19′48.0″
+    /// Dms.separator = '\u202f';          narrow no-break space
+    /// var pʹ = new LatLon( 51.2, 0.33 ); N 51° 12′ 00.0″, E 000° 19′ 48.0″
     /// </summary>
     public static string Separator = " "; // BM changed default
 
@@ -48,17 +52,16 @@ namespace CoordLib
     /// suffixed by compass direction( NSEW). A variety of separators are accepted( eg 3° 37′ 09″W).
     /// Seconds and minutes may be omitted.
     /// 
-    ///      * @example
-    ///      * var lat = Dms.parseDMS("N51° 28' 40.12\"");
-    ///      *     var lon = Dms.parseDMS( "W0° 00' 5.31\"" );
-    ///      *     var p1 = new LatLon( lat, lon ); // N51.4778°, W0.0015°
+    ///  var lat = Dms.parseDMS("N51° 28' 40.12\"");
+    ///  var lon = Dms.parseDMS( "W0° 00' 5.31\"" );
+    ///  var p1 = new LatLon( lat, lon ); N51.4778°, W0.0015°
     /// </summary>
     /// <param name="dmsStr">{string|number} dmsStr - Degrees or deg/min/sec in variety of formats.</param>
     /// <returns>{number} Degrees as double number.</returns>
     public static double ParseDMS( string dmsStr )
     {
       // check for signed double degrees without NSEW, if so return it directly
-      if ( double.TryParse( dmsStr, out double dValue ) ) return dValue;
+      if (double.TryParse( dmsStr, out double dValue )) return dValue;
 
       // strip off any sign or compass dir'n & split out separate d/m/s
       // var dms = String( dmsStr ).trim( ).replace(/^-/, '' ).replace(/[NSEW]$/i, '' ).split(/[^0-9.,]+/);
@@ -66,14 +69,14 @@ namespace CoordLib
       dms = Regex.Replace( dms, @"^[NSEWnsew]", "" );
       string[] dmsA = Regex.Split( dms, @"[^0-9.,]+" );
       //if ( dms[dms.length - 1] == '' ) dms.splice( dms.length - 1 );  // from trailing symbol
-      if ( dmsA[dmsA.Length - 1] == "" ) {
+      if (dmsA[dmsA.Length - 1] == "") {
         Array.Resize( ref dmsA, dmsA.Length - 1 ); //dms.splice( dms.length - 1 );  // from trailing symbol
       }
-      if ( dmsA.Length == 0 ) return double.NaN; // NaN;
+      if (dmsA.Length == 0) return double.NaN; // NaN;
 
       // and convert to double degrees...
       double deg = 0;
-      switch ( dmsA.Length ) {
+      switch (dmsA.Length) {
         case 3:  // interpret 3-part result as d/m/s
           deg = double.Parse( dmsA[0] ) / 1 + double.Parse( dmsA[1] ) / 60 + double.Parse( dmsA[2] ) / 3600;
           break;
@@ -89,7 +92,7 @@ namespace CoordLib
         default:
           return double.NaN;
       }
-      if ( Regex.IsMatch( dmsStr.Trim( ), "^-|^[WSws]" ) )
+      if (Regex.IsMatch( dmsStr.Trim( ), "^-|^[WSws]" ))
         deg = -deg; // take '-', west and south as -ve
 
       return deg;
@@ -108,11 +111,11 @@ namespace CoordLib
     /// <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
     public static string ToDMS( double deg, bool lat = true, string format = "dms", int dPlaces = -1 )
     {
-      if ( deg == double.NaN ) return ""; // give up here if we can't make a number from deg
+      if (deg == double.NaN) return ""; // give up here if we can't make a number from deg
 
       // default values
-      if ( dPlaces == -1 ) {
-        switch ( format ) {
+      if (dPlaces == -1) {
+        switch (format) {
           case "d": case "deg": dPlaces = 4; break;
           case "dm": case "deg+min": dPlaces = 2; break;
           case "dms": case "deg+min+sec": dPlaces = 0; break;
@@ -124,12 +127,12 @@ namespace CoordLib
 
       string dms = "", d = "", m = "", s = "";
       double dN = 0, mN = 0, sN = 0;
-      string degFmt = lat?"00":"000";
-      switch ( format ) {
+      string degFmt = lat ? "00" : "000";
+      switch (format) {
         case "d":
         case "deg": {
             // round/right-pad degrees, left-pad with leading zeros (note may include doubles)
-            if ( dPlaces > 0 )
+            if (dPlaces > 0)
               d = Math.Round( deg, dPlaces ).ToString( degFmt + "." + "000000".Substring( 0, dPlaces ) );
             else
               d = Math.Round( deg, dPlaces ).ToString( degFmt );
@@ -140,10 +143,10 @@ namespace CoordLib
         case "dm":
         case "deg+min": {
             dN = Math.Floor( deg );
-            mN = Math.Round( ( ( deg * 60 ) % 60 ), dPlaces );// get component min & round/right-pad
-            if ( mN == 60 ) { mN = 0; dN++; }               // check for rounding up
+            mN = Math.Round( ((deg * 60) % 60), dPlaces );// get component min & round/right-pad
+            if (mN == 60) { mN = 0; dN++; }               // check for rounding up
             d = dN.ToString( degFmt );
-            if ( dPlaces > 0 )
+            if (dPlaces > 0)
               m = mN.ToString( "00." + "000000".Substring( 0, dPlaces ) );
             else
               m = mN.ToString( "00" );
@@ -154,13 +157,13 @@ namespace CoordLib
         case "dms":
         case "deg+min+sec": {
             dN = Math.Floor( deg );
-            mN = Math.Floor( ( deg * 60 ) % 60 );// get component min & round/right-pad
-            sN = Math.Round( ( deg * 3600 % 60 ), dPlaces );  // get component sec & round/right-pad
-            if ( sN == 60 ) { sN = 0; mN++; } // check for rounding up
-            if ( mN == 60 ) { mN = 0; dN++; } // check for rounding up
+            mN = Math.Floor( (deg * 60) % 60 );// get component min & round/right-pad
+            sN = Math.Round( (deg * 3600 % 60), dPlaces );  // get component sec & round/right-pad
+            if (sN == 60) { sN = 0; mN++; } // check for rounding up
+            if (mN == 60) { mN = 0; dN++; } // check for rounding up
             d = dN.ToString( degFmt );
             m = mN.ToString( "00" );
-            if ( dPlaces > 0 )
+            if (dPlaces > 0)
               s = sN.ToString( "00." + "000000".Substring( 0, dPlaces ) );
             else
               s = sN.ToString( "00" );
@@ -184,7 +187,7 @@ namespace CoordLib
     public static string ToLat( double deg, string format = "dms", int dPlaces = -1 )
     {
       var lat = ToDMS( deg, true, format, dPlaces );
-      return ( lat == "" ) ? "–" : ( ( deg < 0 ? 'S' : 'N' ) + lat );
+      return (lat == "") ? "–" : ((deg < 0 ? 'S' : 'N') + Separator + lat);
     }
 
 
@@ -198,7 +201,7 @@ namespace CoordLib
     public static string ToLon( double deg, string format = "dms", int dPlaces = -1 )
     {
       var lon = ToDMS( deg, false, format, dPlaces );
-      return ( lon == "" ) ? "–" : ( deg < 0 ? 'W' : 'E' ) + lon;
+      return (lon == "") ? "–" : (deg < 0 ? 'W' : 'E') + Separator + lon;
     }
 
 
@@ -211,9 +214,9 @@ namespace CoordLib
     /// <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
     public static string ToBrng( double deg, string format = "dms", int dPlaces = -1 )
     {
-      deg = ( deg + 360 ) % 360;  // normalise -ve values to 180°..360°
+      deg = Geo.Wrap360( deg );  // normalise -ve values to 180°..360°
       var brng = ToDMS( deg, false, format, dPlaces ); // use Longitude format 000 Deg
-      return ( brng == "" ) ? "–" : brng.Replace( "360", "0" );  // just in case rounding took us up to 360°!
+      return (brng == "") ? "–" : brng.Replace( "360", "0" ) + "°";  // just in case rounding took us up to 360°!
     }
 
 
@@ -229,14 +232,14 @@ namespace CoordLib
     public static string CompassPoint( double bearing, int precision = 3 )
     {
       // note precision could be extended to 4 for quarter-winds (eg NbNW), but I think they are little used
-      bearing = ( ( bearing % 360 ) + 360 ) % 360; // normalise to range 0..360°
+      bearing = ((bearing % 360) + 360) % 360; // normalise to range 0..360°
 
       var cardinals = new string[] {
           "N", "NNE", "NE", "ENE",
           "E", "ESE", "SE", "SSE",
           "S", "SSW", "SW", "WSW",
           "W", "WNW", "NW", "NNW" };
-      int n = (int)( 4 * Math.Pow( 2, precision - 1 ) ); // no of compass points at req’d precision (1=>4, 2=>8, 3=>16)
+      int n = (int)(4 * Math.Pow( 2, precision - 1 )); // no of compass points at req’d precision (1=>4, 2=>8, 3=>16)
       var cardinal = cardinals[(int)Math.Round( bearing * n / 360 ) % n * 16 / n];
 
       return cardinal;

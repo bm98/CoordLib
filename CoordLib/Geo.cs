@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using CoordLib.Extensions;
+
 namespace CoordLib
 {
   /// <summary>
@@ -68,7 +70,7 @@ namespace CoordLib
       // see mathforum.org/library/drmath/view/55417.html for derivation
       double φ1 = thisLat.ToRadians( );
       double φ2 = pointLat.ToRadians( );
-      double Δλ = ( pointLon - thisLon ).ToRadians( );
+      double Δλ = (pointLon - thisLon).ToRadians( );
       var y = Math.Sin( Δλ ) * Math.Cos( φ2 );
       var x = Math.Cos( φ1 ) * Math.Sin( φ2 ) -
               Math.Sin( φ1 ) * Math.Cos( φ2 ) * Math.Cos( Δλ );
@@ -112,12 +114,12 @@ namespace CoordLib
       double φ1 = thisLat.ToRadians( );
       double λ1 = thisLon.ToRadians( );
       double φ2 = pointLat.ToRadians( );
-      double Δλ = (double)( pointLon - thisLon ).ToRadians( );
+      double Δλ = (double)(pointLon - thisLon).ToRadians( );
 
       var Bx = Math.Cos( φ2 ) * Math.Cos( Δλ );
       var By = Math.Cos( φ2 ) * Math.Sin( Δλ );
 
-      var x = Math.Sqrt( ( Math.Cos( φ1 ) + Bx ) * ( Math.Cos( φ1 ) + Bx ) + By * By );
+      var x = Math.Sqrt( (Math.Cos( φ1 ) + Bx) * (Math.Cos( φ1 ) + Bx) + By * By );
       var y = Math.Sin( φ1 ) + Math.Sin( φ2 );
       var φ3 = Math.Atan2( y, x );
 
@@ -154,7 +156,7 @@ namespace CoordLib
           + Math.Cos( φ1 ) * Math.Cos( φ2 ) * Math.Sin( Δλ / 2 ) * Math.Sin( Δλ / 2 );
       var δ = 2 * Math.Atan2( Math.Sqrt( a ), Math.Sqrt( 1 - a ) );
 
-      var A = Math.Sin( ( 1 - fraction ) * δ ) / Math.Sin( δ );
+      var A = Math.Sin( (1 - fraction) * δ ) / Math.Sin( δ );
       var B = Math.Sin( fraction * δ ) / Math.Sin( δ );
 
       var x = A * cosφ1 * cosλ1 + B * cosφ2 * cosλ2;
@@ -230,12 +232,12 @@ namespace CoordLib
       // angular distance p1-p2
       var δ12 = 2 * Math.Asin( Math.Sqrt( Math.Sin( Δφ / 2 ) * Math.Sin( Δφ / 2 )
           + Math.Cos( φ1 ) * Math.Cos( φ2 ) * Math.Sin( Δλ / 2 ) * Math.Sin( Δλ / 2 ) ) );
-      if ( δ12 == 0 ) return null;
+      if (δ12 == 0) return null;
 
       // initial/final bearings between points
-      var θa = Math.Acos( ( Math.Sin( φ2 ) - Math.Sin( φ1 ) * Math.Cos( δ12 ) ) / ( Math.Sin( δ12 ) * Math.Cos( φ1 ) ) );
-      if ( double.IsNaN( θa ) ) θa = 0; // protect against rounding
-      var θb = Math.Acos( ( Math.Sin( φ1 ) - Math.Sin( φ2 ) * Math.Cos( δ12 ) ) / ( Math.Sin( δ12 ) * Math.Cos( φ2 ) ) );
+      var θa = Math.Acos( (Math.Sin( φ2 ) - Math.Sin( φ1 ) * Math.Cos( δ12 )) / (Math.Sin( δ12 ) * Math.Cos( φ1 )) );
+      if (double.IsNaN( θa )) θa = 0; // protect against rounding
+      var θb = Math.Acos( (Math.Sin( φ1 ) - Math.Sin( φ2 ) * Math.Cos( δ12 )) / (Math.Sin( δ12 ) * Math.Cos( φ2 )) );
 
       var θ12 = Math.Sin( λ2 - λ1 ) > 0 ? θa : 2 * Math.PI - θa;
       var θ21 = Math.Sin( λ2 - λ1 ) > 0 ? 2 * Math.PI - θb : θb;
@@ -243,8 +245,8 @@ namespace CoordLib
       var α1 = θ13 - θ12; // angle 2-1-3
       var α2 = θ21 - θ23; // angle 1-2-3
 
-      if ( Math.Sin( α1 ) == 0 && Math.Sin( α2 ) == 0 ) return null; // infinite intersections
-      if ( Math.Sin( α1 ) * Math.Sin( α2 ) < 0 ) return null;      // ambiguous intersection
+      if (Math.Sin( α1 ) == 0 && Math.Sin( α2 ) == 0) return null; // infinite intersections
+      if (Math.Sin( α1 ) * Math.Sin( α2 ) < 0) return null;      // ambiguous intersection
 
       var α3 = Math.Acos( -Math.Cos( α1 ) * Math.Cos( α2 ) + Math.Sin( α1 ) * Math.Sin( α2 ) * Math.Cos( δ12 ) );
       var δ13 = Math.Atan2( Math.Sin( δ12 ) * Math.Sin( α1 ) * Math.Sin( α2 ), Math.Cos( α2 ) + Math.Cos( α1 ) * Math.Cos( α3 ) );
@@ -274,7 +276,7 @@ namespace CoordLib
     {
       var δ13 = DistanceTo( pStartLat, pStartLon, thisLat, thisLon, radius ) / radius;
       var θ13 = BearingTo( pStartLat, pStartLon, thisLat, thisLon ).ToRadians( );
-      var θ12 = BearingTo(pStartLat, pStartLon, pEndLat, pEndLon).ToRadians( );
+      var θ12 = BearingTo( pStartLat, pStartLon, pEndLat, pEndLon ).ToRadians( );
 
       var δxt = Math.Asin( Math.Sin( δ13 ) * Math.Sin( θ13 - θ12 ) );
 
@@ -302,7 +304,7 @@ namespace CoordLib
     {
       var δ13 = DistanceTo( pStartLat, pStartLon, thisLat, thisLon, radius ) / radius;
       var θ13 = BearingTo( pStartLat, pStartLon, thisLat, thisLon ).ToRadians( );
-      var θ12 = BearingTo(pStartLat, pStartLon, pEndLat, pEndLon).ToRadians( );
+      var θ12 = BearingTo( pStartLat, pStartLon, pEndLat, pEndLon ).ToRadians( );
 
       var δxt = Math.Asin( Math.Sin( δ13 ) * Math.Sin( θ13 - θ12 ) );
 
@@ -360,7 +362,7 @@ namespace CoordLib
       var y = Math.Sin( φ1 ) * Math.Cos( φ2 ) * Math.Cos( φ ) * Math.Cos( Δλ ) - Math.Cos( φ1 ) * Math.Sin( φ2 ) * Math.Cos( φ );
       var z = Math.Cos( φ1 ) * Math.Cos( φ2 ) * Math.Sin( φ ) * Math.Sin( Δλ );
 
-      if ( z * z > x * x + y * y ) return null; // great circle doesn't reach latitude
+      if (z * z > x * x + y * y) return null; // great circle doesn't reach latitude
 
       var λm = Math.Atan2( -y, x );                  // longitude at max latitude
       var Δλi = Math.Acos( z / Math.Sqrt( x * x + y * y ) ); // Δλ from λm to intersection points
@@ -373,54 +375,48 @@ namespace CoordLib
 
     #region Constraint functions
 
-    /**
-     * Constrain degrees to range -90..+90 (for latitude); e.g. -91 => -89, 91 => 89.
-     *
-     * @private
-     * @param {number} degrees
-     * @returns degrees within range -90..+90.
-     */
+    /// <summary>
+    /// Constrain degrees to range -90..+90 (for latitude); e.g. -91 => -89, 91 => 89.
+    /// </summary>
+    /// <param name="degrees">Latitude degrees</param>
+    /// <returns>degrees within range -90..+90.</returns>
     public static double Wrap90( double degrees )
     {
-      if ( -90 <= degrees && degrees <= 90 ) return degrees; // avoid rounding due to arithmetic ops if within range
+      if (-90 <= degrees && degrees <= 90) return degrees; // avoid rounding due to arithmetic ops if within range
 
       // latitude wrapping requires a triangle wave function; a general triangle wave is
       //     f(x) = 4a/p ⋅ | (x-p/4)%p - p/2 | - a
       // where a = amplitude, p = period, % = modulo; however, JavaScript '%' is a remainder operator (same in C#)
       // not a modulo operator - for modulo, replace 'x%n' with '((x%n)+n)%n'
       double x = degrees, a = 90, p = 360;
-      return 4 * a / p * Math.Abs( ( ( ( x - p / 4 ) % p ) + p ) % p - p / 2 ) - a;
+      return 4 * a / p * Math.Abs( (((x - p / 4) % p) + p) % p - p / 2 ) - a;
     }
 
-    /**
-     * Constrain degrees to range -180..+180 (for longitude); e.g. -181 => 179, 181 => -179.
-     *
-     * @private
-     * @param {number} degrees
-     * @returns degrees within range -180..+180.
-     */
+    /// <summary>
+    /// Constrain degrees to range -180..+180 (for longitude); e.g. -181 => 179, 181 => -179.
+    /// </summary>
+    /// <param name="degrees">Longitude degrees</param>
+    /// <returns>degrees within range -180..+180.</returns>
     public static double Wrap180( double degrees )
     {
-      if ( -180 <= degrees && degrees <= 180 ) return degrees; // avoid rounding due to arithmetic ops if within range
+      if (-180 <= degrees && degrees <= 180) return degrees; // avoid rounding due to arithmetic ops if within range
 
       // longitude wrapping requires a sawtooth wave function; a general sawtooth wave is
       //     f(x) = (2ax/p - p/2) % p - a
       // where a = amplitude, p = period, % = modulo; however, JavaScript '%' is a remainder operator (same in C#)
       // not a modulo operator - for modulo, replace 'x%n' with '((x%n)+n)%n'
       double x = degrees, a = 180, p = 360;
-      return ( ( ( 2 * a * x / p - p / 2 ) % p ) + p ) % p - a;
+      return (((2 * a * x / p - p / 2) % p) + p) % p - a;
     }
 
-    /**
-     * Constrain degrees to range 0..360 (for bearings); e.g. -1 => 359, 361 => 1.
-     *
-     * @private
-     * @param {number} degrees
-     * @returns degrees within range 0..360.
-     */
+    /// <summary>
+    /// Constrain degrees to range 0..360 (for bearings); e.g. -1 => 359, 361 => 1.
+    /// </summary>
+    /// <param name="degrees">Compass degrees (360°)</param>
+    /// <returns>degrees within range 0..360.</returns>
     public static double Wrap360( double degrees )
     {
-      if ( 0 <= degrees && degrees < 360 ) return degrees; // avoid rounding due to arithmetic ops if within range
+      if (0 <= degrees && degrees < 360) return degrees; // avoid rounding due to arithmetic ops if within range
 
       // bearing wrapping requires a sawtooth wave function with a vertical offset equal to the
       // amplitude and a corresponding phase shift; this changes the general sawtooth wave function from
@@ -430,7 +426,7 @@ namespace CoordLib
       // where a = amplitude, p = period, % = modulo; however, JavaScript '%' is a remainder operator (same in C#)
       // not a modulo operator - for modulo, replace 'x%n' with '((x%n)+n)%n'
       double x = degrees, a = 180, p = 360;
-      return ( ( ( 2 * a * x / p ) % p ) + p ) % p;
+      return (((2 * a * x / p) % p) + p) % p;
     }
 
     #endregion

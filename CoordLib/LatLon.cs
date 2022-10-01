@@ -19,7 +19,7 @@ namespace CoordLib
   /// 
   /// Changed to Struct (Aug 2033/BM)
   /// </summary>
-  public struct LatLon
+  public struct LatLon : IEquatable<LatLon>, IComparable<LatLon>
   {
     /// <summary>
     /// Returns an Empty LatLon (Lat,Lon,Alt=NaN)
@@ -38,18 +38,19 @@ namespace CoordLib
     private double _lon;
 
     /// <summary>
-    /// Altitude metres above ellipsoid
+    /// Altitude above ellipsoid (meter preferred)
+    /// Is set to 0 if not provided
     /// </summary>
     private double _altitude;
 
     /// <summary>
     /// Latitude part
     /// </summary>
-    public double Lat { get => _lat; set => _lat = value; }
+    public double Lat { get => _lat; set => _lat = Geo.Wrap90( value ); }
     /// <summary>
     /// Longitude part
     /// </summary>
-    public double Lon { get => _lon; set => _lon = value; }
+    public double Lon { get => _lon; set => _lon = Geo.Wrap180( value ); }
 
     /// <summary>
     /// Altitude part metres above ellipsoid.
@@ -60,6 +61,11 @@ namespace CoordLib
     /// True if Lat or Lon are not assigned
     /// </summary>
     public bool IsEmpty => (double.IsNaN( _lat ) || double.IsNaN( _lon ));
+
+    /// <summary>
+    /// True if Alt is set (not NaN)
+    /// </summary>
+    public bool HasAltitude => !double.IsNaN( Altitude );
 
     /// <summary>
     /// Creates a LatLon point on the earth's surface at the specified latitude / longitude.
@@ -85,8 +91,8 @@ namespace CoordLib
     /// <param name="lon"></param>
     public LatLon( double lat, double lon )
     {
-      _lat = lat;
-      _lon = lon;
+      _lat = Geo.Wrap90( lat );
+      _lon = Geo.Wrap180( lon );
       _altitude = 0;
     }
 
@@ -98,8 +104,8 @@ namespace CoordLib
     /// <param name="alt">Altitude above the ellipsoid</param>
     public LatLon( double lat, double lon, double alt )
     {
-      _lat = lat;
-      _lon = lon;
+      _lat = Geo.Wrap90( lat );
+      _lon = Geo.Wrap180( lon );
       _altitude = alt;
     }
 
@@ -115,8 +121,8 @@ namespace CoordLib
       _altitude = 0;
       // lat / lon given?
       if (latLon?.Length > 1) {
-        _lat = latLon[0];
-        _lon = latLon[1];
+        _lat = Geo.Wrap90( latLon[0] );
+        _lon = Geo.Wrap180( latLon[1] );
         _altitude = 0;
       }
       // akt given?
@@ -132,11 +138,119 @@ namespace CoordLib
     /// <param name="other">LatLon to copy from</param>
     public LatLon( LatLon other )
     {
-      _lat = other.Lat;
-      _lon = other.Lon;
+      _lat = Geo.Wrap90( other.Lat );
+      _lon = Geo.Wrap180( other.Lon );
       _altitude = other.Altitude;
     }
 
+    /// <summary>
+    /// Equality of a LatLon (lat, lon, alt)
+    /// </summary>
+    public static bool operator ==( LatLon latLon, LatLon other )
+    {
+      return latLon.Equals( other ); // full check is done in Equals<LatLon>()
+    }
+    /// <summary>
+    /// Inequality of a LatLon (lat, lon, alt)
+    /// </summary>
+    public static bool operator !=( LatLon latLon, LatLon other )
+    {
+      return !latLon.Equals( other );
+    }
+
+    /// <summary>
+    /// Checks if another point is equal to ‘this’ point.
+    /// 
+    ///      * @example
+    ///      *   var p1 = new LatLon( 52.205, 0.119 );
+    ///      *   var p2 = new LatLon( 52.205, 0.119 );
+    ///      *   var equal = p1.equals( p2 ); // true
+    /// </summary>
+    /// <param name="other">{LatLon} point - Point to be compared against this point.</param>
+    /// <returns>{bool}   True if points are identical.</returns>
+    public bool Equals( LatLon other )
+    {
+      // NaN never equals with == !!
+
+      // Lat check
+      if (double.IsNaN( this.Lat )) {
+        if (!double.IsNaN( other.Lat )) return false;
+      }
+      else {
+        if (double.IsNaN( other.Lat )) return false;
+        if (this.Lat != other.Lat) return false;
+      }
+
+      // Lon check
+      if (double.IsNaN( this.Lon )) {
+        if (!double.IsNaN( other.Lon )) return false;
+      }
+      else {
+        if (double.IsNaN( other.Lon )) return false;
+        if (this.Lon != other.Lon) return false;
+      }
+
+      // Alt check
+      if (double.IsNaN( this.Altitude )) {
+        if (!double.IsNaN( other.Altitude )) return false;
+      }
+      else {
+        if (double.IsNaN( other.Altitude )) return false;
+        if (this.Altitude != other.Altitude) return false;
+      }
+      // must be the same...
+      return true;
+    }
+
+    /// <summary>
+    /// Indicates whether this instance and a specified object are equal.
+    /// </summary>
+    /// <param name="obj">An object</param>
+    public override bool Equals( object obj )
+    {
+      if (obj is LatLon latlon) {
+        return this.Equals( latlon );
+      }
+      return false;
+    }
+
+    /// <summary>
+    /// Returns the hash code for this instance
+    /// </summary>
+    public override int GetHashCode( )
+    {
+      return (Lat.GetHashCode( ) ^ Lon.GetHashCode( )) ^ Altitude.GetHashCode( );
+    }
+
+    /// <summary>
+    /// Compare this with another LatLon
+    /// Larger, Smaller decided on Latitude, then Longitude, then Altitude if set
+    /// If this or the other is empty it returns 0
+    /// </summary>
+    /// <param name="other">The other LatLon</param>
+    /// <returns>+1 if this is greater than the other,-1 if smaller and 0 if the same</returns>
+    public int CompareTo( LatLon other )
+    {
+      if (this.IsEmpty || other.IsEmpty) return 0;
+      if (this.Equals( other )) return 0;
+      // Latitude first
+      if (this.Lat > other.Lat) return 1;
+      if (this.Lat < other.Lat) return -1;
+      // then longitude
+      if (this.Lon > other.Lon) return 1;
+      if (this.Lon < other.Lon) return -1;
+      // then Altitude
+      if (double.IsNaN( other.Altitude )) {
+        return double.IsNaN( this.Altitude ) ? 0 : 1;
+      }
+      else if (double.IsNaN( this.Altitude )) {
+        return double.IsNaN( other.Altitude ) ? 0 : -1;
+      }
+      // neither Alt is NaN, compare them
+      if (this.Altitude > other.Altitude) return 1;
+      if (this.Altitude < other.Altitude) return -1;
+      return 0; // same - should be catched above anyway
+    }
 
     /// <summary>
     /// Returns the distance from ‘this’ point to destination point (using haversine formula).
@@ -198,7 +312,14 @@ namespace CoordLib
     /// <returns>{LatLon} Midpoint between this point and the supplied point.</returns>
     public LatLon MidpointTo( LatLon point )
     {
-      return new LatLon( Geo.MidpointTo( _lat, _lon, point.Lat, point.Lon ) );
+      var midLL = new LatLon( Geo.MidpointTo( _lat, _lon, point.Lat, point.Lon ) );
+      if (this.HasAltitude && point.HasAltitude) {
+        midLL.Altitude = (this.Altitude + point.Altitude) / 2.0;
+      }
+      else {
+        midLL.Altitude = double.NaN; // set to NaN if either of the two does not have an Altitude
+      }
+      return midLL;
     }
 
 
@@ -215,7 +336,14 @@ namespace CoordLib
     /// <returns>{LatLon} Intermediate point between this point and destination point.</returns>
     public LatLon IntermediatePointTo( LatLon point, double fraction )
     {
-      return new LatLon( Geo.IntermediatePointTo( _lat, _lon, point.Lat, point.Lon, fraction ) );
+      var fracLL = new LatLon( Geo.IntermediatePointTo( _lat, _lon, point.Lat, point.Lon, fraction ) );
+      if (this.HasAltitude && point.HasAltitude) {
+        fracLL.Altitude = this.Altitude + (point.Altitude - this.Altitude) * fraction;
+      }
+      else {
+        fracLL.Altitude = double.NaN; // set to NaN if either of the two don't have an Altitude
+      }
+      return fracLL;
     }
 
 
@@ -233,7 +361,10 @@ namespace CoordLib
     /// <returns>{LatLon} Destination point.</returns>
     public LatLon DestinationPoint( double distance, double bearing, double radius = ConvConsts.EarthRadiusM )
     {
-      return new LatLon( Geo.DestinationPoint( _lat, _lon, distance, bearing, radius ) );
+      var destLL = new LatLon( Geo.DestinationPoint( _lat, _lon, distance, bearing, radius ) ) {
+        Altitude = this.Altitude
+      };
+      return destLL;
     }
 
 
@@ -252,7 +383,24 @@ namespace CoordLib
     /// <returns>{LatLon|null} Destination point (null if no unique intersection defined).</returns>
     public static LatLon Intersection( LatLon p1, double brng1, LatLon p2, double brng2 )
     {
-      return new LatLon( Geo.Intersection( p1.Lat, p1.Lon, brng1, p2.Lat, p2.Lon, brng2 ) );
+      if (p1 == p2) return p1; // shortcut
+      if (p1.Lat == p2.Lat && p1.Lon == p2.Lon) {
+        var ret = p1;
+        if (p1.HasAltitude && p2.HasAltitude) {
+          // shortcut with identical coordinates
+          ret.Altitude = (p1.Altitude + p2.Altitude) / 2.0;
+        }
+        return p1;
+      }
+      // calculate
+      var isecLL = new LatLon( Geo.Intersection( p1.Lat, p1.Lon, brng1, p2.Lat, p2.Lon, brng2 ) );
+      if (p1.HasAltitude && p2.HasAltitude) {
+        // must calculate the fraction of the two pathlength to get an Altitude
+        var l1 = p1.DistanceTo( isecLL );
+        var l2 = p2.DistanceTo( isecLL );
+        isecLL.Altitude = p1.Altitude + (p2.Altitude - p1.Altitude) * (l1 / (l1 + l2));// potential Div0 if both length are 0 due to numeric issues
+      }
+      return isecLL;
     }
 
 
@@ -322,27 +470,7 @@ namespace CoordLib
     /// <returns>{Object|null} Object containing { lon1, lon2 } or null if given latitude not reached.</returns>
     public static double[] CrossingParallels( LatLon point1, LatLon point2, double latitude )
     {
-      return Geo.CrossingParallels( point1.Lat, point1.Lon, point2.Lat, point2.Lon, latitude );
-    }
-
-
-    /// <summary>
-    /// Checks if another point is equal to ‘this’ point.
-    /// 
-    ///      * @example
-    ///      *   var p1 = new LatLon( 52.205, 0.119 );
-    ///      *   var p2 = new LatLon( 52.205, 0.119 );
-    ///      *   var equal = p1.equals( p2 ); // true
-    /// </summary>
-    /// <param name="point">{LatLon} point - Point to be compared against this point.</param>
-    /// <returns>{bool}   True if points are identical.</returns>
-    public bool Equals( LatLon point )
-    {
-      if (_lat != point.Lat) return false;
-      if (_lon != point.Lon) return false;
-      if (_altitude != point.Altitude) return false;
-
-      return true;
+      return Geo.CrossingParallels( point1.Lat, point1.Lon, point2.Lat, point2.Lon, Geo.Wrap90( latitude ) );
     }
 
 
@@ -363,106 +491,6 @@ namespace CoordLib
     /// </summary>
     /// <returns>A string</returns>
     public override string ToString( ) => ToString( "dms", 0 );
-
-
-    #region UTM Zone
-
-    /// <summary>
-    /// Returns the UTM Zone Number with Norway exceptions handled
-    /// </summary>
-    /// <param name="ll">A LatLon item</param>
-    /// <returns>The ZoneNumber</returns>
-    private static int _utmZoneNo( LatLon ll )
-    {
-      int ZoneNumber = (int)Math.Floor( (ll.Lon + 180) / 6 ) + 1;
-
-      //Make sure the longitude 180 is in Zone 60
-      if (ll.Lon >= 180) {
-        ZoneNumber = 60;
-      }
-
-      // Special zone for Norway
-      if (ll.Lat >= 56 && ll.Lat < 64 && ll.Lon >= 3 && ll.Lon < 12) {
-        ZoneNumber = 32;
-      }
-
-      // Special zones for Svalbard
-      if (ll.Lat >= 72 && ll.Lat < 84) {
-        if (ll.Lon >= 0 && ll.Lon < 9) {
-          ZoneNumber = 31;
-        }
-        else if (ll.Lon >= 9 && ll.Lon < 21) {
-          ZoneNumber = 33;
-        }
-        else if (ll.Lon >= 21 && ll.Lon < 33) {
-          ZoneNumber = 35;
-        }
-        else if (ll.Lon >= 33 && ll.Lon < 42) {
-          ZoneNumber = 37;
-        }
-      }
-      return ZoneNumber;
-    }
-
-    /**
-     */
-    /// <summary>
-    /// Calculates the MGRS letter designator for the given latitude.
-    /// latitude The latitude in WGS84 to get the letter designator for.
-    /// The letter designator.
-    /// </summary>
-    /// <param name="latLon">LatLon obj</param>
-    /// <returns>The ZoneLetter</returns>
-    private static string _utmLetterDesignator( LatLon latLon )
-    {
-      if (latLon.Lat <= 84 && latLon.Lat >= 72) {
-        // the X band is 12 degrees high
-        return "X";
-      }
-      else if (latLon.Lat < 72 && latLon.Lat >= -80) {
-        // Latitude bands are lettered C through X, excluding I and O
-        var bandLetters = "CDEFGHJKLMNPQRSTUVWX";
-        var bandHeight = 8;
-        var minLatitude = -80;
-        int index = (int)Math.Floor( (latLon.Lat - minLatitude) / bandHeight );
-        return bandLetters.Substring( index, 1 );
-      }
-      else if (latLon.Lat > 84) {
-        if (latLon.Lon >= 0)
-          return "Z"; // East
-        else
-          return "Y"; // West
-      }
-      else if (latLon.Lat < -80) {
-        if (latLon.Lon >= 0)
-          return "B"; // East
-        else
-          return "A"; // West
-      }
-      return "Z";
-    }
-
-    /// <summary>
-    /// Returns the UtmZone Designator NNC 
-    /// </summary>
-    public string UtmZone {
-      get {
-        return $"{_utmZoneNo( this ):00}{_utmLetterDesignator( this )}";
-      }
-    }
-
-    /// <summary>
-    /// Returns the UTM Longitude Zone Number
-    /// </summary>
-    public int UtmZoneNumber => _utmZoneNo( this );
-
-    /// <summary>
-    /// Returns the UTM Latitude Zone Letter
-    /// </summary>
-    public string UtmZoneLetter => _utmLetterDesignator( this );
-
-
-    #endregion
 
   }
 

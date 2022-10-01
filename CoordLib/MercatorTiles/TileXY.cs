@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
+using CoordLib.Extensions;
+
 namespace CoordLib.MercatorTiles
 {
   /// <summary>
@@ -30,12 +32,18 @@ namespace CoordLib.MercatorTiles
   ///                  Height( pixels)   Resolution
   ///                                   ( meters / pixel)
   ///        ..
-  ///        10         262,144         152.8741           1 : 577,791.71      ~40km^2
-  ///        11         524,288          76.4370           1 : 288,895.85      ~20km^2
-  ///        12       1,048,576          38.2185           1 : 144,447.93      ~10km^2
-  ///        13       2,097,152          19.1093           1 : 72,223.96        ~5km^2
-  ///        14       4,194,304           9.5546           1 : 36,111.98      ~2.5km^2
-  ///        15       8,388,608           4.7773           1 : 18,055.99     ~1.25km^2
+  ///         4           4,096        9783.9424           1 : 36,978,669.44   ~2,560km^2
+  ///         5           8,192        4891.9712           1 : 18,489,334.72   ~1,280km^2
+  ///         6          16,384        2445.9856           1 : 9,244,667.36      ~640km^2
+  ///         7          32,768        1222.9928           1 : 4,622,333.68      ~320km^2
+  ///         8          65,536         611.4964           1 : 2,311,166.84      ~160km^2
+  ///         9         131,072         305.7482           1 : 1,155,583.42       ~80km^2
+  ///        10         262,144         152.8741           1 : 577,791.71         ~40km^2
+  ///        11         524,288          76.4370           1 : 288,895.85         ~20km^2
+  ///        12       1,048,576          38.2185           1 : 144,447.93         ~10km^2
+  ///        13       2,097,152          19.1093           1 : 72,223.96           ~5km^2
+  ///        14       4,194,304           9.5546           1 : 36,111.98         ~2.5km^2
+  ///        15       8,388,608           4.7773           1 : 18,055.99        ~1.25km^2
   ///        
   /// </summary>
   public struct TileXY
@@ -77,7 +85,7 @@ namespace CoordLib.MercatorTiles
     /// <param name="lon,">Longitude</param>
     /// <param name="zoom">A zoomlevel</param>
     /// <returns>A Quadrant</returns>
-    public static TileQuadrant QuadrantFromLatLon( double lat, double lon, ushort zoom ) => QuadrantFromLatLon(new LatLon(lat,lon), zoom);
+    public static TileQuadrant QuadrantFromLatLon( double lat, double lon, ushort zoom ) => QuadrantFromLatLon( new LatLon( lat, lon ), zoom );
 
     /// <summary>
     /// cTor: From X,Y (defaults to 0/0)
@@ -139,10 +147,25 @@ namespace CoordLib.MercatorTiles
     }
 
     /// <summary>
-    /// Translates this Tile by the specified amount
+    /// Translates this Tile by the specified amount, wraps around
     /// </summary>
-    public void Offset( int dx, int dy ) => _tileXY.Offset( dx, dy );
+    public void Offset( int dx, int dy, ushort zoom )
+    {
+      // this may over, under cut the XY coordinates
+      _tileXY.Offset( dx, dy );
+      this.Wrap( zoom); // so wrap if needed
+    }
 
+    /// <summary>
+    /// Wraps the Tile for the zoom level
+    /// </summary>
+    /// <param name="zoom">A zoom level</param>
+    public void Wrap( ushort zoom )
+    {
+      var dim = Projection.MapSizeTileXY( zoom );
+      _tileXY.X = (_tileXY.X + dim.Width) % dim.Width;
+      _tileXY.Y = (_tileXY.Y + dim.Height) % dim.Height;
+    }
 
     /// <summary>
     /// The tiles X value

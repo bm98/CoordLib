@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
+using CoordLib.Extensions;
+
 namespace CoordLib.MercatorTiles
 {
   /// <summary>

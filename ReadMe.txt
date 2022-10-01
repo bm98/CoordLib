@@ -1,5 +1,5 @@
-CoordLib V 1.2 - Build 10
-(c) M. Burri - 20-Aug-2022
+CoordLib V 1.2 - Build 15
+(c) M. Burri - 04-Sep-2022
 
 Contains files:
 
@@ -14,6 +14,10 @@ Scanned for viruses before packing...
 github@burri-web.org
 
 Changelog:
+
+V 1.3:
+-Add Altitude calculations for LatLons (where appropriate)
+-Add Extensions (by: Using LatLon.Extensions;)
 
 V 1.2:
 -Add Mercator Tile Projection MapPixel, TileXY, and Quad

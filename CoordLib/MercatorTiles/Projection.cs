@@ -3,21 +3,53 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
+using CoordLib.Extensions;
+
 namespace CoordLib.MercatorTiles
 {
   /// <summary>
-  /// Mercator Tile Projection base items
+  /// Web Mercator projection  for Tile based items
+  /// 
+  /// The projection covers the Earth from −180° to 180° longitude, and 85.05° north and south. 
+  /// 
+  /// https://en.wikipedia.org/wiki/Web_Mercator_projection
+  /// 
+  /// PROJCRS["WGS 84 / Pseudo-Mercator",
+  ///    BASEGEOGCRS["WGS 84",
+  ///        ENSEMBLE["World Geodetic System 1984 ensemble",
+  ///            MEMBER["World Geodetic System 1984 (Transit)", ID["EPSG",1166]],
+  ///            MEMBER["World Geodetic System 1984 (G730)",    ID["EPSG",1152]],
+  ///            MEMBER["World Geodetic System 1984 (G873)",    ID["EPSG",1153]],
+  ///            MEMBER["World Geodetic System 1984 (G1150)",   ID["EPSG",1154]],
+  ///            MEMBER["World Geodetic System 1984 (G1674)",   ID["EPSG",1155]],
+  ///            MEMBER["World Geodetic System 1984 (G1762)",   ID["EPSG",1156]],
+  ///            MEMBER["World Geodetic System 1984 (G2139)",   ID["EPSG",1309]],
+  ///            ELLIPSOID["WGS 84", 6378137, 298.257223563, LENGTHUNIT["metre", 1, ID["EPSG",9001]], ID["EPSG",7030]],
+  ///            ENSEMBLEACCURACY[2], ID["EPSG",6326]],
+  ///        ID["EPSG",4326]],
+  ///    CONVERSION["Popular Visualisation Pseudo-Mercator",
+  ///        METHOD["Popular Visualisation Pseudo Mercator", ID["EPSG",1024]],
+  ///        PARAMETER["Latitude of natural origin",  0, ANGLEUNIT["degree", 0.0174532925199433, ID["EPSG",9102]], ID["EPSG",8801]],
+  ///        PARAMETER["Longitude of natural origin", 0, ANGLEUNIT["degree", 0.0174532925199433, ID["EPSG",9102]], ID["EPSG",8802]],
+  ///        PARAMETER["False easting",               0, LENGTHUNIT["metre", 1,                  ID["EPSG",9001]], ID["EPSG",8806]],
+  ///        PARAMETER["False northing",              0, LENGTHUNIT["metre", 1,                  ID["EPSG",9001]], ID["EPSG",8807]],
+  ///        ID["EPSG",3856]],
+  ///    CS[Cartesian, 2, ID["EPSG",4499]],
+  ///    AXIS["Easting (X)", east],
+  ///    AXIS["Northing (Y)", north],
+  ///    LENGTHUNIT["metre", 1, ID["EPSG",9001]],
+  ///    ID["EPSG",3857]]
   /// </summary>
   public static class Projection
   {
     /// <summary>
     /// Minimum Latitude (limited around the S-Pole)
     /// </summary>
-    public static readonly double MinLatitude = -85.05112878; // limit around the Pole
+    public static readonly double MinLatitude = -85.05112878; // limit around the Pole using the transformation at 0/0 (inv)
     /// <summary>
     /// Maximum Latitude (limited around the N-Pole)
     /// </summary>
-    public static readonly double MaxLatitude = 85.05112878;  // limit around the Pole
+    public static readonly double MaxLatitude = 85.05112878;  // limit around the Pole using the transformation at 0/0 
     /// <summary>
     /// Minimum Longitude
     /// </summary>
@@ -34,7 +66,7 @@ namespace CoordLib.MercatorTiles
     /// <summary>
     /// Maximum ZoomLevel
     /// </summary>
-    public static ushort MaxZoom = 22; // 23 will not fit the integer anymore for Mappixels
+    public static ushort MaxZoom = 22; // using 22 here as 23 will not fit the integer anymore for Mappixels size
 
 
     /// <summary>
@@ -124,8 +156,8 @@ namespace CoordLib.MercatorTiles
     {
       var ret = Point.Empty;
 
-      lat = lat.Clip( MinLatitude, MaxLatitude );
-      lon = lon.Clip( MinLongitude, MaxLongitude );
+      lat = Geo.Wrap90( lat ).Clip( MinLatitude, MaxLatitude );
+      lon = Geo.Wrap180( lon ).Clip( MinLongitude, MaxLongitude );
 
       // how much x (0..1) related to the 360° full scale
       double x = (lon + 180d) / 360d;

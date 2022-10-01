@@ -3,12 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>Coordinate Library; derived from
-https://github.com/chrisveness/geodesy</Description>
+https://github.com/chrisveness/geodesy
+plus Mercator projection with Tile, Pixel and Quad types</Description>
     <Copyright>2022 M.Burri</Copyright>
-    <AssemblyVersion>1.2.0.10</AssemblyVersion>
-    <FileVersion>1.2.0.10</FileVersion>
+    <AssemblyVersion>1.3.0.16</AssemblyVersion>
+    <FileVersion>1.3.0.16</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.2.0</Version>
+    <Version>1.3.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
