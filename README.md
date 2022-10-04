@@ -14,7 +14,7 @@ https://github.com/chrisveness/geodesy
 
 .Net Standard 2.0 Library DLL
 
-Built with VisualStudio 2019 Community free version
+Built with VisualStudio 2022 Community free version
 
 
 

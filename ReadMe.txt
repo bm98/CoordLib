@@ -1,5 +1,5 @@
-CoordLib V 1.2 - Build 15
-(c) M. Burri - 04-Sep-2022
+CoordLib V 1.3 - Build 16
+(c) M. Burri - 04-Oct-2022
 
 Contains files:
 
@@ -14,6 +14,9 @@ Scanned for viruses before packing...
 github@burri-web.org
 
 Changelog:
+
+V 1.3:
+- Update to use Visual Studio 2022 Community Edition
 
 V 1.3:
 -Add Altitude calculations for LatLons (where appropriate)

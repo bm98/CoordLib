@@ -614,6 +614,15 @@
             Returns the hash code for this instance
             </summary>
         </member>
+        <member name="M:CoordLib.LatLon.CompareTo(CoordLib.LatLon)">
+            <summary>
+            Compare this with another LatLon
+            Larger, Smaller decided on Latitude, then Longitude, then Altitude if set
+            If this or the other is empty it returns 0
+            </summary>
+            <param name="other">The other LatLon</param>
+            <returns>+1 if this is greater than the other,-1 if smaller and 0 if the same</returns>
+        </member>
         <member name="M:CoordLib.LatLon.DistanceTo(CoordLib.LatLon,System.Double)">
             <summary>
             Returns the distance from ‘this’ point to destination point (using haversine formula).
