@@ -7,6 +7,11 @@ namespace CoordLib.UTMGrid
   /// <summary>
   /// UTM conversions
   /// https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system
+  /// 
+  /// The UTM system divides the Earth into 60 zones, each 6° of longitude in width.
+  /// Each zone is segmented into 20 latitude Bands. Each latitude band is 8 degrees high,
+  ///  and is lettered starting from "C" at 80°S, increasing up the English alphabet until "X", 
+  ///  omitting the letters "I" and "O" 
   /// </summary>
   internal static class UtmOp
   {
@@ -129,6 +134,75 @@ namespace CoordLib.UTMGrid
     public static string UtmZone( LatLon latLon )
     {
       return UtmZone( latLon.Lat, latLon.Lon );
+    }
+
+    /// <summary>
+    /// UTM Zone list
+    /// </summary>
+    public static List<int> UTM_ZoneList = new List<int>( ) {
+      1,2,3,4,5,6,7,8,9,10,
+      11,12,13,14,15,16,17,18,19,20,
+      21,22,23,24,25,26,27,28,29,30,
+      31,32,33,34,35,36,37,38,39,40,
+      41,42,43,44,45,46,47,48,49,50,
+      51,52,53,54,55,56,57,58,59,60,
+    };
+
+    /// <summary>
+    /// MGRS Band Letter List
+    /// </summary>
+    public static List<string> UTM_BandList = new List<string>( ) {
+      "A","B",
+      "C","D","E","F","G","H","J","K","L","M","N","P","Q","R","S","T","U","V","W","X",
+      "Y","Z",
+    };
+
+    /// <summary>
+    /// Returns the center coordinate of an UTM Cell
+    ///   given the Zone and the Band
+    /// </summary>
+    /// <param name="utmZone">The Zone number</param>
+    /// <param name="utmBand">The Band letter</param>
+    /// <returns>The center coordinate</returns>
+    public static LatLon UTMCellCenterCoord( int utmZone, string utmBand )
+    {
+      // sanity
+      if (!UTM_ZoneList.Contains( utmZone )) return LatLon.Empty;
+      if (!UTM_BandList.Contains( utmBand )) return LatLon.Empty;
+
+      // calc center
+      double lon = -180.0 + utmZone * 6.0 - 3.0;
+      // Special zones will not taken care of as the center cannot be calculated in reverse
+
+      double lat = 0.0;
+      if (utmBand == "Z") {
+        // north of 84 East
+        lat = 84 + 3;
+      }
+      else if (utmBand == "Y") {
+        // north of 84 West
+        lat = 84 + 3;
+      }
+      else if (utmBand == "X") {
+        // the X band is 12 degrees high 72..84
+        lat = 72 + 6;
+      }
+      else if (utmBand == "B") {
+        // the X band is 10 degrees high -80..-90 East
+        lat = -80 - 5;
+      }
+      else if (utmBand == "A") {
+        // the X band is 10 degrees high -80..-90 West
+        lat = -80 - 5;
+      }
+      else {
+        // regular bands
+        var bandLetters = "CDEFGHJKLMNPQRSTUVWX";
+        int mult = bandLetters.IndexOf(utmBand); // 0...
+        lat = -80 + mult * 8 + 4; // center of the band
+      }
+
+      return new LatLon( lat, lon );
     }
 
 

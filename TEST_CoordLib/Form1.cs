@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 using CoordLib;
 using CoordLib.MercatorTiles;
+using CoordLib.Extensions;
 
 namespace TEST_CoordLib
 {
@@ -91,6 +92,15 @@ namespace TEST_CoordLib
       if (latLon != latLon1) {
         RTB.Text = "INEQUALITY MATCH";
       }
+    }
+
+
+    private void btMagVar_Click( object sender, EventArgs e )
+    {
+      lblMVresult.Text = CoordLib.WMM.MagVarEx.MagFromTrueBearing( double.Parse( txMVbearing.Text ), new LatLon( 46.5, 7.25 ), cbxUseTable.Checked ).ToString( );
+
+//      lblMVresult.Text = CoordLib.WMM.MagVarEx.MagVar_deg( new LatLon( 80, 0 ), false ).ToString( );
+
     }
   }
 }

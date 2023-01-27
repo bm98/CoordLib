@@ -32,6 +32,10 @@ namespace TEST_CoordLib
       this.btLookup1 = new System.Windows.Forms.Button();
       this.btLookup2 = new System.Windows.Forms.Button();
       this.button1 = new System.Windows.Forms.Button();
+      this.btMagVar = new System.Windows.Forms.Button();
+      this.txMVbearing = new System.Windows.Forms.TextBox();
+      this.lblMVresult = new System.Windows.Forms.Label();
+      this.cbxUseTable = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // RTB
@@ -73,11 +77,52 @@ namespace TEST_CoordLib
       this.button1.UseVisualStyleBackColor = true;
       this.button1.Click += new System.EventHandler(this.button1_Click);
       // 
+      // btMagVar
+      // 
+      this.btMagVar.Location = new System.Drawing.Point(446, 137);
+      this.btMagVar.Name = "btMagVar";
+      this.btMagVar.Size = new System.Drawing.Size(85, 32);
+      this.btMagVar.TabIndex = 4;
+      this.btMagVar.Text = "Calc MagVar";
+      this.btMagVar.UseVisualStyleBackColor = true;
+      this.btMagVar.Click += new System.EventHandler(this.btMagVar_Click);
+      // 
+      // txMVbearing
+      // 
+      this.txMVbearing.Location = new System.Drawing.Point(446, 90);
+      this.txMVbearing.Name = "txMVbearing";
+      this.txMVbearing.Size = new System.Drawing.Size(106, 20);
+      this.txMVbearing.TabIndex = 5;
+      this.txMVbearing.Text = "180";
+      // 
+      // lblMVresult
+      // 
+      this.lblMVresult.AutoSize = true;
+      this.lblMVresult.Location = new System.Drawing.Point(452, 182);
+      this.lblMVresult.Name = "lblMVresult";
+      this.lblMVresult.Size = new System.Drawing.Size(35, 13);
+      this.lblMVresult.TabIndex = 6;
+      this.lblMVresult.Text = "label1";
+      // 
+      // cbxUseTable
+      // 
+      this.cbxUseTable.AutoSize = true;
+      this.cbxUseTable.Location = new System.Drawing.Point(446, 116);
+      this.cbxUseTable.Name = "cbxUseTable";
+      this.cbxUseTable.Size = new System.Drawing.Size(98, 17);
+      this.cbxUseTable.TabIndex = 7;
+      this.cbxUseTable.Text = "Use UTM table";
+      this.cbxUseTable.UseVisualStyleBackColor = true;
+      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(396, 779);
+      this.ClientSize = new System.Drawing.Size(649, 779);
+      this.Controls.Add(this.cbxUseTable);
+      this.Controls.Add(this.lblMVresult);
+      this.Controls.Add(this.txMVbearing);
+      this.Controls.Add(this.btMagVar);
       this.Controls.Add(this.button1);
       this.Controls.Add(this.btLookup2);
       this.Controls.Add(this.btLookup1);
@@ -85,6 +130,7 @@ namespace TEST_CoordLib
       this.Name = "Form1";
       this.Text = "Form1";
       this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 
@@ -94,6 +140,10 @@ namespace TEST_CoordLib
     private System.Windows.Forms.Button btLookup1;
     private System.Windows.Forms.Button btLookup2;
     private System.Windows.Forms.Button button1;
+    private System.Windows.Forms.Button btMagVar;
+    private System.Windows.Forms.TextBox txMVbearing;
+    private System.Windows.Forms.Label lblMVresult;
+    private System.Windows.Forms.CheckBox cbxUseTable;
   }
 }
 

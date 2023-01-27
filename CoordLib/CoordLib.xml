@@ -321,6 +321,19 @@
             Returns the UTM Latitude Zone Letter
             </summary>
         </member>
+        <member name="M:CoordLib.Extensions.Extensions.MagVar_deg(CoordLib.LatLon)">
+            <summary>
+            Returns the Magnetic Variation (declinattion) at this location 
+            using WMM2020 (valid 2020..2025)
+            </summary>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.MagVarViaUTM_deg(CoordLib.LatLon)">
+            <summary>
+            Returns the Magnetic Variation (declinattion) at this location 
+            using the UTM Lookup table
+            using WMM2020 (valid 2020..2025)
+            </summary>
+        </member>
         <member name="T:CoordLib.Geo">
             <summary>
             Geodetic functions
@@ -2390,6 +2403,11 @@
             <summary>
             UTM conversions
             https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system
+            
+            The UTM system divides the Earth into 60 zones, each 6° of longitude in width.
+            Each zone is segmented into 20 latitude Bands. Each latitude band is 8 degrees high,
+             and is lettered starting from "C" at 80°S, increasing up the English alphabet until "X", 
+             omitting the letters "I" and "O" 
             </summary>
         </member>
         <member name="M:CoordLib.UTMGrid.UtmOp.UtmZoneNo(System.Double,System.Double)">
@@ -2438,6 +2456,173 @@
             Returns the UtmZone Designator NNC 
             <param name="latLon">LatLon obj</param>
             </summary>
+        </member>
+        <member name="F:CoordLib.UTMGrid.UtmOp.UTM_ZoneList">
+            <summary>
+            UTM Zone list
+            </summary>
+        </member>
+        <member name="F:CoordLib.UTMGrid.UtmOp.UTM_BandList">
+            <summary>
+            MGRS Band Letter List
+            </summary>
+        </member>
+        <member name="M:CoordLib.UTMGrid.UtmOp.UTMCellCenterCoord(System.Int32,System.String)">
+            <summary>
+            Returns the center coordinate of an UTM Cell
+              given the Zone and the Band
+            </summary>
+            <param name="utmZone">The Zone number</param>
+            <param name="utmBand">The Band letter</param>
+            <returns>The center coordinate</returns>
+        </member>
+        <member name="T:CoordLib.WMM.MagVar">
+            <summary>
+            Module to calculate magnetic variation and field given position,
+            altitude, and date
+             Implements the NIMA( formerly DMA ) WMM and IGRF models
+             
+              ** Copyright (C) 2000  Edward A Williams
+              ** C# Port by Michael Coyle
+              
+            </summary>
+        </member>
+        <member name="M:CoordLib.WMM.MagVar.deg_to_rad(System.Double)">
+            <summary>
+            Convert degrees to radians
+            </summary>
+            <param name="deg">A deg number</param>
+            <returns>Radians</returns>
+        </member>
+        <member name="M:CoordLib.WMM.MagVar.rad_to_deg(System.Double)">
+            <summary>
+            Convert radians to degrees
+            </summary>
+            <param name="rad">A radian</param>
+            <returns>Degree</returns>
+        </member>
+        <member name="M:CoordLib.WMM.MagVar.yymmdd_to_julian_days(System.DateTime)">
+            <summary>
+            Convert to a Julian Date (year range is 1950..2049)
+            </summary>
+            <param name="dateTime">A Date</param>
+            <returns>A Julian Date</returns>
+        </member>
+        <member name="M:CoordLib.WMM.MagVar.yymmdd_to_julian_days(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Convert to a Julian Date
+              Year 50..99 -> 1950 .. 1999
+              Year 00..49 -> 2000 .. 2049
+            </summary>
+            <param name="yy"></param>
+            <param name="mm"></param>
+            <param name="dd"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CoordLib.WMM.MagVar.SGMagVar(System.Double,System.Double,System.Double,System.DateTime,System.Int32,System.Double[])">
+            <summary>
+            return variation( in radians) given: 
+             geodetic latitude( radians), longitude( radians), height( km), (Julian) date,
+             
+             model(1985 za WMM85, 1990 za WMM90, 1995 za WMM95, 2000 za WMM2000, 2005 za WMM2005, 2010 za WMM2010, 2015 za WWM2015, 2020 WMM2020)
+             model other than the above uses the latest one (i.e. -1)
+             
+             N and E lat and long are positive, S and W negative
+            
+             field needs to be double[6] in order to be filled and returned
+             
+            </summary>
+            <param name="lat_deg">latitude in radians</param>
+            <param name="lon_deg">longitude in radians</param>
+            <param name="h_km">altitude in km</param>
+            <param name="date">A Date</param>
+            <param name="model">model to use: 1985 .. 2020 5y incr.</param>
+            <param name="field"></param>
+            <returns>Magnetic variation in radians</returns>
+        </member>
+        <member name="M:CoordLib.WMM.MagVar.SGMagVar(System.Double,System.Double,System.Double,System.Int64,System.Int32,System.Double[])">
+            <summary>
+            return variation( in radians) given: 
+             geodetic latitude( radians), longitude( radians), height( km), (Julian) date,
+             
+             model(1985 za WMM85, 1990 za WMM90, 1995 za WMM95, 2000 za WMM2000, 2005 za WMM2005, 2010 za WMM2010, 2015 za WWM2015, 2020 WMM2020)
+             model other than the above uses the latest one (i.e. -1)
+             
+             N and E lat and long are positive, S and W negative
+            
+             field needs to be double[6] in order to be filled and returned
+             
+            </summary>
+            <param name="lat_rad">latitude in radians</param>
+            <param name="lon_rad">longitude in radians</param>
+            <param name="h_km">altitude in km</param>
+            <param name="dat">julian date</param>
+            <param name="model">model to use: 1985 .. 2020 5y incr.</param>
+            <param name="field"></param>
+            <returns>Magnetic variation in radians</returns>
+        </member>
+        <member name="T:CoordLib.WMM.MagVarEx">
+            <summary>
+            Tooling to use the WMM library part
+            All calculations are done at MagVar at 3km height
+              
+            Extra MagVar Lookup Tables using the UTM Grid which might be faster than calculation
+            but calculation is rather fast...
+            </summary>
+        </member>
+        <member name="M:CoordLib.WMM.MagVarEx.#cctor">
+            <summary>
+            static cTor:
+            </summary>
+        </member>
+        <member name="M:CoordLib.WMM.MagVarEx.MagVar_rad(System.Int32,System.String)">
+            <summary>
+            Returns the MagVar for the center of the UTM Cell at 3km Height
+            </summary>
+            <param name="utmZone">An UTM Zone Number</param>
+            <param name="utmBand">A Band Letter</param>
+            <returns>The MagVar</returns>
+        </member>
+        <member name="M:CoordLib.WMM.MagVarEx.MagVar_rad_UtmLookup(CoordLib.LatLon)">
+            <summary>
+            Returns the MagVar for the center of the UTM Cell of a LatLon at 3km height
+            </summary>
+            <param name="latLon">A LatLon coordinate</param>
+            <returns>The MagVar</returns>
+        </member>
+        <member name="M:CoordLib.WMM.MagVarEx.MagVar_rad(CoordLib.LatLon,System.Boolean)">
+            <summary>
+            Returns the Magnetic Declination at a location at 3km height [rad]
+            </summary>
+            <param name="latLon">The location</param>
+            <param name="useLookup">When true using the UTM lookup table</param>
+            <returns>The magnetic declination [rad]</returns>
+        </member>
+        <member name="M:CoordLib.WMM.MagVarEx.MagVar_deg(CoordLib.LatLon,System.Boolean)">
+            <summary>
+            Returns the Magnetic Declination at a location at 3km height [deg]
+            </summary>
+            <param name="latLon">The location</param>
+            <param name="useLookup">When true using the UTM lookup table</param>
+            <returns>The magnetic declination [deg]</returns>
+        </member>
+        <member name="M:CoordLib.WMM.MagVarEx.MagFromTrueBearing(System.Double,CoordLib.LatLon,System.Boolean)">
+            <summary>
+            Returns the Magnetic Bearing from a True Bearing at a location at 3km height [deg]
+            </summary>
+            <param name="trueBearing">The true bearing [deg]</param>
+            <param name="latLon">The location</param>
+            <param name="useLookup">When true using the UTM lookup table</param>
+            <returns>The magnetic bearing [deg]</returns>
+        </member>
+        <member name="M:CoordLib.WMM.MagVarEx.TrueFromNagBearing(System.Double,CoordLib.LatLon,System.Boolean)">
+            <summary>
+            Returns the True Bearing from a Magnetic Bearing at a location at 3km height [deg]
+            </summary>
+            <param name="magBearing">The magnetic bearing [deg]</param>
+            <param name="latLon">The location</param>
+            <param name="useLookup">When true using the UTM lookup table</param>
+            <returns>The magnetic bearing [deg]</returns>
         </member>
     </members>
 </doc>

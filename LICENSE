@@ -1,4 +1,4 @@
-MIT License
+MIT License (all ex WMM - MagVar.cs, see below)
 
 Copyright (c) 2021 bm98ch (M.Burri)
 
@@ -48,3 +48,37 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+
+WMM MagVar.cs derived from:
+//  https://github.com/etfovac/wmm-cs
+//  https://bluetoque.ca/2013/01/magnetic-declination-in-c-sharp/
+//  http://www.oplopanax.ca/Downloads/MagVar.cs
+Partially modified, added 2020 coefficients by bm98ch (M.Burri)
+
+/* Module to calculate magnetic variation and field given position,
+**               altitude, and date
+** Implements the NIMA (formerly DMA) WMM and IGRF models
+**
+**    http://www.nima.mil/GandG/ngdc-wmm2000.html
+**    For WMM2000 coefficients:
+**    ftp://ftp.ngdc.noaa.gov/Solid_Earth/Mainfld_Mag/DoD_Model/wmm.cof
+**    For IGRF/DGRF coefficients:
+**    http://swdcdb.kugi.kyoto-u.ac.jp/igrf/coef/igrfall.d
+**
+** Copyright (C) 2000  Edward A Williams <Ed_Williams@compuserve.com>
+** C# Port by Michael Coyle <Michael.Coyle@BlueToque.ca>,
+**
+** This program is free software; you can redistribute it and/or
+** modify it under the terms of the GNU General Public Licence as
+** published by the Free Software Foundation; either version 2 of the
+** Licence, or (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful, but
+** WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+** General Public Licence for more details.
+**
+** You should have received a copy of the GNU General Public Licence
+** along with this program; if not, write to the Free Software
+** Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+**

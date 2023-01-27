@@ -17,8 +17,8 @@ namespace CoordLib.Extensions
   /// </summary>
   public static class Extensions
   {
-    static readonly double R2D = 180 / PI;
-    static readonly double D2R = PI / 180;
+    static readonly double R2D = 180.0 / PI;
+    static readonly double D2R = PI / 180.0;
 
     /// <summary>
     /// Returns the angle in radians
@@ -137,6 +137,19 @@ namespace CoordLib.Extensions
     /// </summary>
     public static string UtmZoneLetter( this LatLon _ll ) => UTMGrid.UtmOp.UtmLetterDesignator( _ll );
 
+
+    /// <summary>
+    /// Returns the Magnetic Variation (declinattion) at this location 
+    /// using WMM2020 (valid 2020..2025)
+    /// </summary>
+    public static double MagVar_deg( this LatLon _ll ) => WMM.MagVarEx.MagVar_deg( _ll, false );
+
+    /// <summary>
+    /// Returns the Magnetic Variation (declinattion) at this location 
+    /// using the UTM Lookup table
+    /// using WMM2020 (valid 2020..2025)
+    /// </summary>
+    public static double MagVarViaUTM_deg( this LatLon _ll ) => WMM.MagVarEx.MagVar_deg( _ll, true );
 
   }
 }
