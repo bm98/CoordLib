@@ -216,6 +216,12 @@ namespace CoordLib.MercatorTiles
     }
 
     /// <summary>
+    /// Returns the Center Coord of a Quad
+    /// </summary>
+    /// <returns>The Center Coordinate of this Quad</returns>
+    public LatLon Center( ) => QuadOp.Center( this );
+
+    /// <summary>
     /// True if the argument Quad is included in this Quad
     /// Implies that the argument is at the same or a higher zoom level
     /// </summary>

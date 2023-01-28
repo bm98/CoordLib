@@ -40,10 +40,10 @@ namespace TEST_CoordLib
       // 
       // RTB
       // 
-      this.RTB.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.RTB.Location = new System.Drawing.Point(12, 102);
+      this.RTB.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.RTB.Location = new System.Drawing.Point(12, 132);
       this.RTB.Name = "RTB";
-      this.RTB.Size = new System.Drawing.Size(357, 665);
+      this.RTB.Size = new System.Drawing.Size(604, 579);
       this.RTB.TabIndex = 0;
       this.RTB.Text = "";
       // 
@@ -73,13 +73,13 @@ namespace TEST_CoordLib
       this.button1.Name = "button1";
       this.button1.Size = new System.Drawing.Size(101, 46);
       this.button1.TabIndex = 3;
-      this.button1.Text = "TEST";
+      this.button1.Text = "TEST equality";
       this.button1.UseVisualStyleBackColor = true;
       this.button1.Click += new System.EventHandler(this.button1_Click);
       // 
       // btMagVar
       // 
-      this.btMagVar.Location = new System.Drawing.Point(446, 137);
+      this.btMagVar.Location = new System.Drawing.Point(418, 59);
       this.btMagVar.Name = "btMagVar";
       this.btMagVar.Size = new System.Drawing.Size(85, 32);
       this.btMagVar.TabIndex = 4;
@@ -89,7 +89,7 @@ namespace TEST_CoordLib
       // 
       // txMVbearing
       // 
-      this.txMVbearing.Location = new System.Drawing.Point(446, 90);
+      this.txMVbearing.Location = new System.Drawing.Point(418, 12);
       this.txMVbearing.Name = "txMVbearing";
       this.txMVbearing.Size = new System.Drawing.Size(106, 20);
       this.txMVbearing.TabIndex = 5;
@@ -98,7 +98,7 @@ namespace TEST_CoordLib
       // lblMVresult
       // 
       this.lblMVresult.AutoSize = true;
-      this.lblMVresult.Location = new System.Drawing.Point(452, 182);
+      this.lblMVresult.Location = new System.Drawing.Point(424, 104);
       this.lblMVresult.Name = "lblMVresult";
       this.lblMVresult.Size = new System.Drawing.Size(35, 13);
       this.lblMVresult.TabIndex = 6;
@@ -107,7 +107,7 @@ namespace TEST_CoordLib
       // cbxUseTable
       // 
       this.cbxUseTable.AutoSize = true;
-      this.cbxUseTable.Location = new System.Drawing.Point(446, 116);
+      this.cbxUseTable.Location = new System.Drawing.Point(418, 38);
       this.cbxUseTable.Name = "cbxUseTable";
       this.cbxUseTable.Size = new System.Drawing.Size(98, 17);
       this.cbxUseTable.TabIndex = 7;

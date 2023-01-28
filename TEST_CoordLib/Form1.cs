@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using CoordLib;
 using CoordLib.MercatorTiles;
 using CoordLib.Extensions;
+using System.Diagnostics;
 
 namespace TEST_CoordLib
 {
@@ -27,6 +28,8 @@ namespace TEST_CoordLib
       public string QString { get; set; }
       public Quad IQuad { get; set; }
     }
+
+    // deterministic
     private void LoadLookupItemsDet( )
     {
       RTB.Text = "";
@@ -79,28 +82,52 @@ namespace TEST_CoordLib
       LatLon latLon1 = new LatLon( latLon );
 
       if (latLon == latLon1) {
-        RTB.Text = "EQUALITY MATCH";
+        RTB.Text += $"{latLon} == {latLon1}:  EQUALITY MATCH\n";
       }
       if (latLon != latLon1) {
-        RTB.Text = "INEQUALITY FAILED";
+        RTB.Text += $"{latLon} != {latLon1}:  INEQUALITY FAILED\n";
       }
 
       latLon1.Lat += 0.01;
       if (latLon == latLon1) {
-        RTB.Text = "EQUALITY FAILED";
+        RTB.Text += $"{latLon} == {latLon1}:  EQUALITY FAILED\n";
       }
       if (latLon != latLon1) {
-        RTB.Text = "INEQUALITY MATCH";
+        RTB.Text += $"{latLon} != {latLon1}:  INEQUALITY MATCH\n";
       }
     }
 
 
     private void btMagVar_Click( object sender, EventArgs e )
     {
+      Stopwatch _timer1 = new Stopwatch( );
+
+      CoordLib.WMM.MagVarEx.MagFromTrueBearing( double.Parse( txMVbearing.Text ), new LatLon( 46.5, 7.25 ), true ); // init lookup value
+
+      // direct result
       lblMVresult.Text = CoordLib.WMM.MagVarEx.MagFromTrueBearing( double.Parse( txMVbearing.Text ), new LatLon( 46.5, 7.25 ), cbxUseTable.Checked ).ToString( );
 
-//      lblMVresult.Text = CoordLib.WMM.MagVarEx.MagVar_deg( new LatLon( 80, 0 ), false ).ToString( );
+      // loops
+      _timer1.Start( );
+      double res;
+      for (int i = 0; i < 100_000; i++) {
+        res = CoordLib.WMM.MagVarEx.MagFromTrueBearing( double.Parse( txMVbearing.Text ), new LatLon( 46.5, 7.25 ), true );
+      }
+      _timer1.Stop( );
+      RTB.Text += $"Lookup 100_000x => {_timer1.ElapsedMilliseconds} ms\n";
 
+      _timer1.Start( );
+      for (int i = 0; i < 100_000; i++) {
+        res = CoordLib.WMM.MagVarEx.MagFromTrueBearing( double.Parse( txMVbearing.Text ), new LatLon( 46.5, 7.25 ), false );
+      }
+      _timer1.Stop( );
+      RTB.Text += $"Calc   100_000x => {_timer1.ElapsedMilliseconds} ms\n";
+
+      // RESULTS 
+      /*
+          Lookup 100_000x => 225 ms
+          Calc   100_000x => 1055 ms
+       */
     }
   }
 }

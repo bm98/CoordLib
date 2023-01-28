@@ -116,6 +116,11 @@ namespace CoordLib.Extensions
 
 
     /// <summary>
+    /// Returns a Quad @ Zoom Level
+    /// </summary>
+    public static Quad AsQuad( this LatLon _ll, ushort zoomLevel ) => new Quad( _ll, zoomLevel );
+
+    /// <summary>
     /// Returns a Quad @ max Zoom Level
     /// </summary>
     public static Quad AsQuadMax( this LatLon _ll ) => new Quad( _ll, Projection.MaxZoom );

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using CoordLib.Extensions;
+using CoordLib.MercatorTiles;
 
 namespace CoordLib.WMM
 {
@@ -11,8 +12,14 @@ namespace CoordLib.WMM
   /// Tooling to use the WMM library part
   /// All calculations are done at MagVar at 3km height
   ///   
-  /// Extra MagVar Lookup Tables using the UTM Grid which might be faster than calculation
-  /// but calculation is rather fast...
+  /// Extra MagVar Lookup Tree using a Quad Grid at level 9 which is about 4 times faster than calculation
+  /// but calculation is also rather fast...
+  /// 
+  ///  Lookup 100_000x => 225 ms
+  ///  Calc   100_000x => 1055 ms
+  /// 
+  /// Lookup values are only calculated once per cell if first time requested
+  /// 
   /// </summary>
   public static class MagVarEx
   {
@@ -21,11 +28,15 @@ namespace CoordLib.WMM
 
     // the model
     private static MagVar _wmm = new MagVar( );
-    // magVar lookup table
-    private static Dictionary<string, List<double>> _mvLookup_rad = new Dictionary<string, List<double>>( );
 
-    // build the lookup table
-    private static void BuildTable( )
+    // magVar lookup table Quad
+    private static QuadLookup<double?> _quadLookup;
+    private const ushort c_qtZoom = 9; // L9 -> squares of 78x78 km at lat==0
+
+    // magVar lookup table UTM - NOT IN USE - too coarse
+    private static Dictionary<string, List<double>> _mvLookup_rad = new Dictionary<string, List<double>>( );
+    // build the UTM lookup table
+    private static void BuildUTMTable( )
     {
       foreach (var band in UtmOp.UTM_BandList) {
         _mvLookup_rad.Add( band, new List<double>( ) { 0 } ); // add a list with a zone 0 index)
@@ -41,7 +52,11 @@ namespace CoordLib.WMM
     /// </summary>
     static MagVarEx( )
     {
-      BuildTable( );
+      // UTM based lookup
+      // BuildUTMTable( );
+
+      // Quad based lookup
+      _quadLookup = new QuadLookup<double?>( 3, c_qtZoom - 1, 64 );
     }
 
     /// <summary>
@@ -59,16 +74,37 @@ namespace CoordLib.WMM
     }
 
     /// <summary>
-    /// Returns the MagVar for the center of the UTM Cell of a LatLon at 3km height
+    ///
     /// </summary>
     /// <param name="latLon">A LatLon coordinate</param>
     /// <returns>The MagVar</returns>
-    private static double MagVar_rad_UtmLookup( LatLon latLon )
+    private static double MagVar_rad_Lookup( LatLon latLon )
     {
       // sanity
       if (latLon.IsEmpty) return 0;
 
-      return _mvLookup_rad[latLon.UtmZoneLetter( )][latLon.UtmZoneNumber( )];
+      double magVar_rad;
+
+      // UTM based lookup
+      // Returns the MagVar for the center of the UTM Cell of a LatLon at 3km height
+      //magVar_rad = _mvLookup_rad[latLon.UtmZoneLetter( )][latLon.UtmZoneNumber( )];
+
+      // Quad based lookup
+      // Returns the MagVar for the center LatLon of a Quad containing the input coord at 3km height
+      var quad = latLon.AsQuad( c_qtZoom );
+      var mvl = _quadLookup.GetItemWhichIncludes( quad );
+      if (mvl.HasValue) {
+        // found
+        magVar_rad = mvl.Value;
+      }
+      else {
+        // not found, calculate and add
+        var center = quad.Center( );
+        magVar_rad = _wmm.SGMagVar( center.Lat, center.Lon, c_height_km, DateTime.Now, -1, new double[0] );
+        _quadLookup.Add( quad, magVar_rad );
+      }
+      // finally
+      return magVar_rad;
     }
 
 
@@ -87,7 +123,7 @@ namespace CoordLib.WMM
 
       double magVar_rad;
       if (useLookup) {
-        magVar_rad = MagVar_rad_UtmLookup( latLon );
+        magVar_rad = MagVar_rad_Lookup( latLon );
       }
       else {
         magVar_rad = _wmm.SGMagVar( latLon.Lat, latLon.Lon, c_height_km, DateTime.Now, -1, new double[0] );

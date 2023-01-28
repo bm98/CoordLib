@@ -21,7 +21,7 @@ namespace CoordLib.MercatorTiles
   internal static class QuadOp
   {
     // 1..22 digits out of 0,1,2,3 nothing else
-   private static Regex _qs = new Regex( @"^[0123]{1,22}$", RegexOptions.Compiled | RegexOptions.Singleline );
+    private static Regex _qs = new Regex( @"^[0123]{1,22}$", RegexOptions.Compiled | RegexOptions.Singleline );
 
     /// <summary>
     /// Checks a Quad for validity
@@ -84,8 +84,53 @@ namespace CoordLib.MercatorTiles
     }
 
     /// <summary>
+    /// Returns the Center Coord of a Quad
+    /// </summary>
+    /// <param name="quad"></param>
+    /// <returns>The Center Coordinate of this Quad</returns>
+    public static LatLon Center( Quad quad )
+    {
+      return QuadKeyToTileXY( quad ).CenterLatLon( quad.ZoomLevel );
+    }
+
+    /// <summary>  
+    /// Converts a QuadKey into tile XY coordinates.
+    ///  credit MS: https://learn.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
+    /// </summary>  
+    /// <param name="quad">Quad of the tile</param>
+    public static TileXY QuadKeyToTileXY( Quad quad )
+    {
+      var tileX = 0;
+      var tileY = 0;
+      var quadKey = quad.ToString( );
+      ushort levelOfDetail = (ushort)quadKey.Length;
+
+      for (int i = levelOfDetail; i > 0; i--) {
+        int mask = 1 << (i - 1);
+        switch (quadKey[levelOfDetail - i]) {
+          case '0':
+            break;
+          case '1':
+            tileX |= mask;
+            break;
+          case '2':
+            tileY |= mask;
+            break;
+          case '3':
+            tileX |= mask;
+            tileY |= mask;
+            break;
+          default:
+            throw new ArgumentException( "Invalid QuadKey digit sequence." );
+        }
+      }
+      return new TileXY( tileX, tileY );
+    }
+
+
+    /// <summary>
     /// Converts TileXY coordinates @zoom into a QuadKey at a specified level of detail.
-    /// see also: https://docs.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
+    /// credit: https://docs.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
     /// </summary>
     /// <param name="tileXY">Tile XY coordinate.</param>
     /// <param name="zoom">
@@ -219,7 +264,7 @@ namespace CoordLib.MercatorTiles
       return ""; // should not...
     }
 
-    
+
     /// <summary>
     /// True if the argument Quad is included in this Quad
     /// Implies that the argument is at the same or a higher zoom level
@@ -327,7 +372,7 @@ namespace CoordLib.MercatorTiles
       return Around4( new LatLon( lat, lon ), zoom );
     }
 
-        /// <summary>
+    /// <summary>
     /// Returns 8 surounding Quad of the argument + the argument as center [0]
     /// </summary>
     /// <param name="quadKey">A QuadKey at zoom</param>

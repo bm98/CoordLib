@@ -301,6 +301,11 @@
             Returns a Point as TileXY Type
             </summary>
         </member>
+        <member name="M:CoordLib.Extensions.Extensions.AsQuad(CoordLib.LatLon,System.UInt16)">
+            <summary>
+            Returns a Quad @ Zoom Level
+            </summary>
+        </member>
         <member name="M:CoordLib.Extensions.Extensions.AsQuadMax(CoordLib.LatLon)">
             <summary>
             Returns a Quad @ max Zoom Level
@@ -1610,6 +1615,12 @@
             <param name="zoom">Zoomlevel</param>
             <returns>A Quad</returns>
         </member>
+        <member name="M:CoordLib.MercatorTiles.Quad.Center">
+            <summary>
+            Returns the Center Coord of a Quad
+            </summary>
+            <returns>The Center Coordinate of this Quad</returns>
+        </member>
         <member name="M:CoordLib.MercatorTiles.Quad.Includes(CoordLib.MercatorTiles.Quad)">
             <summary>
             True if the argument Quad is included in this Quad
@@ -1901,10 +1912,24 @@
             <param name="zoom">Zoomlevel</param>
             <returns>A QuadKey as String</returns>
         </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.Center(CoordLib.MercatorTiles.Quad)">
+            <summary>
+            Returns the Center Coord of a Quad
+            </summary>
+            <param name="quad"></param>
+            <returns>The Center Coordinate of this Quad</returns>
+        </member>
+        <member name="M:CoordLib.MercatorTiles.QuadOp.QuadKeyToTileXY(CoordLib.MercatorTiles.Quad)">
+            <summary>  
+            Converts a QuadKey into tile XY coordinates.
+             credit MS: https://learn.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
+            </summary>  
+            <param name="quad">Quad of the tile</param>
+        </member>
         <member name="M:CoordLib.MercatorTiles.QuadOp.TileXYToQuad(System.Drawing.Point,System.UInt16)">
             <summary>
             Converts TileXY coordinates @zoom into a QuadKey at a specified level of detail.
-            see also: https://docs.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
+            credit: https://docs.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
             </summary>
             <param name="tileXY">Tile XY coordinate.</param>
             <param name="zoom">
@@ -2566,8 +2591,14 @@
             Tooling to use the WMM library part
             All calculations are done at MagVar at 3km height
               
-            Extra MagVar Lookup Tables using the UTM Grid which might be faster than calculation
-            but calculation is rather fast...
+            Extra MagVar Lookup Tree using a Quad Grid at level 9 which is about 4 times faster than calculation
+            but calculation is also rather fast...
+            
+             Lookup 100_000x => 225 ms
+             Calc   100_000x => 1055 ms
+            
+            Lookup values are only calculated once per cell if first time requested
+            
             </summary>
         </member>
         <member name="M:CoordLib.WMM.MagVarEx.#cctor">
@@ -2583,12 +2614,12 @@
             <param name="utmBand">A Band Letter</param>
             <returns>The MagVar</returns>
         </member>
-        <member name="M:CoordLib.WMM.MagVarEx.MagVar_rad_UtmLookup(CoordLib.LatLon)">
-            <summary>
-            Returns the MagVar for the center of the UTM Cell of a LatLon at 3km height
-            </summary>
-            <param name="latLon">A LatLon coordinate</param>
-            <returns>The MagVar</returns>
+        <member name="M:CoordLib.WMM.MagVarEx.MagVar_rad_Lookup(CoordLib.LatLon)">
+             <summary>
+            
+             </summary>
+             <param name="latLon">A LatLon coordinate</param>
+             <returns>The MagVar</returns>
         </member>
         <member name="M:CoordLib.WMM.MagVarEx.MagVar_rad(CoordLib.LatLon,System.Boolean)">
             <summary>

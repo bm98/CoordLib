@@ -54,7 +54,7 @@ namespace CoordLib.MercatorTiles
   ///   + Level Dictionary overhead
   /// 
   /// </summary>
-  public class QuadLookup<T> where T : class
+  public class QuadLookup<T> //where T : class
   {
     // root of the tree
     private QLevel _root;
