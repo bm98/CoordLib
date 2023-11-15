@@ -147,14 +147,14 @@ namespace CoordLib.Extensions
     /// Returns the Magnetic Variation (declinattion) at this location 
     /// using WMM2020 (valid 2020..2025)
     /// </summary>
-    public static double MagVar_deg( this LatLon _ll ) => WMM.MagVarEx.MagVar_deg( _ll, false );
+    public static double MagVarCalc_deg( this LatLon _ll ) => WMM.MagVarEx.MagVar_deg( _ll, false );
 
     /// <summary>
     /// Returns the Magnetic Variation (declinattion) at this location 
-    /// using the UTM Lookup table
+    /// using the Lookup table/tree
     /// using WMM2020 (valid 2020..2025)
     /// </summary>
-    public static double MagVarViaUTM_deg( this LatLon _ll ) => WMM.MagVarEx.MagVar_deg( _ll, true );
+    public static double MagVarLookup_deg( this LatLon _ll ) => WMM.MagVarEx.MagVar_deg( _ll, true );
 
   }
 }

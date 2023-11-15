@@ -92,16 +92,20 @@ namespace CoordLib.WMM
       // Quad based lookup
       // Returns the MagVar for the center LatLon of a Quad containing the input coord at 3km height
       var quad = latLon.AsQuad( c_qtZoom );
-      var mvl = _quadLookup.GetItemWhichIncludes( quad );
-      if (mvl.HasValue) {
-        // found
-        magVar_rad = mvl.Value;
-      }
-      else {
-        // not found, calculate and add
-        var center = quad.Center( );
-        magVar_rad = _wmm.SGMagVar( center.Lat, center.Lon, c_height_km, DateTime.Now, -1, new double[0] );
-        _quadLookup.Add( quad, magVar_rad );
+
+      // support threaded access
+      lock (_quadLookup) {
+        var mvl = _quadLookup.GetItemWhichIncludes( quad );
+        if (mvl.HasValue) {
+          // found
+          magVar_rad = mvl.Value;
+        }
+        else {
+          // not found, calculate and add
+          var center = quad.Center( );
+          magVar_rad = _wmm.SGMagVar( center.Lat, center.Lon, c_height_km, DateTime.Now, -1, new double[0] );
+          _quadLookup.Add( quad, magVar_rad );
+        }
       }
       // finally
       return magVar_rad;

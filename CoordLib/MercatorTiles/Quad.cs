@@ -196,6 +196,11 @@ namespace CoordLib.MercatorTiles
     public Quad( Point tileXY, ushort zoom ) { _quad = TileXYToQuad( tileXY, zoom ); }
 
     /// <summary>
+    /// True for an Empty Quad
+    /// </summary>
+    public bool IsEmpty => string.IsNullOrEmpty( _quad );
+
+    /// <summary>
     /// Returns the string representation
     /// </summary>
     /// <returns>A string</returns>

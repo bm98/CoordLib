@@ -63,41 +63,93 @@ namespace CoordLib
       // check for signed double degrees without NSEW, if so return it directly
       if (double.TryParse( dmsStr, out double dValue )) return dValue;
 
-      // strip off any sign or compass dir'n & split out separate d/m/s
-      // var dms = String( dmsStr ).trim( ).replace(/^-/, '' ).replace(/[NSEW]$/i, '' ).split(/[^0-9.,]+/);
-      var dms = Regex.Replace( dmsStr.Trim( ), @"^-", "" );
-      dms = Regex.Replace( dms, @"^[NSEWnsew]", "" );
-      string[] dmsA = Regex.Split( dms, @"[^0-9.,]+" );
-      //if ( dms[dms.length - 1] == '' ) dms.splice( dms.length - 1 );  // from trailing symbol
-      if (dmsA[dmsA.Length - 1] == "") {
-        Array.Resize( ref dmsA, dmsA.Length - 1 ); //dms.splice( dms.length - 1 );  // from trailing symbol
-      }
-      if (dmsA.Length == 0) return double.NaN; // NaN;
+      double deg = double.NaN;
+      // shall never fail..
+      try {
 
-      // and convert to double degrees...
-      double deg = 0;
-      switch (dmsA.Length) {
-        case 3:  // interpret 3-part result as d/m/s
-          deg = double.Parse( dmsA[0] ) / 1 + double.Parse( dmsA[1] ) / 60 + double.Parse( dmsA[2] ) / 3600;
-          break;
-        case 2:  // interpret 2-part result as d/m
-          deg = double.Parse( dmsA[0] ) / 1 + double.Parse( dmsA[1] ) / 60;
-          break;
-        case 1:  // just d (possibly double) or non-separated dddmmss
-          deg = double.Parse( dmsA[0] );
-          // check for fixed-width unseparated format eg 0033709W
-          //if (/[NS]/i.test(dmsStr)) deg = '0' + deg;  // - normalise N/S to 3-digit degrees
-          //if (/[0-9]{7}/.test(deg)) deg = deg.slice(0,3)/1 + deg.slice(3,5)/60 + deg.slice(5)/3600;
-          break;
-        default:
-          return double.NaN;
+        // strip off any sign or compass dir'n & split out separate d/m/s
+        // var dms = String( dmsStr ).trim( ).replace(/^-/, '' ).replace(/[NSEW]$/i, '' ).split(/[^0-9.,]+/);
+        var dms = Regex.Replace( dmsStr.Trim( ), @"^-", "" );
+        dms = Regex.Replace( dms, @"^[NSEWnsew]", "" ); // at start of line
+        string[] dmsA = Regex.Split( dms, @"[^0-9.,]+" );
+        //if ( dms[dms.length - 1] == '' ) dms.splice( dms.length - 1 );  // from trailing symbol
+        if (dmsA[dmsA.Length - 1] == "") {
+          Array.Resize( ref dmsA, dmsA.Length - 1 ); //dms.splice( dms.length - 1 );  // from trailing symbol
+        }
+        if (dmsA.Length == 0) return double.NaN; // NaN;
+
+        // and convert to double degrees...
+        switch (dmsA.Length) {
+          case 3:  // interpret 3-part result as d/m/s
+            deg = double.Parse( dmsA[0] ) / 1 + double.Parse( dmsA[1] ) / 60 + double.Parse( dmsA[2] ) / 3600;
+            break;
+          case 2:  // interpret 2-part result as d/m
+            deg = double.Parse( dmsA[0] ) / 1 + double.Parse( dmsA[1] ) / 60;
+            break;
+          case 1:  // just d (possibly double) or non-separated dddmmss
+            deg = double.Parse( dmsA[0] );
+            // check for fixed-width unseparated format eg 0033709W
+            //if (/[NS]/i.test(dmsStr)) deg = '0' + deg;  // - normalise N/S to 3-digit degrees
+            if (Regex.Match( dmsStr, @"[NSns]" ).Success) { dmsA[0] = "0" + dmsA[0]; }
+            // can be 3,5,7 long (make 7 pad with 0)
+            dmsA[0].PadRight( 7, '0' );
+            //if (/[0-9]{7}/.test(deg)) deg = deg.slice(0,3)/1 + deg.slice(3,5)/60 + deg.slice(5)/3600;
+            if (Regex.Match( dmsA[0], @"^[0-9]{7}" ).Success) {
+              deg = double.Parse( dmsA[0].Substring( 0, 3 ) )
+                  + double.Parse( dmsA[0].Substring( 3, 2 ) ) / 60.0
+                  + double.Parse( dmsA[0].Substring( 5, 2 ) ) / 3600.0;
+            }
+            break;
+          default:
+            return double.NaN;
+        }
+        if (Regex.IsMatch( dmsStr.Trim( ), "^-|^[WSws]|[WSws]$" ))
+          deg = -deg; // take '-', west and south as -ve
+
       }
-      if (Regex.IsMatch( dmsStr.Trim( ), "^-|^[WSws]" ))
-        deg = -deg; // take '-', west and south as -ve
+      catch { }
 
       return deg;
     }
 
+    /// <summary>
+    /// Parse a Route Coord string (DD[MM[SS]]{N|S}DDD[MM[SS]]{E|W})
+    /// </summary>
+    /// <param name="rtCoordStr">A route coord string</param>
+    /// <returns>A LatLon</returns>
+    public static LatLon ParseRouteCoord( string rtCoordStr )
+    {
+      Regex _rx = new Regex( "^(?<coord>(?<lat>[0-8][0-9]([0-5][0-9]([0-5][0-9])?)?[NS])(?<lon>[0-1][0-9][0-9]([0-5][0-9]([0-5][0-9])?)?[EW]))$", RegexOptions.Compiled | RegexOptions.IgnoreCase );
+      Match match = _rx.Match( rtCoordStr );
+      if (match.Success) {
+        return new LatLon( ParseDMS( match.Groups["lat"].Value ), ParseDMS( match.Groups["lon"].Value ) );
+      }
+      return LatLon.Empty;
+    }
+
+    /// <summary>
+    /// Converts a LatLon to a Route COORD string 
+    /// DDMM[SS]{N|S}DDDMM[SS]{E|W} 0..89°59'59" N/S 0..180°00'00" E/W
+    /// </summary>
+    /// <param name="latLon">A LatLon</param>
+    /// <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
+    /// <returns></returns>
+    public static string ToRouteCoord( LatLon latLon, string format = "dms" )
+    {
+      string latS = ToDMS( latLon.Lat, true, format, 0 ); // 89°59'59" 
+      string lonS = ToDMS( latLon.Lon, false, format, 0 ); // 180°00'00"
+      latS = latS.Replace( Separator, "" ).Replace( "°", "" ).Replace( "'", "" ).Replace( "\"", "" );
+      lonS = lonS.Replace( Separator, "" ).Replace( "°", "" ).Replace( "'", "" ).Replace( "\"", "" );
+      // for LAT
+      int lLen = format.Length * 2;
+      if (lonS.Length < lLen) lonS = "0" + lonS;
+      lLen++; //  for LON
+      if (lonS.Length < lLen) lonS = "0" + lonS;
+      if (lonS.Length < lLen) lonS = "0" + lonS;
+      latS += (latLon.Lat < 0) ? "S" : "N";
+      lonS += (latLon.Lon < 0) ? "W" : "E";
+      return latS + lonS;
+    }
 
     /// <summary>
     /// Converts double degrees to deg/min/sec format
@@ -131,45 +183,45 @@ namespace CoordLib
       switch (format) {
         case "d":
         case "deg": {
-            // round/right-pad degrees, left-pad with leading zeros (note may include doubles)
-            if (dPlaces > 0)
-              d = Math.Round( deg, dPlaces ).ToString( degFmt + "." + "000000".Substring( 0, dPlaces ) );
-            else
-              d = Math.Round( deg, dPlaces ).ToString( degFmt );
-            dms = d + '°';
-          }
-          break;
+          // round/right-pad degrees, left-pad with leading zeros (note may include doubles)
+          if (dPlaces > 0)
+            d = Math.Round( deg, dPlaces ).ToString( degFmt + "." + "000000".Substring( 0, dPlaces ) );
+          else
+            d = Math.Round( deg, dPlaces ).ToString( degFmt );
+          dms = d + '°';
+        }
+        break;
 
         case "dm":
         case "deg+min": {
-            dN = Math.Floor( deg );
-            mN = Math.Round( ((deg * 60) % 60), dPlaces );// get component min & round/right-pad
-            if (mN == 60) { mN = 0; dN++; }               // check for rounding up
-            d = dN.ToString( degFmt );
-            if (dPlaces > 0)
-              m = mN.ToString( "00." + "000000".Substring( 0, dPlaces ) );
-            else
-              m = mN.ToString( "00" );
-            dms = d + '°' + Separator + m + "'";
-          }
-          break;
+          dN = Math.Floor( deg );
+          mN = Math.Round( ((deg * 60) % 60), dPlaces );// get component min & round/right-pad
+          if (mN == 60) { mN = 0; dN++; }               // check for rounding up
+          d = dN.ToString( degFmt );
+          if (dPlaces > 0)
+            m = mN.ToString( "00." + "000000".Substring( 0, dPlaces ) );
+          else
+            m = mN.ToString( "00" );
+          dms = d + '°' + Separator + m + "'";
+        }
+        break;
 
         case "dms":
         case "deg+min+sec": {
-            dN = Math.Floor( deg );
-            mN = Math.Floor( (deg * 60) % 60 );// get component min & round/right-pad
-            sN = Math.Round( (deg * 3600 % 60), dPlaces );  // get component sec & round/right-pad
-            if (sN == 60) { sN = 0; mN++; } // check for rounding up
-            if (mN == 60) { mN = 0; dN++; } // check for rounding up
-            d = dN.ToString( degFmt );
-            m = mN.ToString( "00" );
-            if (dPlaces > 0)
-              s = sN.ToString( "00." + "000000".Substring( 0, dPlaces ) );
-            else
-              s = sN.ToString( "00" );
-            dms = d + '°' + Separator + m + "'" + Separator + s + '"';
-          }
-          break;
+          dN = Math.Floor( deg );
+          mN = Math.Floor( (deg * 60) % 60 );// get component min & round/right-pad
+          sN = Math.Round( (deg * 3600 % 60), dPlaces );  // get component sec & round/right-pad
+          if (sN == 60) { sN = 0; mN++; } // check for rounding up
+          if (mN == 60) { mN = 0; dN++; } // check for rounding up
+          d = dN.ToString( degFmt );
+          m = mN.ToString( "00" );
+          if (dPlaces > 0)
+            s = sN.ToString( "00." + "000000".Substring( 0, dPlaces ) );
+          else
+            s = sN.ToString( "00" );
+          dms = d + '°' + Separator + m + "'" + Separator + s + '"';
+        }
+        break;
         default: break; // invalid format spec!
       }
 

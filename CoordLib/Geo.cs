@@ -373,7 +373,38 @@ namespace CoordLib
       return new double[] { Wrap180( λi1.ToDegrees( ) ), Wrap180( λi2.ToDegrees( ) ) }; // normalise to −180..+180°
     }
 
+    #region Track functions
+
+    /// <summary>
+    /// Returns true if a track is towards a station at bearing
+    /// </summary>
+    /// <param name="bearing_deg">The bearing to the station</param>
+    /// <param name="track_deg">The current track</param>
+    /// <returns>True if towards, else false (going away from)</returns>
+    public static bool Towards( double bearing_deg, double track_deg )
+    {
+      // deviation of the two must be <=90°
+      return Math.Abs( Wrap180( bearing_deg - track_deg ) ) <= 90.0;
+    }
+
+    /// <summary>
+    /// Returns the heads on direction of a station at bearing with regards of a track
+    /// 0 is straight ahead, neg. is left, pos. is right (+-180)
+    /// </summary>
+    /// <returns></returns>
+    public static double DirectionOf( double bearing_deg, double track_deg )
+    {
+      return Wrap180( bearing_deg - track_deg );
+    }
+
+    #endregion
+
     #region Constraint functions
+
+    private const double a_90 = 90;
+    private const double a_180 = 180;
+    private const double p_180 = 180;
+    private const double p_360 = 360;
 
     /// <summary>
     /// Constrain degrees to range -90..+90 (for latitude); e.g. -91 => -89, 91 => 89.
@@ -382,14 +413,15 @@ namespace CoordLib
     /// <returns>degrees within range -90..+90.</returns>
     public static double Wrap90( double degrees )
     {
-      if (-90 <= degrees && degrees <= 90) return degrees; // avoid rounding due to arithmetic ops if within range
+      if (double.IsNaN( degrees )) return degrees;
+
+      if (degrees >= -90 && degrees <= 90) return degrees; // avoid rounding due to arithmetic ops if within range
 
       // latitude wrapping requires a triangle wave function; a general triangle wave is
-      //     f(x) = 4a/p ⋅ | (x-p/4)%p - p/2 | - a
+      //     f(x) = 4a/p ⋅ | (x-p/4)%p - p/2 | - a   // a=90, p=360
       // where a = amplitude, p = period, % = modulo; however, JavaScript '%' is a remainder operator (same in C#)
       // not a modulo operator - for modulo, replace 'x%n' with '((x%n)+n)%n'
-      double x = degrees, a = 90, p = 360;
-      return 4 * a / p * Math.Abs( (((x - p / 4) % p) + p) % p - p / 2 ) - a;
+      return 4 * a_90 / p_360 * Math.Abs( (((degrees - p_360 / 4) % p_360) + p_360) % p_360 - p_360 / 2 ) - a_90;
     }
 
     /// <summary>
@@ -399,14 +431,15 @@ namespace CoordLib
     /// <returns>degrees within range -180..+180.</returns>
     public static double Wrap180( double degrees )
     {
-      if (-180 <= degrees && degrees <= 180) return degrees; // avoid rounding due to arithmetic ops if within range
+      if (double.IsNaN( degrees )) return degrees;
+
+      if (degrees >= -180 && degrees <= 180) return degrees; // avoid rounding due to arithmetic ops if within range
 
       // longitude wrapping requires a sawtooth wave function; a general sawtooth wave is
-      //     f(x) = (2ax/p - p/2) % p - a
+      //     f(x) = (2ax/p - p/2) % p - a   // a=180, p=360
       // where a = amplitude, p = period, % = modulo; however, JavaScript '%' is a remainder operator (same in C#)
       // not a modulo operator - for modulo, replace 'x%n' with '((x%n)+n)%n'
-      double x = degrees, a = 180, p = 360;
-      return (((2 * a * x / p - p / 2) % p) + p) % p - a;
+      return (((2 * a_180 * degrees / p_360 - p_180) % p_360) + p_360) % p_360 - a_180;
     }
 
     /// <summary>
@@ -416,17 +449,60 @@ namespace CoordLib
     /// <returns>degrees within range 0..360.</returns>
     public static double Wrap360( double degrees )
     {
-      if (0 <= degrees && degrees < 360) return degrees; // avoid rounding due to arithmetic ops if within range
+      if (double.IsNaN( degrees )) return degrees;
+
+      if (degrees >= 0 && degrees < 360) return degrees; // avoid rounding due to arithmetic ops if within range
 
       // bearing wrapping requires a sawtooth wave function with a vertical offset equal to the
       // amplitude and a corresponding phase shift; this changes the general sawtooth wave function from
       //     f(x) = (2ax/p - p/2) % p - a
       // to
-      //     f(x) = (2ax/p) % p
+      //     f(x) = (2ax/p) % p   // a=360, p=180
       // where a = amplitude, p = period, % = modulo; however, JavaScript '%' is a remainder operator (same in C#)
-      // not a modulo operator - for modulo, replace 'x%n' with '((x%n)+n)%n'
-      double x = degrees, a = 180, p = 360;
-      return (((2 * a * x / p) % p) + p) % p;
+      //  modulo and remainder are the same with positive argument, else see below
+      // not a modulo operator - for modulo, replace 'x%n' with '((x%n)+n)%n' in case of negative degrees
+      return (((2 * a_180 * degrees / p_360) % p_360) + p_360) % p_360;
+    }
+
+    /// <summary>
+    /// Constrain degrees to range 0..360 (for bearings); e.g. -1 => 359, 361 => 1.
+    /// </summary>
+    /// <param name="degrees">Compass degrees (360°)</param>
+    /// <returns>degrees within range 0..360.</returns>
+    public static int Wrap360( int degrees )
+    {
+      if (degrees >= 0 && degrees < 360) return degrees; // avoid rounding due to arithmetic ops if within range
+
+      return (int)Math.Round( Wrap360( (double)degrees ) );
+    }
+
+    /// <summary>
+    /// Constrain degrees to range >0..360 for Aviation use (for bearings)
+    /// e.g. -1 => 359, 361 => 1 and 000 is returned as 360
+    /// </summary>
+    /// <param name="degrees">Compass degrees (360°)</param>
+    /// <returns>degrees within range >0..360.</returns>
+    public static double Wrap360avi( double degrees )
+    {
+      if (double.IsNaN( degrees )) return degrees;
+      if (degrees > 0 && degrees <= 360) return degrees; // in range
+
+      double ret = Wrap360( degrees );
+      return (ret == 0.0) ? 360.0 : ret;
+    }
+
+    /// <summary>
+    /// Constrain degrees to range >0..360 for Aviation use (for bearings)
+    /// e.g. -1 => 359, 361 => 1 and 000 is returned as 360
+    /// </summary>
+    /// <param name="degrees">Compass degrees</param>
+    /// <returns>degrees within range 1..360.</returns>
+    public static int Wrap360avi( int degrees )
+    {
+      if (degrees > 0 && degrees <= 360) return degrees; // in range
+
+      int ret = Wrap360( degrees );
+      return (ret == 0) ? 360 : ret;
     }
 
     #endregion

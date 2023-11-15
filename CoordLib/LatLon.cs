@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Xml;
 
 namespace CoordLib
 {
@@ -142,6 +144,12 @@ namespace CoordLib
       _lon = Geo.Wrap180( other.Lon );
       _altitude = other.Altitude;
     }
+
+    /// <summary>
+    /// To set the Altitude on created objects
+    /// </summary>
+    /// <param name="alt">An altitude value</param>
+    public void SetAltitude( double alt ) => _altitude = alt;
 
     /// <summary>
     /// Equality of a LatLon (lat, lon, alt)
@@ -490,7 +498,39 @@ namespace CoordLib
     /// Returns the default string representation 
     /// </summary>
     /// <returns>A string</returns>
-    public override string ToString( ) => ToString( "dms", 0 );
+    public override string ToString( )
+    {
+      if (double.IsNaN( _altitude ))
+        return ToString( "dms", 0 );
+      else
+        return ToString( "dms", 0 ) + $", {_altitude:####0}";
+    }
+
+    // Crude Serializing support
+
+    /// <summary>
+    /// Create a LatLon from a Serializer String
+    /// </summary>
+    /// <param name="serString">Serialized string</param>
+    public LatLon( string serString = "" )
+    {
+      _lat = double.NaN; _lon = double.NaN; _altitude = double.NaN;
+      if (string.IsNullOrEmpty( serString )) return;
+
+      // "lat;lon;alt" as decimals from Invariant Culture
+      string[] e = serString.Split( new char[] { ';' } );
+      if (e.Length > 0) double.TryParse( e[0], NumberStyles.Float, CultureInfo.InvariantCulture, out _lat );
+      if (e.Length > 1) double.TryParse( e[1], NumberStyles.Float, CultureInfo.InvariantCulture, out _lon );
+      if (e.Length > 2) double.TryParse( e[2], NumberStyles.Float, CultureInfo.InvariantCulture, out _altitude );
+    }
+
+    /// <summary>
+    /// Provide A serializer string
+    /// </summary>
+    public string ToSerString( )
+    {
+      return $"{_lat.ToString( "#0.000000", CultureInfo.InvariantCulture )};{_lon.ToString( "##0.000000", CultureInfo.InvariantCulture )};{_altitude.ToString( "####0.0", CultureInfo.InvariantCulture )}";
+    }
 
   }
 

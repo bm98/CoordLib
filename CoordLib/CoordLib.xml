@@ -172,6 +172,22 @@
             <param name="dmsStr">{string|number} dmsStr - Degrees or deg/min/sec in variety of formats.</param>
             <returns>{number} Degrees as double number.</returns>
         </member>
+        <member name="M:CoordLib.Dms.ParseRouteCoord(System.String)">
+            <summary>
+            Parse a Route Coord string (DD[MM[SS]]{N|S}DDD[MM[SS]]{E|W})
+            </summary>
+            <param name="rtCoordStr">A route coord string</param>
+            <returns>A LatLon</returns>
+        </member>
+        <member name="M:CoordLib.Dms.ToRouteCoord(CoordLib.LatLon,System.String)">
+            <summary>
+            Converts a LatLon to a Route COORD string 
+            DDMM[SS]{N|S}DDDMM[SS]{E|W} 0..89°59'59" N/S 0..180°00'00" E/W
+            </summary>
+            <param name="latLon">A LatLon</param>
+            <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
+            <returns></returns>
+        </member>
         <member name="M:CoordLib.Dms.ToDMS(System.Double,System.Boolean,System.String,System.Int32)">
             <summary>
             Converts double degrees to deg/min/sec format
@@ -326,16 +342,16 @@
             Returns the UTM Latitude Zone Letter
             </summary>
         </member>
-        <member name="M:CoordLib.Extensions.Extensions.MagVar_deg(CoordLib.LatLon)">
+        <member name="M:CoordLib.Extensions.Extensions.MagVarCalc_deg(CoordLib.LatLon)">
             <summary>
             Returns the Magnetic Variation (declinattion) at this location 
             using WMM2020 (valid 2020..2025)
             </summary>
         </member>
-        <member name="M:CoordLib.Extensions.Extensions.MagVarViaUTM_deg(CoordLib.LatLon)">
+        <member name="M:CoordLib.Extensions.Extensions.MagVarLookup_deg(CoordLib.LatLon)">
             <summary>
             Returns the Magnetic Variation (declinattion) at this location 
-            using the UTM Lookup table
+            using the Lookup table/tree
             using WMM2020 (valid 2020..2025)
             </summary>
         </member>
@@ -484,6 +500,21 @@
             <param name="latitude">{number} latitude - Latitude crossings are to be determined for.</param>
             <returns>{Object|null} Object containing { lon1, lon2 } or null if given latitude not reached.</returns>
         </member>
+        <member name="M:CoordLib.Geo.Towards(System.Double,System.Double)">
+            <summary>
+            Returns true if a track is towards a station at bearing
+            </summary>
+            <param name="bearing_deg">The bearing to the station</param>
+            <param name="track_deg">The current track</param>
+            <returns>True if towards, else false (going away from)</returns>
+        </member>
+        <member name="M:CoordLib.Geo.DirectionOf(System.Double,System.Double)">
+            <summary>
+            Returns the heads on direction of a station at bearing with regards of a track
+            0 is straight ahead, neg. is left, pos. is right (+-180)
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CoordLib.Geo.Wrap90(System.Double)">
             <summary>
             Constrain degrees to range -90..+90 (for latitude); e.g. -91 => -89, 91 => 89.
@@ -504,6 +535,29 @@
             </summary>
             <param name="degrees">Compass degrees (360°)</param>
             <returns>degrees within range 0..360.</returns>
+        </member>
+        <member name="M:CoordLib.Geo.Wrap360(System.Int32)">
+            <summary>
+            Constrain degrees to range 0..360 (for bearings); e.g. -1 => 359, 361 => 1.
+            </summary>
+            <param name="degrees">Compass degrees (360°)</param>
+            <returns>degrees within range 0..360.</returns>
+        </member>
+        <member name="M:CoordLib.Geo.Wrap360avi(System.Double)">
+            <summary>
+            Constrain degrees to range >0..360 for Aviation use (for bearings)
+            e.g. -1 => 359, 361 => 1 and 000 is returned as 360
+            </summary>
+            <param name="degrees">Compass degrees (360°)</param>
+            <returns>degrees within range >0..360.</returns>
+        </member>
+        <member name="M:CoordLib.Geo.Wrap360avi(System.Int32)">
+            <summary>
+            Constrain degrees to range >0..360 for Aviation use (for bearings)
+            e.g. -1 => 359, 361 => 1 and 000 is returned as 360
+            </summary>
+            <param name="degrees">Compass degrees</param>
+            <returns>degrees within range 1..360.</returns>
         </member>
         <member name="T:CoordLib.LatLon">
             <summary>
@@ -598,6 +652,12 @@
               as copy of the given LatLon
             </summary>
             <param name="other">LatLon to copy from</param>
+        </member>
+        <member name="M:CoordLib.LatLon.SetAltitude(System.Double)">
+            <summary>
+            To set the Altitude on created objects
+            </summary>
+            <param name="alt">An altitude value</param>
         </member>
         <member name="M:CoordLib.LatLon.op_Equality(CoordLib.LatLon,CoordLib.LatLon)">
             <summary>
@@ -800,6 +860,17 @@
             Returns the default string representation 
             </summary>
             <returns>A string</returns>
+        </member>
+        <member name="M:CoordLib.LatLon.#ctor(System.String)">
+            <summary>
+            Create a LatLon from a Serializer String
+            </summary>
+            <param name="serString">Serialized string</param>
+        </member>
+        <member name="M:CoordLib.LatLon.ToSerString">
+            <summary>
+            Provide A serializer string
+            </summary>
         </member>
         <member name="T:CoordLib.LLA">
             <summary>
@@ -1599,6 +1670,11 @@
         <member name="M:CoordLib.MercatorTiles.Quad.#ctor(System.Drawing.Point,System.UInt16)">
             <summary>
             cTor: From a TileXY coordinate at a zoom level
+            </summary>
+        </member>
+        <member name="P:CoordLib.MercatorTiles.Quad.IsEmpty">
+            <summary>
+            True for an Empty Quad
             </summary>
         </member>
         <member name="M:CoordLib.MercatorTiles.Quad.ToString">

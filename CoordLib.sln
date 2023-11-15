@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31515.178
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoordLib", "CoordLib\CoordLib.csproj", "{93E03D7B-D2B1-4D73-AF0E-724A22605FB2}"
 EndProject
@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{4F1D5C98-B67
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TEST_CoordLib", "TEST_CoordLib\TEST_CoordLib.csproj", "{A41C5575-B72B-4D90-AB6D-18127C37881C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTEST_CoordLib", "NTEST_CoordLib\NTEST_CoordLib.csproj", "{E76A0915-C231-4FA2-8231-6A87D3520475}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,6 +30,10 @@ Global
 		{A41C5575-B72B-4D90-AB6D-18127C37881C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A41C5575-B72B-4D90-AB6D-18127C37881C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A41C5575-B72B-4D90-AB6D-18127C37881C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E76A0915-C231-4FA2-8231-6A87D3520475}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E76A0915-C231-4FA2-8231-6A87D3520475}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E76A0915-C231-4FA2-8231-6A87D3520475}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E76A0915-C231-4FA2-8231-6A87D3520475}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
