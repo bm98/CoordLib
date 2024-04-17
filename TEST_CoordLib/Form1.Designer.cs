@@ -36,6 +36,7 @@ namespace TEST_CoordLib
       this.txMVbearing = new System.Windows.Forms.TextBox();
       this.lblMVresult = new System.Windows.Forms.Label();
       this.cbxUseTable = new System.Windows.Forms.CheckBox();
+      this.btQuadList = new System.Windows.Forms.Button();
       this.SuspendLayout();
       // 
       // RTB
@@ -114,11 +115,22 @@ namespace TEST_CoordLib
       this.cbxUseTable.Text = "Use UTM table";
       this.cbxUseTable.UseVisualStyleBackColor = true;
       // 
+      // btQuadList
+      // 
+      this.btQuadList.Location = new System.Drawing.Point(268, 84);
+      this.btQuadList.Name = "btQuadList";
+      this.btQuadList.Size = new System.Drawing.Size(100, 32);
+      this.btQuadList.TabIndex = 8;
+      this.btQuadList.Text = "LatLon-Quad";
+      this.btQuadList.UseVisualStyleBackColor = true;
+      this.btQuadList.Click += new System.EventHandler(this.btQuadList_Click);
+      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(649, 779);
+      this.Controls.Add(this.btQuadList);
       this.Controls.Add(this.cbxUseTable);
       this.Controls.Add(this.lblMVresult);
       this.Controls.Add(this.txMVbearing);
@@ -144,6 +156,7 @@ namespace TEST_CoordLib
     private System.Windows.Forms.TextBox txMVbearing;
     private System.Windows.Forms.Label lblMVresult;
     private System.Windows.Forms.CheckBox cbxUseTable;
+    private System.Windows.Forms.Button btQuadList;
   }
 }
 

@@ -68,5 +68,14 @@ namespace NTEST_CoordLib
       Assert.AreEqual( new LatLon( -12.5050, -112.5050 ), Dms.ParseRouteCoord( "123018S1123018W" ) );
     }
 
+    [TestMethod]
+    public void DMS_ToDMSarray( )
+    {
+
+      var x = Dms.ToDMSarray(0,false );
+
+    }
+
+
   }
 }

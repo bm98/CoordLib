@@ -21,6 +21,16 @@ namespace CoordLib.Extensions
     static readonly double D2R = PI / 180.0;
 
     /// <summary>
+    /// True for valid Latitudes (+-90°)
+    /// </summary>
+    public static bool IsValidLat( this double lat ) => lat >= -90 && lat <= 90;
+
+    /// <summary>
+    /// True for valid Longitudes (+-180°)
+    /// </summary>
+    public static bool IsValidLon( this double lon ) => lon >= -180 && lon <= 180;
+
+    /// <summary>
     /// Returns the angle in radians
     /// </summary>
     public static float ToRadians( this float angleInDegree )

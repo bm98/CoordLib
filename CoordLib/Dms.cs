@@ -20,6 +20,9 @@ namespace CoordLib
   // N9° 44' 31.60",E118° 45' 31.51"
   //
   // i.e. NWSE leading pos, degs not with leading zeroes, Min,Sec attributes as regular quote and double quotes, Separator default <space>
+  //
+  // BM20240327 removed the static Separator and introduced it as argument
+  //
   /// <summary>
   /// Geodesy representation conversion functions  
   /// Latitude/longitude points may be represented as double degrees, or subdivided into sexagesimal
@@ -32,18 +35,6 @@ namespace CoordLib
     /// Non Breaking Space char
     /// </summary>
     public const string NbSpace = "\u202F";
-
-    /// <summary>
-    /// Separator character to be used to separate degrees, minutes, seconds, and cardinal directions.
-    /// 
-    /// Set to '\u202f' (narrow no-break space) for improved formatting.
-    /// 
-    /// var p = new LatLon(51.2, 0.33);    N51°12′00.0″, E000°19′48.0″
-    /// Dms.separator = '\u202f';          narrow no-break space
-    /// var pʹ = new LatLon( 51.2, 0.33 ); N 51° 12′ 00.0″, E 000° 19′ 48.0″
-    /// </summary>
-    public static string Separator = " "; // BM changed default
-
 
     /// <summary>
     /// Parses string representing degrees/minutes/seconds into numeric degrees.
@@ -133,13 +124,13 @@ namespace CoordLib
     /// </summary>
     /// <param name="latLon">A LatLon</param>
     /// <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
-    /// <returns></returns>
+    /// <returns>A coord string</returns>
     public static string ToRouteCoord( LatLon latLon, string format = "dms" )
     {
-      string latS = ToDMS( latLon.Lat, true, format, 0 ); // 89°59'59" 
-      string lonS = ToDMS( latLon.Lon, false, format, 0 ); // 180°00'00"
-      latS = latS.Replace( Separator, "" ).Replace( "°", "" ).Replace( "'", "" ).Replace( "\"", "" );
-      lonS = lonS.Replace( Separator, "" ).Replace( "°", "" ).Replace( "'", "" ).Replace( "\"", "" );
+      string latS = ToDMS( latLon.Lat, true, format, "", 0 ); // 89°59'59" 
+      string lonS = ToDMS( latLon.Lon, false, format, "", 0 ); // 180°00'00"
+      latS = latS.Replace( "°", "" ).Replace( "'", "" ).Replace( "\"", "" );
+      lonS = lonS.Replace( "°", "" ).Replace( "'", "" ).Replace( "\"", "" );
       // for LAT
       int lLen = format.Length * 2;
       if (lonS.Length < lLen) lonS = "0" + lonS;
@@ -159,9 +150,10 @@ namespace CoordLib
     /// <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
     /// <param name="lat">bool - Format Latitude(00 Deg), else it is Longitude(000 Deg)</param>
     /// <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
+    /// <param name="separator">Item separator string - default a space</param>
     /// <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
     /// <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
-    public static string ToDMS( double deg, bool lat = true, string format = "dms", int dPlaces = -1 )
+    public static string ToDMS( double deg, bool lat = true, string format = "dms", string separator = " ", int dPlaces = -1 )
     {
       if (deg == double.NaN) return ""; // give up here if we can't make a number from deg
 
@@ -202,7 +194,7 @@ namespace CoordLib
             m = mN.ToString( "00." + "000000".Substring( 0, dPlaces ) );
           else
             m = mN.ToString( "00" );
-          dms = d + '°' + Separator + m + "'";
+          dms = d + '°' + separator + m + "'";
         }
         break;
 
@@ -219,7 +211,7 @@ namespace CoordLib
             s = sN.ToString( "00." + "000000".Substring( 0, dPlaces ) );
           else
             s = sN.ToString( "00" );
-          dms = d + '°' + Separator + m + "'" + Separator + s + '"';
+          dms = d + '°' + separator + m + "'" + separator + s + '"';
         }
         break;
         default: break; // invalid format spec!
@@ -228,18 +220,39 @@ namespace CoordLib
       return dms;
     }
 
+    /// <summary>
+    /// Converts double degrees to deg/min/sec string array
+    ///  - returns a string array where [0] +-Degree, [1] Min and [2] Sec
+    /// </summary>
+    /// <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
+    /// <param name="lat">bool - Format Latitude(00 Deg), else it is Longitude(000 Deg)</param>
+    /// <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
+    public static string[] ToDMSarray( double deg, bool lat )
+    {
+      string dms;
+      if (lat) {
+        dms = ToLat( deg, "dms", "" );
+      }
+      else {
+        dms = ToLon( deg, "dms", "" );
+      }
+      dms = dms.Replace( "°", "|" ).Replace( "'", "|" ).Replace( "\"", "" ); ; // +-deg|min|sec"
+
+      return dms.Split( new char[] { '|' }, StringSplitOptions.None );
+    }
 
     /// <summary>
     /// Converts numeric degrees to deg/min/sec latitude (2-digit degrees, prefixed with N/S).
     /// </summary>
     /// <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
     /// <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
+    /// <param name="separator">Item separator string - default a space</param>
     /// <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
     /// <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
-    public static string ToLat( double deg, string format = "dms", int dPlaces = -1 )
+    public static string ToLat( double deg, string format = "dms", string separator = " ", int dPlaces = -1 )
     {
-      var lat = ToDMS( deg, true, format, dPlaces );
-      return (lat == "") ? "–" : ((deg < 0 ? 'S' : 'N') + Separator + lat);
+      var lat = ToDMS( deg, true, format, separator, dPlaces );
+      return (lat == "") ? "–" : ((deg < 0 ? 'S' : 'N') + separator + lat);
     }
 
 
@@ -248,12 +261,13 @@ namespace CoordLib
     /// </summary>
     /// <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
     /// <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
+    /// <param name="separator">Item separator string - default a space</param>
     /// <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
     /// <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
-    public static string ToLon( double deg, string format = "dms", int dPlaces = -1 )
+    public static string ToLon( double deg, string format = "dms", string separator = " ", int dPlaces = -1 )
     {
-      var lon = ToDMS( deg, false, format, dPlaces );
-      return (lon == "") ? "–" : (deg < 0 ? 'W' : 'E') + Separator + lon;
+      var lon = ToDMS( deg, false, format, separator, dPlaces );
+      return (lon == "") ? "–" : (deg < 0 ? 'W' : 'E') + separator + lon;
     }
 
 
@@ -262,12 +276,13 @@ namespace CoordLib
     /// </summary>
     /// <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
     /// <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
+    /// <param name="separator">Item separator string - default a space</param>
     /// <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
     /// <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
-    public static string ToBrng( double deg, string format = "dms", int dPlaces = -1 )
+    public static string ToBrng( double deg, string format = "dms", string separator = " ", int dPlaces = -1 )
     {
       deg = Geo.Wrap360( deg );  // normalise -ve values to 180°..360°
-      var brng = ToDMS( deg, false, format, dPlaces ); // use Longitude format 000 Deg
+      var brng = ToDMS( deg, false, format, separator, dPlaces ); // use Longitude format 000 Deg
       return (brng == "") ? "–" : brng.Replace( "360", "0" ) + "°";  // just in case rounding took us up to 360°!
     }
 

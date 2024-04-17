@@ -129,5 +129,14 @@ namespace TEST_CoordLib
           Calc   100_000x => 1055 ms
        */
     }
+
+    private void btQuadList_Click( object sender, EventArgs e )
+    {
+      for(int i = 0;i <360;i++) {
+        for(int j = 0;j <=0;j++) {
+          RTB.Text += $"LatLon {j:00}-{i:000}  QuadMax: {Quad.LatLonToQuad(new LatLon(j,i),9)}\n";
+        }
+      }
+    }
   }
 }

@@ -487,11 +487,12 @@ namespace CoordLib
     /// degrees+minutes+seconds.
     /// </summary>
     /// <param name="format">{string} [format=dms] - Format point as 'd', 'dm', 'dms'.</param>
+    /// <param name="separator">Item separator string - default a space</param>
     /// <param name="dp">{number} [dp=0|2|4] - Number of decimal places to use - default 0 for dms, 2 for dm, 4 for d.</param>
     /// <returns>{string} Comma-separated latitude/longitude.</returns>
-    public string ToString( string format = "dms", int dp = 0 )
+    public string ToString( string format = "dms", string separator = " ", int dp = 0 )
     {
-      return Dms.ToLat( _lat, format, dp ) + ", " + Dms.ToLon( _lon, format, dp );
+      return Dms.ToLat( _lat, format, separator, dp ) + ", " + Dms.ToLon( _lon, format, separator, dp );
     }
 
     /// <summary>
@@ -501,9 +502,9 @@ namespace CoordLib
     public override string ToString( )
     {
       if (double.IsNaN( _altitude ))
-        return ToString( "dms", 0 );
+        return ToString( "dms" );
       else
-        return ToString( "dms", 0 ) + $", {_altitude:####0}";
+        return ToString( "dms" ) + $", {_altitude:####0}";
     }
 
     // Crude Serializing support

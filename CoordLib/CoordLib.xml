@@ -146,17 +146,6 @@
             Non Breaking Space char
             </summary>
         </member>
-        <member name="F:CoordLib.Dms.Separator">
-            <summary>
-            Separator character to be used to separate degrees, minutes, seconds, and cardinal directions.
-            
-            Set to '\u202f' (narrow no-break space) for improved formatting.
-            
-            var p = new LatLon(51.2, 0.33);    N51°12′00.0″, E000°19′48.0″
-            Dms.separator = '\u202f';          narrow no-break space
-            var pʹ = new LatLon( 51.2, 0.33 ); N 51° 12′ 00.0″, E 000° 19′ 48.0″
-            </summary>
-        </member>
         <member name="M:CoordLib.Dms.ParseDMS(System.String)">
             <summary>
             Parses string representing degrees/minutes/seconds into numeric degrees.
@@ -186,9 +175,9 @@
             </summary>
             <param name="latLon">A LatLon</param>
             <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
-            <returns></returns>
+            <returns>A coord string</returns>
         </member>
-        <member name="M:CoordLib.Dms.ToDMS(System.Double,System.Boolean,System.String,System.Int32)">
+        <member name="M:CoordLib.Dms.ToDMS(System.Double,System.Boolean,System.String,System.String,System.Int32)">
             <summary>
             Converts double degrees to deg/min/sec format
              - degree, prime, double-prime symbols are added, but sign is discarded, though no compass
@@ -197,33 +186,46 @@
             <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
             <param name="lat">bool - Format Latitude(00 Deg), else it is Longitude(000 Deg)</param>
             <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
+            <param name="separator">Item separator string - default a space</param>
             <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
             <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
         </member>
-        <member name="M:CoordLib.Dms.ToLat(System.Double,System.String,System.Int32)">
+        <member name="M:CoordLib.Dms.ToDMSarray(System.Double,System.Boolean)">
+            <summary>
+            Converts double degrees to deg/min/sec string array
+             - returns a string array where [0] +-Degree, [1] Min and [2] Sec
+            </summary>
+            <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
+            <param name="lat">bool - Format Latitude(00 Deg), else it is Longitude(000 Deg)</param>
+            <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
+        </member>
+        <member name="M:CoordLib.Dms.ToLat(System.Double,System.String,System.String,System.Int32)">
             <summary>
             Converts numeric degrees to deg/min/sec latitude (2-digit degrees, prefixed with N/S).
             </summary>
             <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
             <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
+            <param name="separator">Item separator string - default a space</param>
             <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
             <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
         </member>
-        <member name="M:CoordLib.Dms.ToLon(System.Double,System.String,System.Int32)">
+        <member name="M:CoordLib.Dms.ToLon(System.Double,System.String,System.String,System.Int32)">
             <summary>
             Convert numeric degrees to deg/min/sec longitude (3-digit degrees, prefixed with E/W)
             </summary>
             <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
             <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
+            <param name="separator">Item separator string - default a space</param>
             <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
             <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
         </member>
-        <member name="M:CoordLib.Dms.ToBrng(System.Double,System.String,System.Int32)">
+        <member name="M:CoordLib.Dms.ToBrng(System.Double,System.String,System.String,System.Int32)">
             <summary>
             Converts numeric degrees to deg/min/sec as a bearing (0°..360°)
             </summary>
             <param name="deg">{number} deg - Degrees to be formatted as specified.</param>
             <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
+            <param name="separator">Item separator string - default a space</param>
             <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
             <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
         </member>
@@ -245,6 +247,16 @@
               using CoordLib.Extensions;
               
             
+            </summary>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.IsValidLat(System.Double)">
+            <summary>
+            True for valid Latitudes (+-90°)
+            </summary>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.IsValidLon(System.Double)">
+            <summary>
+            True for valid Longitudes (+-180°)
             </summary>
         </member>
         <member name="M:CoordLib.Extensions.Extensions.ToRadians(System.Single)">
@@ -846,12 +858,13 @@
             <param name="latitude">{number} latitude - Latitude crossings are to be determined for.</param>
             <returns>{Object|null} Object containing { lon1, lon2 } or null if given latitude not reached.</returns>
         </member>
-        <member name="M:CoordLib.LatLon.ToString(System.String,System.Int32)">
+        <member name="M:CoordLib.LatLon.ToString(System.String,System.String,System.Int32)">
             <summary>
             Returns a string representation of ‘this’ point, formatted as degrees, degrees+minutes, or
             degrees+minutes+seconds.
             </summary>
             <param name="format">{string} [format=dms] - Format point as 'd', 'dm', 'dms'.</param>
+            <param name="separator">Item separator string - default a space</param>
             <param name="dp">{number} [dp=0|2|4] - Number of decimal places to use - default 0 for dms, 2 for dm, 4 for d.</param>
             <returns>{string} Comma-separated latitude/longitude.</returns>
         </member>

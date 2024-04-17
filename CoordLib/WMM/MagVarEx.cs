@@ -177,7 +177,7 @@ namespace CoordLib.WMM
     /// <param name="latLon">The location</param>
     /// <param name="useLookup">When true using the UTM lookup table</param>
     /// <returns>The magnetic bearing [deg]</returns>
-    public static double TrueFromNagBearing( double magBearing, LatLon latLon, bool useLookup = false )
+    public static double TrueFromMagBearing( double magBearing, LatLon latLon, bool useLookup = false )
     {
       // sanity
       if (latLon.IsEmpty) return magBearing;

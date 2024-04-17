@@ -22,8 +22,8 @@ namespace CoordLib
     /// <returns>An LL string</returns>
     public static string ToLL( double lat, double lon )
     {
-      string ll = Dms.ToLat(lat,"dms", 2) + ",";
-      ll += Dms.ToLon( lat, "dms", 2 );
+      string ll = Dms.ToLat( lat, "dms", " ", 2 ) + ",";
+      ll += Dms.ToLon( lat, "dms", " ", 2 );
       return ll;
     }
 
@@ -37,7 +37,7 @@ namespace CoordLib
     /// <returns>An LLA string</returns>
     public static string ToLLA( double lat, double lon, double alt )
     {
-      string lla = ToLL(lat,lon) + ",";
+      string lla = ToLL( lat, lon ) + ",";
       lla += $"{alt:+000000.00;000000.00}";
       return lla;
     }
@@ -52,11 +52,11 @@ namespace CoordLib
     public static bool TryParseLL( string ll, out double lat, out double lon )
     {
       lat = 0; lon = 0; // init defaults
-      string[] e = ll.Split(new char[]{ ','} );
-      if ( e.Length != 2 ) return false; // nope
+      string[] e = ll.Split( new char[] { ',' } );
+      if (e.Length != 2) return false; // nope
       lat = Dms.ParseDMS( e[0] );
       lon = Dms.ParseDMS( e[1] );
-      return !( double.IsNaN( lat ) || double.IsNaN( lon ) );
+      return !(double.IsNaN( lat ) || double.IsNaN( lon ));
     }
 
     /// <summary>
@@ -70,12 +70,12 @@ namespace CoordLib
     public static bool TryParseLLA( string lla, out double lat, out double lon, out double alt )
     {
       lat = 0; lon = 0; alt = 0; // init defaults
-      string[] e = lla.Split(new char[]{ ','} );
-      if ( e.Length != 3 ) return false; // nope
+      string[] e = lla.Split( new char[] { ',' } );
+      if (e.Length != 3) return false; // nope
       lat = Dms.ParseDMS( e[0] );
       lon = Dms.ParseDMS( e[1] );
-      if ( double.TryParse( e[2], out alt ) ) {
-        return !( double.IsNaN( lat ) || double.IsNaN( lon ) );
+      if (double.TryParse( e[2], out alt )) {
+        return !(double.IsNaN( lat ) || double.IsNaN( lon ));
       }
       return false;
     }
