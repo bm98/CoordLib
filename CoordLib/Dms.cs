@@ -61,8 +61,8 @@ namespace CoordLib
         // strip off any sign or compass dir'n & split out separate d/m/s
         // var dms = String( dmsStr ).trim( ).replace(/^-/, '' ).replace(/[NSEW]$/i, '' ).split(/[^0-9.,]+/);
         var dms = Regex.Replace( dmsStr.Trim( ), @"^-", "" );
-        dms = Regex.Replace( dms, @"^[NSEWnsew]", "" ); // at start of line
-        string[] dmsA = Regex.Split( dms, @"[^0-9.,]+" );
+        dms = Regex.Replace( dms, @"^[NSEWnsew]", "" ).Trim(); // at start of line
+        string[] dmsA = Regex.Split( dms, @"[^0-9.,]+", RegexOptions.Singleline );
         //if ( dms[dms.length - 1] == '' ) dms.splice( dms.length - 1 );  // from trailing symbol
         if (dmsA[dmsA.Length - 1] == "") {
           Array.Resize( ref dmsA, dmsA.Length - 1 ); //dms.splice( dms.length - 1 );  // from trailing symbol

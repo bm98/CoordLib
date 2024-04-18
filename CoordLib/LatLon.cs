@@ -425,9 +425,9 @@ namespace CoordLib
     /// <param name="pathEnd">{LatLon} pathEnd - End point of great circle path.</param>
     /// <param name="radius">{number} [radius=6371e3] - (Mean) radius of earth (defaults to radius in metres).</param>
     /// <returns>{number} Distance to great circle (-ve if to left, +ve if to right of path).</returns>
-    public double DoubleCrossTrackDistanceTo( LatLon pathStart, LatLon pathEnd, double radius = ConvConsts.EarthRadiusM )
+    public double CrossTrackDistanceTo( LatLon pathStart, LatLon pathEnd, double radius = ConvConsts.EarthRadiusM )
     {
-      return Geo.DoubleCrossTrackDistanceTo( _lat, _lon, pathStart.Lat, pathStart.Lon, pathEnd.Lat, pathEnd.Lon, radius );
+      return Geo.CrossTrackDistanceTo( _lat, _lon, pathStart.Lat, pathStart.Lon, pathEnd.Lat, pathEnd.Lon, radius );
     }
 
 
@@ -530,7 +530,7 @@ namespace CoordLib
     /// </summary>
     public string ToSerString( )
     {
-      return $"{_lat.ToString( "#0.000000", CultureInfo.InvariantCulture )};{_lon.ToString( "##0.000000", CultureInfo.InvariantCulture )};{_altitude.ToString( "####0.0", CultureInfo.InvariantCulture )}";
+      return $"{_lat.ToString( "#0.000000000000", CultureInfo.InvariantCulture )};{_lon.ToString( "##0.000000000000", CultureInfo.InvariantCulture )};{_altitude.ToString( "####0.0", CultureInfo.InvariantCulture )}";
     }
 
   }

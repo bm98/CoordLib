@@ -150,5 +150,31 @@ namespace NTEST_CoordLib
       Assert.AreEqual( -180.0, Geo.DirectionOf( 180.0, 180.0 - 180.0 - eps ), epsTest );
 
     }
+
+    [TestMethod]
+    public void XTrackTests( )
+    {
+      var pCurrent = new LatLon( 53.2611, -0.7972 );
+        var p1 = new LatLon( 53.3206, -1.7297 );
+        var p2 = new LatLon( 53.1887, 0.1334 );
+        var d = pCurrent.CrossTrackDistanceTo( p1, p2 );  // -307.5 m
+      Assert.AreEqual( -307.894, d, 0.001 );
+
+      LatLon Start = new LatLon( Dms.ParseDMS( "N 21° 18' 24\"" ), Dms.ParseDMS( "W 157° 56' 44\"" ), 7 );
+      LatLon Target = new LatLon( Dms.ParseDMS( "N 21° 18' 25\"" ), Dms.ParseDMS( "W 157° 56' 23\"" ) );
+      var xtk = Target.CrossTrackDistanceTo(
+        Start.DestinationPoint( -1000, 89 ),
+        Start.DestinationPoint( 5000, 89 ) );
+
+      Start  = new LatLon( 21.306801 , -157.945555, 7 );
+      Target = new LatLon( 21.306847018665916 ,-157.93977428471166 );
+      xtk = Target.CrossTrackDistanceTo(
+        Start.DestinationPoint( -10000, 89 ),
+        Start.DestinationPoint( 10000, 89 ) );
+
+
+
+    }
+
   }
 }

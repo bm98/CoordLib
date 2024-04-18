@@ -459,7 +459,7 @@
             <param name="brng2">{number} brng2 - Initial bearing from second point.</param>
             <returns>Lat and Lon of the Intersection point as array (null if no unique intersection defined)</returns>
         </member>
-        <member name="M:CoordLib.Geo.DoubleCrossTrackDistanceTo(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:CoordLib.Geo.CrossTrackDistanceTo(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Returns (signed) distance from ‘this’ point to great circle defined by start-point and end-point.
             </summary>
@@ -804,7 +804,7 @@
             <param name="brng2">{number} brng2 - Initial bearing from second point.</param>
             <returns>{LatLon|null} Destination point (null if no unique intersection defined).</returns>
         </member>
-        <member name="M:CoordLib.LatLon.DoubleCrossTrackDistanceTo(CoordLib.LatLon,CoordLib.LatLon,System.Double)">
+        <member name="M:CoordLib.LatLon.CrossTrackDistanceTo(CoordLib.LatLon,CoordLib.LatLon,System.Double)">
             <summary>
             Returns (signed) distance from ‘this’ point to great circle defined by start-point and end-point.
             
@@ -2735,7 +2735,7 @@
             <param name="useLookup">When true using the UTM lookup table</param>
             <returns>The magnetic bearing [deg]</returns>
         </member>
-        <member name="M:CoordLib.WMM.MagVarEx.TrueFromNagBearing(System.Double,CoordLib.LatLon,System.Boolean)">
+        <member name="M:CoordLib.WMM.MagVarEx.TrueFromMagBearing(System.Double,CoordLib.LatLon,System.Boolean)">
             <summary>
             Returns the True Bearing from a Magnetic Bearing at a location at 3km height [deg]
             </summary>

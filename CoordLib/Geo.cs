@@ -269,7 +269,7 @@ namespace CoordLib
     /// <param name="pEndLon">Longitude of End point of great circle path</param>
     /// <param name="radius">{number} [radius=6371e3] - (Mean) radius of earth (defaults to radius in metres).</param>
     /// <returns>{number} Distance to great circle (-ve if to left, +ve if to right of path).</returns>
-    public static double DoubleCrossTrackDistanceTo( double thisLat, double thisLon,
+    public static double CrossTrackDistanceTo( double thisLat, double thisLon,
                                                   double pStartLat, double pStartLon,
                                                   double pEndLat, double pEndLon,
                                                   double radius = ConvConsts.EarthRadiusM )
