@@ -22,8 +22,8 @@ namespace CoordLib
     /// <returns>An LL string</returns>
     public static string ToLL( double lat, double lon )
     {
-      string ll = Dms.ToLat( lat, "dms", " ", 2 ) + ",";
-      ll += Dms.ToLon( lat, "dms", " ", 2 );
+      string ll = Dms.ToLat( lat, "dms", ' ', 2 ) + ",";
+      ll += Dms.ToLon( lat, "dms", ' ', 2 );
       return ll;
     }
 

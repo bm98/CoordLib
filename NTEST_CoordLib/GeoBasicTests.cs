@@ -154,10 +154,14 @@ namespace NTEST_CoordLib
     [TestMethod]
     public void XTrackTests( )
     {
+      // ********************************
+      // ***** Cross Track Distance *****
+      // ********************************
+
       var pCurrent = new LatLon( 53.2611, -0.7972 );
-        var p1 = new LatLon( 53.3206, -1.7297 );
-        var p2 = new LatLon( 53.1887, 0.1334 );
-        var d = pCurrent.CrossTrackDistanceTo( p1, p2 );  // -307.5 m
+      var p1 = new LatLon( 53.3206, -1.7297 );
+      var p2 = new LatLon( 53.1887, 0.1334 );
+      var d = pCurrent.CrossTrackDistanceTo( p1, p2 );  // -307.5 m
       Assert.AreEqual( -307.894, d, 0.001 );
 
       LatLon Start = new LatLon( Dms.ParseDMS( "N 21° 18' 24\"" ), Dms.ParseDMS( "W 157° 56' 44\"" ), 7 );
@@ -166,15 +170,127 @@ namespace NTEST_CoordLib
         Start.DestinationPoint( -1000, 89 ),
         Start.DestinationPoint( 5000, 89 ) );
 
-      Start  = new LatLon( 21.306801 , -157.945555, 7 );
-      Target = new LatLon( 21.306847018665916 ,-157.93977428471166 );
+
+      Start = new LatLon( 21.306800879538, -157.945554703474, 7 );
+      Target = new LatLon( 21.306847018665916, -157.93977428471166 );
       xtk = Target.CrossTrackDistanceTo(
-        Start.DestinationPoint( -10000, 89 ),
-        Start.DestinationPoint( 10000, 89 ) );
-
-
+        Start.DestinationPoint( -1000, 89.9940032958984 ),
+        Start.DestinationPoint( 5000, 89.9940032958984 ) );
 
     }
+
+
+    [TestMethod]
+    public void AlongTrackTests( )
+    {
+      // ********************************
+      // ***** Along Track Distance *****
+      // ********************************
+
+      // Setup
+      double trackAngle = 0.0;
+      var Start = new LatLon( 21.306800879538, -157.945554703474, 7 );
+      var Target = Start.DestinationPoint( 20, trackAngle, ConvConsts.EarthRadiusNm ); // Target is North out 20nm
+
+      // on Start/End tests
+      var p1 = Start;
+      double xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 30nm from Start
+      Assert.AreEqual( 0, xtk, 0.00001 );
+
+      p1 = Target;
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 30nm from Start
+      Assert.AreEqual( 20, xtk, 0.00001 );
+
+      // on track tests
+      p1 = Start.DestinationPoint( 10, trackAngle, ConvConsts.EarthRadiusNm ); // Current is North out 10nm
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 10nm from Start
+      Assert.AreEqual( 10, xtk, 0.00001 );
+
+      p1 = Start.DestinationPoint( 30, trackAngle, ConvConsts.EarthRadiusNm ); // Current is North out 30nm
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 30nm from Start
+      Assert.AreEqual( 30, xtk, 0.00001 );
+
+      p1 = Start.DestinationPoint( 10, trackAngle + 180, ConvConsts.EarthRadiusNm ); // Current is South out 10nm
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // -10nm from Start
+      Assert.AreEqual( -10, xtk, 0.00001 );
+
+      p1 = Start.DestinationPoint( 30, trackAngle + 180, ConvConsts.EarthRadiusNm ); // Current is South out 30nm
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 30nm from Start
+      Assert.AreEqual( -30, xtk, 0.00001 );
+
+
+      // no longer on track tests
+      p1 = Start.DestinationPoint( 20.0 / 2.0 * Math.Sqrt( 2 ), trackAngle - 45.0, ConvConsts.EarthRadiusNm ); // Current 45° West 0.707 * Dist
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 10nm from Start
+      Assert.AreEqual( 10, xtk, 0.0001 ); // calc error is about 0.00003
+
+      p1 = Start.DestinationPoint( 20.0 / 2.0 * Math.Sqrt( 2 ), trackAngle + 45.0, ConvConsts.EarthRadiusNm ); // Current 45° East 0.707 * Dist
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 10nm from Start
+      Assert.AreEqual( 10, xtk, 0.0001 ); // calc error is about 0.00003
+
+      p1 = Start.DestinationPoint( 20.0 / 2.0 * Math.Sqrt( 2 ), trackAngle - 90.0, ConvConsts.EarthRadiusNm ); // Current 90° West 0.707 * Dist
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 0nm from Start
+      Assert.AreEqual( 0, xtk, 0.0001 );
+
+      p1 = Start.DestinationPoint( 20.0 / 2.0 * Math.Sqrt( 2 ), trackAngle + 90.0, ConvConsts.EarthRadiusNm ); // Current 90° East 0.707 * Dist
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 0nm from Start
+      Assert.AreEqual( 0, xtk, 0.0001 );
+
+
+      // ** 2nd Setup with initial track of 33° and inversed sign on LatLon
+      trackAngle = 33.0;
+      Start = new LatLon( -21.306800879538, 157.945554703474, 7 );
+      Target = Start.DestinationPoint( 20, trackAngle, ConvConsts.EarthRadiusNm ); // Target is 33° out 20nm
+
+      // on Start/End tests
+      p1 = Start;
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 30nm from Start
+      Assert.AreEqual( 0, xtk, 0.00001 );
+
+      p1 = Target;
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 30nm from Start
+      Assert.AreEqual( 20, xtk, 0.00001 );
+
+      // on track tests
+      p1 = Start.DestinationPoint( 10, trackAngle, ConvConsts.EarthRadiusNm ); // Current is North out 10nm
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 10nm from Start
+      Assert.AreEqual( 10, xtk, 0.00001 );
+
+      p1 = Start.DestinationPoint( 30, trackAngle, ConvConsts.EarthRadiusNm ); // Current is North out 30nm
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 30nm from Start
+      Assert.AreEqual( 30, xtk, 0.00001 );
+
+      p1 = Start.DestinationPoint( 10, trackAngle + 180, ConvConsts.EarthRadiusNm ); // Current is South out 10nm
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // -10nm from Start
+      Assert.AreEqual( -10, xtk, 0.00001 );
+
+      p1 = Start.DestinationPoint( 30, trackAngle + 180, ConvConsts.EarthRadiusNm ); // Current is South out 30nm
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 30nm from Start
+      Assert.AreEqual( -30, xtk, 0.00001 );
+
+
+      // no longer on track tests
+      p1 = Start.DestinationPoint( 20.0 / 2.0 * Math.Sqrt( 2 ), trackAngle - 45.0, ConvConsts.EarthRadiusNm ); // Current 45° West 0.707 * Dist
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 10nm from Start
+      Assert.AreEqual( 10, xtk, 0.0001 ); // calc error is about 0.00003
+
+      p1 = Start.DestinationPoint( 20.0 / 2.0 * Math.Sqrt( 2 ), trackAngle + 45.0, ConvConsts.EarthRadiusNm ); // Current 45° East 0.707 * Dist
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 10nm from Start
+      Assert.AreEqual( 10, xtk, 0.0001 ); // calc error is about 0.00003
+
+      p1 = Start.DestinationPoint( 20.0 / 2.0 * Math.Sqrt( 2 ), trackAngle - 90.0, ConvConsts.EarthRadiusNm ); // Current 90° West 0.707 * Dist
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 0nm from Start
+      Assert.AreEqual( 0, xtk, 0.0001 );
+
+      p1 = Start.DestinationPoint( 20.0 / 2.0 * Math.Sqrt( 2 ), trackAngle + 90.0, ConvConsts.EarthRadiusNm ); // Current 90° East 0.707 * Dist
+      xtk = p1.AlongTrackDistanceTo( Start, Target, ConvConsts.EarthRadiusNm ); // 0nm from Start
+      Assert.AreEqual( 0, xtk, 0.0001 );
+
+      ;
+
+    }
+
+
 
   }
 }

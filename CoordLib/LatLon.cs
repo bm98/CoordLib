@@ -481,16 +481,23 @@ namespace CoordLib
       return Geo.CrossingParallels( point1.Lat, point1.Lon, point2.Lat, point2.Lon, Geo.Wrap90( latitude ) );
     }
 
+    /// <summary>
+    /// Converts this LatLon to a Route COORD string 
+    /// DDMM[SS]{N|S}DDDMM[SS]{E|W} 0..89°59'59" N/S 0..180°00'00" E/W
+    /// </summary>
+    /// <param name="format">{string} [format=dm] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
+    /// <returns>A coord string</returns>
+    public string ToRouteCoord( string format = "dm" ) => Dms.ToRouteCoord( this, format );
 
     /// <summary>
     /// Returns a string representation of ‘this’ point, formatted as degrees, degrees+minutes, or
     /// degrees+minutes+seconds.
     /// </summary>
     /// <param name="format">{string} [format=dms] - Format point as 'd', 'dm', 'dms'.</param>
-    /// <param name="separator">Item separator string - default a space</param>
+    /// <param name="separator">Item separator character - default a space</param>
     /// <param name="dp">{number} [dp=0|2|4] - Number of decimal places to use - default 0 for dms, 2 for dm, 4 for d.</param>
     /// <returns>{string} Comma-separated latitude/longitude.</returns>
-    public string ToString( string format = "dms", string separator = " ", int dp = 0 )
+    public string ToString( string format = "dms", char separator = ' ', int dp = 0 )
     {
       return Dms.ToLat( _lat, format, separator, dp ) + ", " + Dms.ToLon( _lon, format, separator, dp );
     }
