@@ -161,13 +161,8 @@ namespace CoordLib.WMM
 
       double magVar = MagVar_deg( latLon, useLookup );
 
-      // correction is: add if West else sub
-      if (latLon.Lon < 0) {
-        return Geo.Wrap360( trueBearing + magVar );
-      }
-      else {
-        return Geo.Wrap360( trueBearing - magVar );
-      }
+      // correction is: add if West(neg magVar) else sub
+      return Geo.Wrap360( trueBearing - magVar );
     }
 
     /// <summary>
@@ -184,13 +179,9 @@ namespace CoordLib.WMM
 
       double magVar = MagVar_deg( latLon, useLookup );
 
+      // correction is: add if East(pos magVar) else sub
       // correction is: add if East else sub
-      if (latLon.Lon > 0) {
-        return Geo.Wrap360( magBearing + magVar );
-      }
-      else {
-        return Geo.Wrap360( magBearing - magVar );
-      }
+      return Geo.Wrap360( magBearing + magVar );
     }
 
     #endregion

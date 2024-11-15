@@ -59,9 +59,9 @@ namespace CoordLib
       @"^((?<deg>[0-9]{1,3})(°|\p{Zs}))\p{Zs}*((?<min>[0-5]?[0-9])('|\p{Zs}))\p{Zs}*(?<sec>[0-5]?[0-9](.[0-9]+)?)""?$",
       RegexOptions.IgnoreCase | RegexOptions.Compiled );
 
-    // match: D[D[D]]{°| }M[M][']
+    // match: D[D[D]]{°| }M[M][.n*][']
     private static Regex c_RxLL_2part = new Regex(
-      @"^((?<deg>[0-9]{1,3})(°|\p{Zs}))\p{Zs}*(?<min>[0-5]?[0-9])'?$",
+      @"^((?<deg>[0-9]{1,3})(°|\p{Zs}))\p{Zs}*(?<min>[0-5]?[0-9](.[0-9]+)?)'?$",
       RegexOptions.IgnoreCase | RegexOptions.Compiled );
 
     // match: D[D[D]][°]
@@ -110,11 +110,11 @@ namespace CoordLib
           b1) 1 part dec lon {E|W|e|w}d.dddddd  (succeeds in double.Parse()) / must include a decimal _point_
           b2) 1 part dec lat {N|S|n|s}d.dddddd  (succeeds in double.Parse()) / must include a decimal _point_
 
-          c1) 3 part dms lon {E|W|e|w}D[D[D]]{°| }M[M]{'| }S[S]["]
-          c2) 3 part dms lat {N|S|n|s}D[D]{°| }M[M]{'| }S[S]["]
+          c1) 3 part dms lon {E|W|e|w}D[D[D]]{°| }M[M]{'| }S[S][.s..]["]
+          c2) 3 part dms lat {N|S|n|s}D[D]{°| }M[M]{'| }S[S][.s..]["]
 
-          d1) 2 part dm lon {E|W|e|w}D[D[D]]{°| }M[M][']
-          d2) 2 part dm lat {N|S|n|s}D[D]{°| }M[M][']
+          d1) 2 part dm lon {E|W|e|w}D[D[D]]{°| }M[M][.m..][']
+          d2) 2 part dm lat {N|S|n|s}D[D]{°| }M[M][.m..][']
 
           e1) 1 part d lon {E|W|e|w}D[D[D]][°]
           e2) 1 part d lat {N|S|n|s}D[D][°]
@@ -176,7 +176,7 @@ namespace CoordLib
         match = c_RxLL_2part.Match( stuff );
         if (match.Success) {
           double dd = int.Parse( match.Groups["deg"].Value );
-          double mm = int.Parse( match.Groups["min"].Value );
+          double mm = double.Parse( match.Groups["min"].Value );
           deg = dd + mm / 60.0;
           return deg * sign;
         }

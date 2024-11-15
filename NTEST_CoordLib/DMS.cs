@@ -59,7 +59,9 @@ namespace NTEST_CoordLib
       Assert.AreEqual( 51.883333333333333333333333333333, Dms.ParseDMS( "N51° 53'" ) );
       Assert.AreEqual( 51.275833333333333333333333333333, Dms.ParseDMS( "N51° 16' 33\"" ) );
 
-      Assert.AreEqual( 51.27583675, Dms.ParseDMS( "N51° 16' 33.0123\"" ), 0.000000001 );
+      Assert.AreEqual( 51.27583675, Dms.ParseDMS( "N51° 16' 33.0123\"" ), 0.000000001 );  // dec on Sec
+      Assert.AreEqual( 51.275, Dms.ParseDMS( "N51° 16.5'" ), 0.000000001 );  // dec on Min
+      Assert.AreEqual( 51.275, Dms.ParseDMS( "N51 16.5" ), 0.000000001 );  // dec on Min
 
       Assert.AreEqual( -1.0, Dms.ParseDMS( "S1" ) );
       Assert.AreEqual( -1.0, Dms.ParseDMS( "S1°" ) );
@@ -71,7 +73,10 @@ namespace NTEST_CoordLib
 
       Assert.AreEqual( -51.275833333333333333333333333333, Dms.ParseDMS( "S51 16 33" ) );
 
-      Assert.AreEqual( -51.27583675, Dms.ParseDMS( "S51 16 33.0123" ), 0.000000001 );
+      Assert.AreEqual( -51.27583675, Dms.ParseDMS( "S51 16 33.0123" ), 0.000000001 );  // dec on Sec
+      Assert.AreEqual( -51.275, Dms.ParseDMS( "S51° 16.5'" ), 0.000000001 );  // dec on Min
+      Assert.AreEqual( -51.275, Dms.ParseDMS( "S51 16.5" ), 0.000000001 );  // dec on Min
+
 
       Assert.AreEqual( -51.275833333333333333333333333333, Dms.ParseDMS( "S51_16_33_", separator: '_' ) );
       Assert.AreEqual( -51.275833333333333333333333333333, Dms.ParseDMS( "S51°_16'_33\"_", separator: '_' ) );
@@ -104,6 +109,8 @@ namespace NTEST_CoordLib
       Assert.AreEqual( 51.275833333333333333333333333333, Dms.ParseDMS( "E51° 16' 33\"" ) );
 
       Assert.AreEqual( 51.27583675, Dms.ParseDMS( "E51° 16' 33.0123\"" ), 0.000000001 );
+      Assert.AreEqual( 51.275, Dms.ParseDMS( "E51° 16.5'" ), 0.000000001 );  // dec on Min
+      Assert.AreEqual( 51.275, Dms.ParseDMS( "E051 16.5" ), 0.000000001 );  // dec on Min
 
       Assert.AreEqual( 151.883333333333333333333333333333, Dms.ParseDMS( "E151° 53'" ) );
 
@@ -115,7 +122,9 @@ namespace NTEST_CoordLib
       Assert.AreEqual( -51.883333333333333333333333333333, Dms.ParseDMS( "W51° 53'" ) );
       Assert.AreEqual( -51.275833333333333333333333333333, Dms.ParseDMS( "W51° 16' 33\"" ) );
 
-      Assert.AreEqual( -51.27583675, Dms.ParseDMS( "W51° 16' 33.0123\""), 0.000000001 );
+      Assert.AreEqual( -51.27583675, Dms.ParseDMS( "W51° 16' 33.0123\"" ), 0.000000001 );
+      Assert.AreEqual( -51.275, Dms.ParseDMS( "W51° 16.5'" ), 0.000000001 );  // dec on Min
+      Assert.AreEqual( -51.275, Dms.ParseDMS( "W51 16.5" ), 0.000000001 );  // dec on Min
 
       Assert.AreEqual( -51.275833333333333333333333333333, Dms.ParseDMS( "W51 16 33" ) );
 
@@ -124,6 +133,8 @@ namespace NTEST_CoordLib
 
       Assert.AreEqual( -151.883333333333333333333333333333, Dms.ParseDMS( "W151° 53'" ) );
       Assert.AreEqual( -151.275833333333333333333333333333, Dms.ParseDMS( "W151° 16' 33\"" ) );
+      Assert.AreEqual( -151.275, Dms.ParseDMS( "W151° 16.5'" ), 0.000000001 );  // dec on Min
+      Assert.AreEqual( -151.275, Dms.ParseDMS( "W151 16.5" ), 0.000000001 );  // dec on Min
 
       Assert.AreEqual( 151.275833333333333333333333333333, Dms.ParseDMS( "E1511633" ) );
       Assert.AreEqual( 151.275833333333333333333333333333, Dms.ParseDMS( "1511633E" ) );
@@ -148,7 +159,6 @@ namespace NTEST_CoordLib
       Assert.AreEqual( double.NaN, Dms.ParseDMS( "54° 01' 01\"Q" ) ); // invalid Lat/Lon designator
 
       Assert.AreEqual( double.NaN, Dms.ParseDMS( "E54° 01' 01.\"" ) ); // invalid solo dec point
-      Assert.AreEqual( double.NaN, Dms.ParseDMS( "E54° 01.0'" ) ); // invalid dec on Minutes
 
       Assert.AreEqual( double.NaN, Dms.ParseDMS( "Q54 01 01" ) ); // invalid Lat/Lon designator
       Assert.AreEqual( double.NaN, Dms.ParseDMS( "54 01 01Q" ) ); // invalid Lat/Lon designator
