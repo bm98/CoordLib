@@ -2754,12 +2754,32 @@
             <param name="useLookup">When true using the UTM lookup table</param>
             <returns>The magnetic bearing [deg]</returns>
         </member>
+        <member name="M:CoordLib.WMM.MagVarEx.MagFromTrueBearing(System.Double,CoordLib.LatLon,CoordLib.LatLon,System.Boolean)">
+            <summary>
+            Returns the Magnetic Bearing from a True Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
+            </summary>
+            <param name="trueBearing">The true bearing [deg]</param>
+            <param name="latLon1">The location (from)</param>
+            <param name="latLon2">The location (to)</param>
+            <param name="useLookup">When true using the UTM lookup table</param>
+            <returns>The magnetic bearing [deg]</returns>
+        </member>
         <member name="M:CoordLib.WMM.MagVarEx.TrueFromMagBearing(System.Double,CoordLib.LatLon,System.Boolean)">
             <summary>
             Returns the True Bearing from a Magnetic Bearing at a location at 3km height [deg]
             </summary>
             <param name="magBearing">The magnetic bearing [deg]</param>
             <param name="latLon">The location</param>
+            <param name="useLookup">When true using the UTM lookup table</param>
+            <returns>The magnetic bearing [deg]</returns>
+        </member>
+        <member name="M:CoordLib.WMM.MagVarEx.TrueFromMagBearing(System.Double,CoordLib.LatLon,CoordLib.LatLon,System.Boolean)">
+            <summary>
+            Returns the True Bearing from a Magnetic Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
+            </summary>
+            <param name="magBearing">The magnetic bearing [deg]</param>
+            <param name="latLon1">The location (from)</param>
+            <param name="latLon2">The location (to)</param>
             <param name="useLookup">When true using the UTM lookup table</param>
             <returns>The magnetic bearing [deg]</returns>
         </member>

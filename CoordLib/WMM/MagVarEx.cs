@@ -166,6 +166,29 @@ namespace CoordLib.WMM
     }
 
     /// <summary>
+    /// Returns the Magnetic Bearing from a True Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
+    /// </summary>
+    /// <param name="trueBearing">The true bearing [deg]</param>
+    /// <param name="latLon1">The location (from)</param>
+    /// <param name="latLon2">The location (to)</param>
+    /// <param name="useLookup">When true using the UTM lookup table</param>
+    /// <returns>The magnetic bearing [deg]</returns>
+    public static double MagFromTrueBearing( double trueBearing, LatLon latLon1, LatLon latLon2, bool useLookup = false )
+    {
+      // sanity
+      if (latLon1.IsEmpty) return trueBearing;
+      if (latLon2.IsEmpty) return trueBearing;
+
+      var llIntermediate = latLon1.IntermediatePointTo( latLon2, 0.5 );
+      double magVar = MagVar_deg( llIntermediate, useLookup );
+      // take ( start + mid + end ) / 3 as magVar
+      double mgCalc = (magVar + MagVar_deg( latLon1, useLookup ) + MagVar_deg( latLon2, useLookup )) / 3.0;
+
+      // correction is: add if West(neg magVar) else sub
+      return Geo.Wrap360( trueBearing - mgCalc );
+    }
+
+    /// <summary>
     /// Returns the True Bearing from a Magnetic Bearing at a location at 3km height [deg]
     /// </summary>
     /// <param name="magBearing">The magnetic bearing [deg]</param>
@@ -182,6 +205,30 @@ namespace CoordLib.WMM
       // correction is: add if East(pos magVar) else sub
       // correction is: add if East else sub
       return Geo.Wrap360( magBearing + magVar );
+    }
+
+    /// <summary>
+    /// Returns the True Bearing from a Magnetic Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
+    /// </summary>
+    /// <param name="magBearing">The magnetic bearing [deg]</param>
+    /// <param name="latLon1">The location (from)</param>
+    /// <param name="latLon2">The location (to)</param>
+    /// <param name="useLookup">When true using the UTM lookup table</param>
+    /// <returns>The magnetic bearing [deg]</returns>
+    public static double TrueFromMagBearing( double magBearing, LatLon latLon1, LatLon latLon2, bool useLookup = false )
+    {
+      // sanity
+      if (latLon1.IsEmpty) return magBearing;
+      if (latLon2.IsEmpty) return magBearing;
+
+      var llIntermediate = latLon1.IntermediatePointTo( latLon2, 0.5 );
+      double magVar = MagVar_deg( llIntermediate, useLookup );
+      // take ( start + mid + end ) / 3 as magVar
+      double mgCalc = (magVar + MagVar_deg( latLon1, useLookup ) + MagVar_deg( latLon2, useLookup )) / 3.0;
+
+      // correction is: add if East(pos magVar) else sub
+      // correction is: add if East else sub
+      return Geo.Wrap360( magBearing + mgCalc );
     }
 
     #endregion

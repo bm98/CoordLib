@@ -23,7 +23,7 @@ namespace CoordLib
     public static string ToLL( double lat, double lon )
     {
       string ll = Dms.ToLat( lat, "dms", ' ', 2 ) + ",";
-      ll += Dms.ToLon( lat, "dms", ' ', 2 );
+      ll += Dms.ToLon( lon, "dms", ' ', 2 );
       return ll;
     }
 

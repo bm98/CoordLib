@@ -128,6 +128,24 @@ namespace NTEST_CoordLib
       Assert.AreEqual( brg, TrueFromMagBearing( MagFromTrueBearing( brg, ptTo, true ), ptTo, true ), 0.000001 ); // lookup
 
 
+      // setup and calc manual
+      ptFrom = new LatLon( Dms.ParseDMS( "N35°38'49.1\"" ), Dms.ParseDMS( "119°58'43.0\"W" ) ); // AVE (VOR) TrueH=95°(94.8)
+      ptTo = new LatLon( Dms.ParseDMS( "35°9'27.2\"N" ), Dms.ParseDMS( "119°19'31.3\"W" ) ); // TAFTO
+      brg = ptFrom.BearingTo( ptTo ); // True
+      mdec_Calc = MagVar_deg( ptTo, false );
+      brgM = brg - mdec_Calc; // neg MDec will be added (Abs(MDec)), pos will be subtracted
+      // -> MAG
+      Assert.AreEqual( brgM, MagFromTrueBearing( brg, ptTo, false ), 0.001 ); // calc at loc
+      Assert.AreEqual( brgM, MagFromTrueBearing( brg, ptTo, true ), 0.5 );    // lookup
+      // -> TRUE
+      Assert.AreEqual( brg, TrueFromMagBearing( brgM, ptTo, false ), 0.001 ); // calc at loc
+      Assert.AreEqual( brg, TrueFromMagBearing( brgM, ptTo, true ), 0.5 );    // lookup
+
+      // true - mag - true
+      Assert.AreEqual( brg, TrueFromMagBearing( MagFromTrueBearing( brg, ptTo, false ), ptTo, false ), 0.000001 ); // calc at loc
+      Assert.AreEqual( brg, TrueFromMagBearing( MagFromTrueBearing( brg, ptTo, true ), ptTo, true ), 0.000001 ); // lookup
+
+
     }
   }
 }
