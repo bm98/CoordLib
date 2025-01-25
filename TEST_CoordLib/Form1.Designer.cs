@@ -37,6 +37,7 @@ namespace TEST_CoordLib
       this.lblMVresult = new System.Windows.Forms.Label();
       this.cbxUseTable = new System.Windows.Forms.CheckBox();
       this.btQuadList = new System.Windows.Forms.Button();
+      this.btDistTable = new System.Windows.Forms.Button();
       this.SuspendLayout();
       // 
       // RTB
@@ -125,11 +126,22 @@ namespace TEST_CoordLib
       this.btQuadList.UseVisualStyleBackColor = true;
       this.btQuadList.Click += new System.EventHandler(this.btQuadList_Click);
       // 
+      // btDistTable
+      // 
+      this.btDistTable.Location = new System.Drawing.Point(544, 59);
+      this.btDistTable.Name = "btDistTable";
+      this.btDistTable.Size = new System.Drawing.Size(93, 39);
+      this.btDistTable.TabIndex = 9;
+      this.btDistTable.Text = "DistTable";
+      this.btDistTable.UseVisualStyleBackColor = true;
+      this.btDistTable.Click += new System.EventHandler(this.btDistTable_Click);
+      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(649, 779);
+      this.Controls.Add(this.btDistTable);
       this.Controls.Add(this.btQuadList);
       this.Controls.Add(this.cbxUseTable);
       this.Controls.Add(this.lblMVresult);
@@ -157,6 +169,7 @@ namespace TEST_CoordLib
     private System.Windows.Forms.Label lblMVresult;
     private System.Windows.Forms.CheckBox cbxUseTable;
     private System.Windows.Forms.Button btQuadList;
+    private System.Windows.Forms.Button btDistTable;
   }
 }
 

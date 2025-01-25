@@ -132,11 +132,31 @@ namespace TEST_CoordLib
 
     private void btQuadList_Click( object sender, EventArgs e )
     {
-      for(int i = 0;i <360;i++) {
-        for(int j = 0;j <=0;j++) {
-          RTB.Text += $"LatLon {j:00}-{i:000}  QuadMax: {Quad.LatLonToQuad(new LatLon(j,i),9)}\n";
+      for (int i = 0; i < 360; i++) {
+        for (int j = 0; j <= 0; j++) {
+          RTB.Text += $"LatLon {j:00}-{i:000}  QuadMax: {Quad.LatLonToQuad( new LatLon( j, i ), 9 )}\n";
         }
       }
     }
+
+    // calc the dist of one degree at various latitudes
+    private void btDistTable_Click( object sender, EventArgs e )
+    {
+
+
+      RTB.Text = $"LAT,dLon,dLat\n";
+      for (int i = 0; i < 90; i++) {
+        var ll = new LatLon( i, 0 );
+        var distLat = ll.DistanceTo( new LatLon( i + 1, 0 ), ConvConsts.EarthRadiusM ); // lat dist [m]
+        var distLon = ll.DistanceTo( new LatLon( i, 1 ), ConvConsts.EarthRadiusM ); // lon dist  [m]
+        //RTB.Text += $"{i,2:0},{distLon:#0.0},{distLat:#0.0}\n";
+        //RTB.Text += $"{distLon:#0.0},\n";
+        RTB.Text += $"{ConvConsts.LonDistPerDeg(i, ConvConsts.EarthRadiusNm):#0.0000},\n";
+
+      }
+    }
+
+
+
   }
 }

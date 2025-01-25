@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 using CoordLib.Extensions;
 
@@ -9,7 +7,7 @@ namespace CoordLib
   /// <summary>
   /// Useful conversions and constants
   /// </summary>
-  public class ConvConsts
+  public static class ConvConsts
   {
     /// <summary>
     /// Const Km per Sm (Statute Mile)
@@ -46,14 +44,63 @@ namespace CoordLib
     public const double EarthRadiusSM = EarthRadiusKm / KmPerSm;
 
     /// <summary>
+    /// Latitude Distance per Degree [m]
+    /// </summary>
+    public const double LatDistPerDeg_m = 111_319.5;
+    /// <summary>
+    /// Latitude Distance per Degree, default [m]
+    ///  use earthRadius to change the unit
+    /// </summary>
+    /// <param name="earthRadius">Earth radius, default [m]</param>
+    public static double LatDistPerDeg( double earthRadius = EarthRadiusM )
+    {
+      return (LatDistPerDeg_m / EarthRadiusM * earthRadius);
+    }
+    /// <summary>
+    /// Longitude Distance per Degree at a Latitude, default [m]
+    ///  use earthRadius to change the unit
+    /// </summary>
+    /// <param name="atLatitude">Latitude [deg]</param>
+    /// <param name="earthRadius">Earth radius, default [m]</param>
+    public static double LonDistPerDeg( double atLatitude, double earthRadius = EarthRadiusM )
+    {
+      var lat = Geo.Wrap90( atLatitude );
+      // at 90 the distance gets 0 i.e. no longer defined
+      var absLat = Math.Abs( lat );
+      if ( absLat >= 89.9) { 
+        absLat= double.NegativeInfinity; }
+      return Math.Cos( absLat.ToRadians( ) ) * LatDistPerDeg( earthRadius );
+    }
+
+    /// <summary>
+    /// Latitude Degrees for a distance, default [m]
+    /// </summary>
+    /// <param name="distance">The distance in earthRadius base units</param>
+    /// <param name="earthRadius">Earth radius, default [m]</param>
+    public static double LatDegPerDist( double distance, double earthRadius = EarthRadiusM )
+    {
+      return distance / LatDistPerDeg( earthRadius );
+    }
+    /// <summary>
+    /// Longitude Degrees for a distance at a Latitude, default [m]
+    /// </summary>
+    /// <param name="distance">The distance in earthRadius base units</param>
+    /// <param name="atLatitude"></param>
+    /// <param name="earthRadius">Earth radius, default [m]</param>
+    public static double LonDegPerDist( double distance, double atLatitude, double earthRadius = EarthRadiusM )
+    {
+      return distance / LonDistPerDeg( atLatitude, earthRadius );
+    }
+
+    /// <summary>
     /// Convert m to nm
     /// </summary>
     /// <param name="m">m to convert</param>
     /// <returns>nm</returns>
     public static double MToNm( double m )
     {
-      if ( m == double.NaN ) return double.NaN;  // sanity
-      return ( ( m / 1000.0 ) / KmPerNm );
+      if (m == double.NaN) return double.NaN;  // sanity
+      return ((m / 1000.0) / KmPerNm);
     }
 
     /// <summary>
@@ -63,8 +110,8 @@ namespace CoordLib
     /// <returns>Sm</returns>
     public static double MToSm( double m )
     {
-      if ( m == double.NaN ) return double.NaN;  // sanity
-      return ( ( m / 1000.0 ) / KmPerSm );
+      if (m == double.NaN) return double.NaN;  // sanity
+      return ((m / 1000.0) / KmPerSm);
     }
 
     /// <summary>
@@ -74,8 +121,8 @@ namespace CoordLib
     /// <returns>nm</returns>
     public static double KmToNm( double km )
     {
-      if ( km == double.NaN ) return double.NaN;  // sanity
-      return ( km / KmPerNm );
+      if (km == double.NaN) return double.NaN;  // sanity
+      return (km / KmPerNm);
     }
 
     /// <summary>
@@ -85,8 +132,8 @@ namespace CoordLib
     /// <returns>Sm</returns>
     public static double KmToSm( double km )
     {
-      if ( km == double.NaN ) return double.NaN;  // sanity
-      return ( km / KmPerSm );
+      if (km == double.NaN) return double.NaN;  // sanity
+      return (km / KmPerSm);
     }
 
     /// <summary>
@@ -96,8 +143,8 @@ namespace CoordLib
     /// <returns>m</returns>
     public static double NmToM( double nm )
     {
-      if ( nm == double.NaN ) return double.NaN;  // sanity
-      return ( nm * KmPerNm * 1000.0 );
+      if (nm == double.NaN) return double.NaN;  // sanity
+      return (nm * KmPerNm * 1000.0);
     }
 
     /// <summary>
@@ -107,8 +154,8 @@ namespace CoordLib
     /// <returns>m</returns>
     public static double SmToM( double sm )
     {
-      if ( sm == double.NaN ) return double.NaN;  // sanity
-      return ( sm * KmPerSm * 1000.0 );
+      if (sm == double.NaN) return double.NaN;  // sanity
+      return (sm * KmPerSm * 1000.0);
     }
 
     /// <summary>
@@ -118,8 +165,8 @@ namespace CoordLib
     /// <returns>km</returns>
     public static double NmToKm( double nm )
     {
-      if ( nm == double.NaN ) return double.NaN;  // sanity
-      return ( nm * KmPerNm );
+      if (nm == double.NaN) return double.NaN;  // sanity
+      return (nm * KmPerNm);
     }
 
     /// <summary>
@@ -129,8 +176,8 @@ namespace CoordLib
     /// <returns>km</returns>
     public static double SmToKm( double sm )
     {
-      if ( sm == double.NaN ) return double.NaN;  // sanity
-      return ( sm * KmPerSm );
+      if (sm == double.NaN) return double.NaN;  // sanity
+      return (sm * KmPerSm);
     }
 
     /// <summary>
@@ -140,8 +187,8 @@ namespace CoordLib
     /// <returns>ft</returns>
     public static double MToFt( double m )
     {
-      if ( m == double.NaN ) return double.NaN;  // sanity
-      return ( m / MPerFt );
+      if (m == double.NaN) return double.NaN;  // sanity
+      return (m / MPerFt);
     }
     /// <summary>
     /// Convert ft to m
@@ -150,8 +197,8 @@ namespace CoordLib
     /// <returns>m</returns>
     public static double FtToM( double ft )
     {
-      if ( ft == double.NaN ) return double.NaN;  // sanity
-      return ( ft * MPerFt );
+      if (ft == double.NaN) return double.NaN;  // sanity
+      return (ft * MPerFt);
     }
 
     /// <summary>
@@ -171,7 +218,7 @@ namespace CoordLib
     /// <returns>The angle in degrees</returns>
     public static double ToDegrees( double angleInRadians )
     {
-      return angleInRadians.ToDegrees();
+      return angleInRadians.ToDegrees( );
     }
 
 

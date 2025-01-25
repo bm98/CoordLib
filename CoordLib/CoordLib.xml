@@ -49,6 +49,41 @@
             Const Earth radius in SM
             </summary>
         </member>
+        <member name="F:CoordLib.ConvConsts.LatDistPerDeg_m">
+            <summary>
+            Latitude Distance per Degree [m]
+            </summary>
+        </member>
+        <member name="M:CoordLib.ConvConsts.LatDistPerDeg(System.Double)">
+            <summary>
+            Latitude Distance per Degree, default [m]
+             use earthRadius to change the unit
+            </summary>
+            <param name="earthRadius">Earth radius, default [m]</param>
+        </member>
+        <member name="M:CoordLib.ConvConsts.LonDistPerDeg(System.Double,System.Double)">
+            <summary>
+            Longitude Distance per Degree at a Latitude, default [m]
+             use earthRadius to change the unit
+            </summary>
+            <param name="atLatitude">Latitude [deg]</param>
+            <param name="earthRadius">Earth radius, default [m]</param>
+        </member>
+        <member name="M:CoordLib.ConvConsts.LatDegPerDist(System.Double,System.Double)">
+            <summary>
+            Latitude Degrees for a distance, default [m]
+            </summary>
+            <param name="distance">The distance in earthRadius base units</param>
+            <param name="earthRadius">Earth radius, default [m]</param>
+        </member>
+        <member name="M:CoordLib.ConvConsts.LonDegPerDist(System.Double,System.Double,System.Double)">
+            <summary>
+            Longitude Degrees for a distance at a Latitude, default [m]
+            </summary>
+            <param name="distance">The distance in earthRadius base units</param>
+            <param name="atLatitude"></param>
+            <param name="earthRadius">Earth radius, default [m]</param>
+        </member>
         <member name="M:CoordLib.ConvConsts.MToNm(System.Double)">
             <summary>
             Convert m to nm
@@ -952,20 +987,37 @@
         <member name="T:CoordLib.LLShapes.LLPoint">
             <summary>
             Point Struct with LatLon items as Points
+            Lon and Lat are coordinates [deg]
+            Points are wrapped around to remain (Lon: -180..180, Lat: -90..90)
+            
             Note: Math operations are performed on the numbers and not in any particular projection
+            
+            Note: all methods go with X,Y (Lon,Lat) parameters
+            
             </summary>
         </member>
         <member name="F:CoordLib.LLShapes.LLPoint.Empty">
             <summary>
-            Represents a Point that has X and Y values set to zero.
+            Represents a Point that has X and Y values set to NaN
             </summary>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLPoint.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of an Empty Point /arg does not matter
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLPoint.#ctor(CoordLib.LLShapes.LLPoint)">
+            <summary>
+            Initializes a new instance with the given LLPoint
+            </summary>
+            <param name="other">Point to copy from</param>
         </member>
         <member name="M:CoordLib.LLShapes.LLPoint.#ctor(System.Double,System.Double)">
             <summary>
             Initializes a new instance of the Point struct with the specified coordinates.
             </summary>
-            <param name="lat">Latitude</param>
-            <param name="lon">Longitude</param>
+            <param name="lonX">Longitude</param>
+            <param name="latY">Latitude</param>
         </member>
         <member name="M:CoordLib.LLShapes.LLPoint.#ctor(CoordLib.LatLon)">
             <summary>
@@ -983,14 +1035,14 @@
             returns true if coordinates wasn't assigned
             </summary>
         </member>
-        <member name="P:CoordLib.LLShapes.LLPoint.Lat">
-            <summary>
-            Latitude of this Point
-            </summary>
-        </member>
         <member name="P:CoordLib.LLShapes.LLPoint.Lon">
             <summary>
             Longitude of this Point
+            </summary>
+        </member>
+        <member name="P:CoordLib.LLShapes.LLPoint.Lat">
+            <summary>
+            Latitude of this Point
             </summary>
         </member>
         <member name="M:CoordLib.LLShapes.LLPoint.op_Explicit(CoordLib.LLShapes.LLPoint)~CoordLib.LatLon">
@@ -1008,11 +1060,6 @@
             Translates a Point by the negative of a given Size.
             </summary>
         </member>
-        <member name="M:CoordLib.LLShapes.LLPoint.op_Subtraction(CoordLib.LLShapes.LLPoint,CoordLib.LLShapes.LLPoint)">
-            <summary>
-            Translates a Point by the negative of a given Point
-            </summary>
-        </member>
         <member name="M:CoordLib.LLShapes.LLPoint.op_Equality(CoordLib.LLShapes.LLPoint,CoordLib.LLShapes.LLPoint)">
             <summary>
             Compares two Point objects. The result specifies whether the values of the X and Y properties of the two Point objects are equal.
@@ -1023,29 +1070,48 @@
             Compares two Point objects. The result specifies whether the values of the X or Y properties of the two Point objects are unequal.
             </summary>
         </member>
+        <member name="M:CoordLib.LLShapes.LLPoint.Add(CoordLib.LLShapes.LLPoint,System.Double,System.Double)">
+            <summary>
+            Adds the specified width and height to the specified Point.
+            Returns a new LLPoint as result
+            </summary>
+        </member>
         <member name="M:CoordLib.LLShapes.LLPoint.Add(CoordLib.LLShapes.LLPoint,CoordLib.LLShapes.LLSize)">
             <summary>
             Adds the specified Size to the specified Point.
+            Returns a new LLPoint as result
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLPoint.Subtract(CoordLib.LLShapes.LLPoint,System.Double,System.Double)">
+            <summary>
+            Subtracts the specified width and height from the specified Point.
+            Returns a new LLPoint as result
             </summary>
         </member>
         <member name="M:CoordLib.LLShapes.LLPoint.Subtract(CoordLib.LLShapes.LLPoint,CoordLib.LLShapes.LLSize)">
             <summary>
+            Returns a new LLPoint as result
             Returns the result of subtracting specified Size from the specified Point.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLPoint.Offset(System.Double,System.Double)">
+            <summary>
+            Translates this Point by the specified amount 
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLPoint.Offset(CoordLib.LLShapes.LLSize)">
+            <summary>
+            Translates this Point by the specified distance
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLPoint.Offset(CoordLib.LLShapes.LLPoint)">
+            <summary>
+            Translates this Point by the specified Point (as offsets).
             </summary>
         </member>
         <member name="M:CoordLib.LLShapes.LLPoint.Equals(System.Object)">
             <summary>
             Specifies whether this point instance contains the same coordinates as the specified object.
-            </summary>
-        </member>
-        <member name="M:CoordLib.LLShapes.LLPoint.Offset(CoordLib.LLShapes.LLPoint)">
-            <summary>
-            Translates this Point by the specified Point.
-            </summary>
-        </member>
-        <member name="M:CoordLib.LLShapes.LLPoint.Offset(System.Double,System.Double)">
-            <summary>
-            Translates this Point by the specified amount.
             </summary>
         </member>
         <member name="M:CoordLib.LLShapes.LLPoint.GetHashCode">
@@ -1061,7 +1127,14 @@
         <member name="T:CoordLib.LLShapes.LLRectangle">
             <summary>
             Rectangle made from LatLon Coordinate Items
+             THE RECTANGLE LOCATION IS LEFT/TOP  (same as Graphic Rectangles)
+               WIDTH  to the right (pos Longitude)
+               HEIGHT to downwards (neg Latitude)
+               
             Note: Math operations are performed on the numbers and not in any particular projection
+            
+            Note: all methods go with X,Y (Lon,Lat) parameters
+            
             </summary>
         </member>
         <member name="M:CoordLib.LLShapes.LLRectangle.#cctor">
@@ -1074,24 +1147,35 @@
             Represents a Rectangle structure with its properties left uninitialized.
             </summary>
         </member>
+        <member name="M:CoordLib.LLShapes.LLRectangle.GetSized(CoordLib.LLShapes.LLPoint,System.Double,System.Double,System.Double)">
+            <summary>
+            Get a sized LLRectangle around a center point with the dimensions given, default [m]
+              use earthRadius for other dimensions
+              this will scale along the Latitude of the center point (flattened)
+            </summary>
+            <param name="center">Center point</param>
+            <param name="width">Widht in earthRadius base dimension</param>
+            <param name="height">Height in earthRadius base dimension</param>
+            <param name="earthRadius">EarthRadius, default [m]</param>
+        </member>
         <member name="P:CoordLib.LLShapes.LLRectangle.Lon">
             <summary>
-            Longitude (X) Part
+            Get; Set: Longitude (X, horizontal part) [deg]
             </summary>
         </member>
         <member name="P:CoordLib.LLShapes.LLRectangle.Lat">
             <summary>
-            Latitude (Y) Part
+            Get; Set: Latitude (Y, vertical part) [deg]
             </summary>
         </member>
         <member name="P:CoordLib.LLShapes.LLRectangle.WidthLon">
             <summary>
-            Radial Distance as angle (deg)
+            Get; Set: Longitudinal Distance as angle [deg]
             </summary>
         </member>
         <member name="P:CoordLib.LLShapes.LLRectangle.HeightLat">
             <summary>
-            Radial Distance as angle (deg)
+            Get; Set: Lateral Distance as angle [deg]
             </summary>
         </member>
         <member name="P:CoordLib.LLShapes.LLRectangle.IsEmpty">
@@ -1106,64 +1190,72 @@
         </member>
         <member name="M:CoordLib.LLShapes.LLRectangle.#ctor(System.Double,System.Double,System.Double,System.Double)">
             <summary>
-            cTor: from valued
+            cTor: from values
             </summary>
+            <param name="lon">Longitude center</param>
+            <param name="lat">Latitude center</param>
+            <param name="widthLng">Horizontal size</param>
+            <param name="heightLat">vertical size</param>
         </member>
         <member name="M:CoordLib.LLShapes.LLRectangle.#ctor(CoordLib.LLShapes.LLPoint,CoordLib.LLShapes.LLSize)">
             <summary>
-            cTor: from point and size
+            cTor: from LLPoint and LLSize
             </summary>
-            <param name="location"></param>
-            <param name="size"></param>
+            <param name="location">Center point</param>
+            <param name="size">Area</param>
         </member>
         <member name="M:CoordLib.LLShapes.LLRectangle.FromLTRB(System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Returns an LLRectangle from Left,Top,Right,Bottom points
             </summary>
+            <param name="leftLon">Longitude of the left side</param>
+            <param name="topLat">Latitude of the top side</param>
+            <param name="rightLon">Longitude of the right side</param>
+            <param name="bottomLat">Latitude of the bottom side</param>
+        </member>
+        <member name="P:CoordLib.LLShapes.LLRectangle.Location">
+            <summary>
+            Get: Left,Top Point
+            </summary>
         </member>
         <member name="P:CoordLib.LLShapes.LLRectangle.LocationTopLeft">
             <summary>
-            TopLeft Point
+            Get: Left,Top Point
             </summary>
         </member>
         <member name="P:CoordLib.LLShapes.LLRectangle.LocationRightBottom">
             <summary>
-            Right Bottom Point
+            Get: Right,Bottom Point
             </summary>
         </member>
         <member name="P:CoordLib.LLShapes.LLRectangle.LocationMiddle">
             <summary>
-            Center Point
+            Get: Center Point of this LLRectangle
             </summary>
         </member>
         <member name="P:CoordLib.LLShapes.LLRectangle.Size">
             <summary>
-            Gets or sets the size of this Rectangle.
+            Get; Set: The size of this LLRectangle
             </summary>
         </member>
-        <member name="P:CoordLib.LLShapes.LLRectangle.Left">
+        <member name="P:CoordLib.LLShapes.LLRectangle.LeftLon">
             <summary>
-            Left (Longitude)
+            Get: Left (Longitude)
             </summary>
         </member>
-        <member name="P:CoordLib.LLShapes.LLRectangle.Top">
+        <member name="P:CoordLib.LLShapes.LLRectangle.TopLat">
             <summary>
-            Top (Latitude)
+            Get: Top (Latitude)
             </summary>
         </member>
-        <member name="P:CoordLib.LLShapes.LLRectangle.Right">
+        <member name="P:CoordLib.LLShapes.LLRectangle.RightLon">
             <summary>
-            Right (Lon + WidthDeg)
+            Get: Right (Lon + WidthDeg)
             </summary>
         </member>
-        <member name="P:CoordLib.LLShapes.LLRectangle.Bottom">
+        <member name="P:CoordLib.LLShapes.LLRectangle.BottomLat">
             <summary>
-            Bottom (Lat-Height)
-            </summary>
-        </member>
-        <member name="M:CoordLib.LLShapes.LLRectangle.Equals(System.Object)">
-            <summary>
-            Tests whether obj is a Rectangle structure with the same location and size of this Rectangle structure.
+            Get: Bottom (Lat - Height)
             </summary>
         </member>
         <member name="M:CoordLib.LLShapes.LLRectangle.op_Equality(CoordLib.LLShapes.LLRectangle,CoordLib.LLShapes.LLRectangle)">
@@ -1176,10 +1268,27 @@
             Inequality: Tests whether two Rectangle structures differ in location or size.
             </summary>
         </member>
+        <member name="M:CoordLib.LLShapes.LLRectangle.Offset(System.Double,System.Double)">
+            <summary>
+            Adjusts the location of this rectangle by the specified amount.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLRectangle.Offset(CoordLib.LLShapes.LLSize)">
+            <summary>
+            Adjusts the location of this rectangle by the specified amount.
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLRectangle.Offset(CoordLib.LLShapes.LLPoint)">
+            <summary>
+            Adjusts the location of this rectangle by the specified amount.
+            </summary>
+        </member>
         <member name="M:CoordLib.LLShapes.LLRectangle.Contains(System.Double,System.Double)">
             <summary>
             Determines if the specified point is contained within this Rectangle structure.
             </summary>
+            <param name="lon">Lon or X of point</param>
+            <param name="lat">Lat or Y of point</param>
         </member>
         <member name="M:CoordLib.LLShapes.LLRectangle.Contains(CoordLib.LLShapes.LLPoint)">
             <summary>
@@ -1191,21 +1300,78 @@
             Determines if the rectangular region represented by rect is entirely contained within this Rectangle structure.
             </summary>
         </member>
+        <member name="M:CoordLib.LLShapes.LLRectangle.Inflate(System.Double,System.Double)">
+            <summary>
+            Inflate our size by the amount given in both directions, maintaining the original Center
+            i.e. a size of 50 increased by 20 will result in a size of 20+50+20 = 90
+            </summary>
+            <param name="lonX">Width Increase</param>
+            <param name="latY">Height Increase</param>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLRectangle.Inflate(CoordLib.LLShapes.LLSize)">
+            <summary>
+            Inflate our size by the amount given in both directions, maintaining the original Center
+            i.e. a size of 50 increased by 20 will result in a size of 20+50+20 = 90
+            </summary>
+            <param name="size">Increase Size</param>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLRectangle.Inflate(CoordLib.LLShapes.LLRectangle,System.Double,System.Double)">
+             <summary>
+             Return an inflated LLRectangle based on the given rectangle and the amount given in both directions, maintaining the original Center
+             i.e. a size of 50 increased by 20 will result in a size of 20+50+20 = 90
+             </summary>
+            <param name="rect">The source Rectangle</param>
+             <param name="lonX">Width Increase</param>
+             <param name="latY">Height Increase</param>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLRectangle.Intersect(CoordLib.LLShapes.LLRectangle,CoordLib.LLShapes.LLRectangle)">
+            <summary>
+            Returns a third LLRectangle that represents the intersection
+                of two other LLRectangles. 
+                If there is no intersection, an empty LLRectangle is returned.
+            </summary>
+            <param name="rect1">Rectangle 1</param>
+            <param name="rect2">Rectangle 2</param>
+            <returns>An LLRectangle</returns>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLRectangle.Intersect(CoordLib.LLShapes.LLRectangle)">
+            <summary>
+            Intersect this LLRectangle with another LLRectangle
+            </summary>
+            <param name="otherRect">LLRectangle to intersect with</param>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLRectangle.IntersectsWith(CoordLib.LLShapes.LLRectangle)">
+            <summary>
+            True if this Rectangle Intersects with another LLRectangle
+            i.e. has a common area
+            </summary>§
+            <param name="otherRect"></param>
+            <returns>True on intersection</returns>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLRectangle.Union(CoordLib.LLShapes.LLRectangle,CoordLib.LLShapes.LLRectangle)">
+            <summary>
+            An LLRectangle that bounds the union of the two LLRectangles
+            </summary>
+            <param name="rect1">Rectangle 1</param>
+            <param name="rect2">Rectangle 2</param>
+            <returns>An LLRectangle</returns>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLRectangle.Union(CoordLib.LLShapes.LLRectangle)">
+            <summary>
+            Union this LLRectangle with another LLRectangle
+            </summary>
+            <param name="otherRect">LLRectangle to union with</param>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLRectangle.Equals(System.Object)">
+            <summary>
+            Tests whether obj is a Rectangle structure with the same location and size of this Rectangle structure.
+            </summary>
+        </member>
         <member name="M:CoordLib.LLShapes.LLRectangle.GetHashCode">
             <summary>
             Returns the hash code for this Rectangle structure. For information about the use of hash codes, see GetHashCode() .
             </summary>
             <returns></returns>
-        </member>
-        <member name="M:CoordLib.LLShapes.LLRectangle.Offset(CoordLib.LLShapes.LLPoint)">
-            <summary>
-            Adjusts the location of this rectangle by the specified amount.
-            </summary>
-        </member>
-        <member name="M:CoordLib.LLShapes.LLRectangle.Offset(System.Double,System.Double)">
-            <summary>
-            Adjusts the location of this rectangle by the specified amount.
-            </summary>
         </member>
         <member name="M:CoordLib.LLShapes.LLRectangle.ToString">
             <summary>
@@ -1215,7 +1381,12 @@
         <member name="T:CoordLib.LLShapes.LLSize">
             <summary>
             Size Struct with LatLon items as Points
+            WidthLon and HeightLat can be considered as Longitudinal distance angle [deg] rsp. Lateral distance angle [deg]
+            
             Note: Math operations are performed on the numbers and not in any particular projection
+            
+            Note: all methods go with X,Y (Lon,Lat) parameters
+            
             </summary>
         </member>
         <member name="M:CoordLib.LLShapes.LLSize.#cctor">
@@ -1235,12 +1406,12 @@
         </member>
         <member name="P:CoordLib.LLShapes.LLSize.WidthLon">
             <summary>
-            Width or Longitude degrees
+            Width or Longitude [deg]
             </summary>
         </member>
         <member name="P:CoordLib.LLShapes.LLSize.HeightLat">
             <summary>
-            Height or Latitude degrees
+            Height or Latitude [deg]
             </summary>
         </member>
         <member name="M:CoordLib.LLShapes.LLSize.#ctor(System.Boolean)">
@@ -1255,12 +1426,13 @@
         </member>
         <member name="M:CoordLib.LLShapes.LLSize.#ctor(CoordLib.LLShapes.LLPoint)">
             <summary>
-            cTor: From LLPoint values
+            cTor: From LLPoint values 
+             lon-> width, lat-> height
             </summary>
         </member>
         <member name="M:CoordLib.LLShapes.LLSize.#ctor(System.Double,System.Double)">
             <summary>
-            cTor: from height (latitude) and width (longitude) as coordinates [deg]
+            cTor: from width (longitude) and height (latitude) as coordinates [deg]
             </summary>
         </member>
         <member name="M:CoordLib.LLShapes.LLSize.op_Addition(CoordLib.LLShapes.LLSize,CoordLib.LLShapes.LLSize)">
@@ -1289,14 +1461,33 @@
             </summary>
             <param name="size"></param>
         </member>
+        <member name="M:CoordLib.LLShapes.LLSize.ToLLPoint">
+            <summary>
+            Returns the Values as LLPoint Struct
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLSize.Add(CoordLib.LLShapes.LLSize,System.Double,System.Double)">
+            <summary>
+            Adds the width and height to the width and height of sz1
+            Returns a new LLSize as result
+            </summary>
+        </member>
         <member name="M:CoordLib.LLShapes.LLSize.Add(CoordLib.LLShapes.LLSize,CoordLib.LLShapes.LLSize)">
             <summary>
-            Adds the width and height of one Size structure to the width and height of another Size structure.
+            Adds the width and height of sz2 to the width and height sz1.
+            Returns a new LLSize as result
+            </summary>
+        </member>
+        <member name="M:CoordLib.LLShapes.LLSize.Subtract(CoordLib.LLShapes.LLSize,System.Double,System.Double)">
+            <summary>
+            Subtracts the width and height from the width and height of sz1
+            Returns a new LLSize as result
             </summary>
         </member>
         <member name="M:CoordLib.LLShapes.LLSize.Subtract(CoordLib.LLShapes.LLSize,CoordLib.LLShapes.LLSize)">
             <summary>
-            Subtracts the width and height of one Size structure from the width and height of another Size structure.
+            Subtracts the width and height of sz2 from the width and height of sz1
+            Returns a new LLSize as result
             </summary>
         </member>
         <member name="M:CoordLib.LLShapes.LLSize.Equals(System.Object)">
@@ -1307,11 +1498,6 @@
         <member name="M:CoordLib.LLShapes.LLSize.GetHashCode">
             <summary>
             Returns a hash code for this Size structure.
-            </summary>
-        </member>
-        <member name="M:CoordLib.LLShapes.LLSize.ToLLPoint">
-            <summary>
-            Returns the Values as LLPoint Struct
             </summary>
         </member>
         <member name="M:CoordLib.LLShapes.LLSize.ToString">

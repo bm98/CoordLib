@@ -1,29 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace CoordLib.LLShapes
 {
   /// <summary>
   /// Size Struct with LatLon items as Points
+  /// WidthLon and HeightLat can be considered as Longitudinal distance angle [deg] rsp. Lateral distance angle [deg]
+  /// 
   /// Note: Math operations are performed on the numbers and not in any particular projection
+  /// 
+  /// Note: all methods go with X,Y (Lon,Lat) parameters
+  /// 
   /// </summary>
   public struct LLSize
   {
     /// <summary>
     /// static cTor:
     /// </summary>
-    static LLSize( )
-    {
-      Empty = new LLSize( );
-    }
-
+    static LLSize( ) => Empty = new LLSize( );
 
     /// <summary>
     /// An Empty LLSize
     /// </summary>
     public static readonly LLSize Empty;
+
+    // specific
+
+
+
+    // *** STRUCT
 
     /// <summary>
     /// Get: true if it is empty (Height and Width value of 0)
@@ -31,11 +36,11 @@ namespace CoordLib.LLShapes
     public bool IsEmpty => (WidthLon == 0d) && (HeightLat == 0d);
 
     /// <summary>
-    /// Width or Longitude degrees
+    /// Width or Longitude [deg]
     /// </summary>
     public double WidthLon { get; set; }
     /// <summary>
-    /// Height or Latitude degrees
+    /// Height or Latitude [deg]
     /// </summary>
     public double HeightLat { get; set; }
 
@@ -56,21 +61,22 @@ namespace CoordLib.LLShapes
       HeightLat = size.HeightLat;
     }
     /// <summary>
-    /// cTor: From LLPoint values
+    /// cTor: From LLPoint values 
+    ///  lon-> width, lat-> height
     /// </summary>
     public LLSize( LLPoint pt )
     {
-      HeightLat = pt.Lat;
       WidthLon = pt.Lon;
+      HeightLat = pt.Lat;
     }
 
     /// <summary>
-    /// cTor: from height (latitude) and width (longitude) as coordinates [deg]
+    /// cTor: from width (longitude) and height (latitude) as coordinates [deg]
     /// </summary>
-    public LLSize( double heightLat, double widthLng )
+    public LLSize( double widthLon, double heightLat )
     {
+      WidthLon = widthLon;
       HeightLat = heightLat;
-      WidthLon = widthLng;
     }
 
     /// <summary>
@@ -97,17 +103,37 @@ namespace CoordLib.LLShapes
     /// Conversion: Returns an LLPoint from the values (X=Height,Lat / Y=Width,Lon)
     /// </summary>
     /// <param name="size"></param>
-    public static explicit operator LLPoint( LLSize size ) => new LLPoint( size.HeightLat, size.WidthLon );
+    public static explicit operator LLPoint( LLSize size ) => new LLPoint( size.WidthLon, size.HeightLat );
+    /// <summary>
+    /// Returns the Values as LLPoint Struct
+    /// </summary>
+    public LLPoint ToLLPoint( ) => (LLPoint)this;
 
     /// <summary>
-    /// Adds the width and height of one Size structure to the width and height of another Size structure.
+    /// Adds the width and height to the width and height of sz1
+    /// Returns a new LLSize as result
     /// </summary>
-    public static LLSize Add( LLSize sz1, LLSize sz2 ) => new LLSize( sz1.HeightLat + sz2.HeightLat, sz1.WidthLon + sz2.WidthLon );
+    public static LLSize Add( LLSize sz1, double widthLon, double heightLat ) => new LLSize( sz1.WidthLon + widthLon, sz1.HeightLat + heightLat );
 
     /// <summary>
-    /// Subtracts the width and height of one Size structure from the width and height of another Size structure.
+    /// Adds the width and height of sz2 to the width and height sz1.
+    /// Returns a new LLSize as result
     /// </summary>
-    public static LLSize Subtract( LLSize sz1, LLSize sz2 ) => new LLSize( sz1.HeightLat - sz2.HeightLat, sz1.WidthLon - sz2.WidthLon );
+    public static LLSize Add( LLSize sz1, LLSize sz2 ) => Add( sz1, sz2.WidthLon, sz2.HeightLat );
+
+    /// <summary>
+    /// Subtracts the width and height from the width and height of sz1
+    /// Returns a new LLSize as result
+    /// </summary>
+    public static LLSize Subtract( LLSize sz1, double widthLon, double heightLat ) => Add( sz1, -widthLon, -heightLat );
+
+    /// <summary>
+    /// Subtracts the width and height of sz2 from the width and height of sz1
+    /// Returns a new LLSize as result
+    /// </summary>
+    public static LLSize Subtract( LLSize sz1, LLSize sz2 ) => Add( sz1, -sz2.WidthLon, -sz2.HeightLat );
+
+
 
     /// <summary>
     /// Tests to see whether the specified object is a Size structure with the same dimensions as this Size structure.
@@ -131,17 +157,12 @@ namespace CoordLib.LLShapes
     }
 
     /// <summary>
-    /// Returns the Values as LLPoint Struct
-    /// </summary>
-    public LLPoint ToLLPoint( ) => (LLPoint)this;
-
-    /// <summary>
     /// Creates a human-readable string that represents this Size structure.
     /// </summary>
     public override string ToString( )
     {
-      return "{WidthLon=" + WidthLon.ToString( CultureInfo.InvariantCulture ) + ", HeightLng=" +
-             HeightLat.ToString( CultureInfo.InvariantCulture ) + "}";
+      return "{WidthLon=" + WidthLon.ToString( CultureInfo.InvariantCulture )
+        + ", HeightLng=" + HeightLat.ToString( CultureInfo.InvariantCulture ) + "}";
     }
 
 
