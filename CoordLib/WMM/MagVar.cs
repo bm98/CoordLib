@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 // CREDITS:
 //  https://github.com/etfovac/wmm-cs
@@ -645,6 +643,72 @@ namespace CoordLib.WMM
         {0,0,0,-0.1,0.1,0,0,0,0.1,0,0,0,-0.1}
     };
 
+    //************************************************************************
+    // BM: WMM coeff 2025-2030   NOAA download 20250401 file WMM2025COF.zip
+    // rem. transposed tables from the COF file, each COD col goes into rows 1..12
+    //      of the corresponding table (
+
+    static double[,] gnm_wmm2025 = new double[13, 13] {
+        {0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {-29351.8,-1410.8,0,0,0,0,0,0,0,0,0,0,0},
+        {-2556.6,2951.1,1649.3,0,0,0,0,0,0,0,0,0,0},
+        { 1361,-2404.1,1243.8,453.6,0,0,0,0,0,0,0,0,0},
+        { 895,799.5,55.7,-281.1,12.1,0,0,0,0,0,0,0,0},
+        { -233.2,368.9,187.2,-138.7,-142,20.9,0,0,0,0,0,0,0},
+        { 64.4,63.8,76.9,-115.7,-40.9,14.9,-60.7,0,0,0,0,0,0},
+        { 79.5,-77,-8.8,59.3,15.8,2.5,-11.1,14.2,0,0,0,0,0},
+        { 23.2,10.8,-17.5,2,-21.7,16.9,15,-16.8,0.9,0,0,0,0},
+        { 4.6,7.8,3,-0.2,-2.5,-13.1,2.4,8.6,-8.7,-12.9,0,0,0},
+        { -1.3,-6.4,0.2,2,-1,-0.6,-0.9,1.5,0.9,-2.7,-3.9,0,0},
+        { 2.9,-1.5,-2.5,2.4,-0.6,-0.1,-0.6,-0.1,1.1,-1,-0.2,2.6,0},
+        { -2,-0.2,0.3,1.2,-1.3,0.6,0.6,0.5,-0.1,-0.4,-0.2,-1.3,-0.7}
+    };
+    static double[,] hnm_wmm2025 = new double[13, 13]{
+        {0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,4545.4,0,0,0,0,0,0,0,0,0,0,0},
+        {0,-3133.6,-815.1,0,0,0,0,0,0,0,0,0,0},
+        {0,-56.6,237.5,-549.5,0,0,0,0,0,0,0,0,0},
+        {0,278.6,-133.9,212,-375.6,0,0,0,0,0,0,0,0},
+        {0,45.4,220.2,-122.9,43,106.1,0,0,0,0,0,0,0},
+        {0,-18.4,16.8,48.8,-59.8,10.9,72.7,0,0,0,0,0,0},
+        {0,-48.9,-14.4,-1,23.4,-7.4,-25.1,-2.3,0,0,0,0,0},
+        {0,7.1,-12.6,11.4,-9.7,12.7,0.7,-5.2,3.9,0,0,0,0},
+        {0,-24.8,12.2,8.3,-3.3,-5.2,7.2,-0.6,0.8,10,0,0,0},
+        {0,3.3,0,2.4,5.3,-9.1,0.4,-4.2,-3.8,0.9,-9.1,0,0},
+        {0,0,2.9,-0.6,0.2,0.5,-0.3,-1.2,-1.7,-2.9,-1.8,-2.3,0},
+        {0,-1.3,0.7,1,-1.4,0,0.6,-0.1,0.8,0.1,-1,0.1,0.2}
+    };
+    static double[,] gtnm_wmm2025 = new double[13, 13]{
+        {0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {12,9.7,0,0,0,0,0,0,0,0,0,0,0},
+        {-11.6,-5.2,-8,0,0,0,0,0,0,0,0,0,0},
+        {-1.3,-4.2,0.4,-15.6,0,0,0,0,0,0,0,0,0},
+        {-1.6,-2.4,-6,5.6,-7,0,0,0,0,0,0,0,0},
+        {0.6,1.4,0,0.6,2.2,0.9,0,0,0,0,0,0,0},
+        {-0.2,-0.4,0.9,1.2,-0.9,0.3,0.9,0,0,0,0,0,0},
+        {0,-0.1,-0.1,0.5,-0.1,-0.8,-0.8,0.8,0,0,0,0,0},
+        {-0.1,0.2,0,0.5,-0.1,0.3,0.2,0,0.2,0,0,0,0},
+        {0,-0.1,0.1,0.3,-0.3,0,0.3,-0.1,0.1,-0.1,0,0,0},
+        {0.1,0,0.1,0.1,0,-0.3,0,-0.1,-0.1,0,0,0,0},
+        {0,0,0,0,0,-0.1,0,0,-0.1,-0.1,-0.1,-0.1,0},
+        {0,0,0,0,0,0,0.1,0,0,0,-0.1,0,-0.1}
+    };
+    static double[,] htnm_wmm2025 = new double[13, 13]{
+        {0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,-21.5,0,0,0,0,0,0,0,0,0,0,0},
+        {0,-27.7,-12.1,0,0,0,0,0,0,0,0,0,0},
+        {0,4,-0.3,-4.1,0,0,0,0,0,0,0,0,0},
+        {0,-1.1,4.1,1.6,-4.4,0,0,0,0,0,0,0,0},
+        {0,-0.5,2.2,0.4,1.7,1.9,0,0,0,0,0,0,0},
+        {0,0.3,-1.6,-0.4,0.9,0.7,0.9,0,0,0,0,0,0},
+        {0,0.6,0.5,-0.8,0,-1,0.6,-0.2,0,0,0,0,0},
+        {0,-0.2,0.5,-0.4,0.4,-0.5,-0.6,0.3,0.2,0,0,0,0},
+        {0,-0.3,0.3,-0.3,0.3,0.2,-0.1,-0.2,0.4,0.1,0,0,0},
+        {0,0,0,-0.2,0.1,-0.1,0.1,0,-0.1,0.2,0,0,0},
+        {0,0,0.1,0,0.1,0,0,0.1,0,0,0,0,0},
+        {0,0,0,-0.1,0.1,0,0,0,0,0,0,0,-0.1}
+    };
+
     #endregion
 
     const int nmax = 12;
@@ -755,14 +819,16 @@ namespace CoordLib.WMM
     /* 
      * return variation (in radians) given: 
      * geodetic latitude (radians), longitude (radians), height (km), (Julian) date,
-     * model (1985 za WMM85, 1990 za WMM90, 1995 za WMM95, 2000 za WMM2000, 2005 za WMM2005, 2010 za WMM2010, 2015 za WWM2015, 2020 WMM2020
+     * model (1985 za WMM85, 1990 za WMM90, 1995 za WMM95, 2000 za WMM2000, 2005 za WMM2005, 2010 za WMM2010
+     * , 2015 za WWM2015, 2020 WMM2020, 2025 WMM2025
      * N and E lat and long are positive, S and W negative
      */
     /// <summary>
     /// return variation( in radians) given: 
     ///  geodetic latitude( radians), longitude( radians), height( km), (Julian) date,
     ///  
-    ///  model(1985 za WMM85, 1990 za WMM90, 1995 za WMM95, 2000 za WMM2000, 2005 za WMM2005, 2010 za WMM2010, 2015 za WWM2015, 2020 WMM2020)
+    ///  model(1985 za WMM85, 1990 za WMM90, 1995 za WMM95, 2000 za WMM2000, 2005 za WMM2005, 2010 za WMM2010
+    ///  , 2015 za WWM2015, 2020 WMM2020, 2025 WMM2025)
     ///  model other than the above uses the latest one (i.e. -1)
     ///  
     ///  N and E lat and long are positive, S and W negative
@@ -774,7 +840,7 @@ namespace CoordLib.WMM
     /// <param name="lon_rad">longitude in radians</param>
     /// <param name="h_km">altitude in km</param>
     /// <param name="dat">julian date</param>
-    /// <param name="model">model to use: 1985 .. 2020 5y incr.</param>
+    /// <param name="model">model to use: 1985 .. 2025 5y incr.</param>
     /// <param name="field"></param>
     /// <returns>Magnetic variation in radians</returns>
     public double SGMagVar( double lat_rad, double lon_rad, double h_km, long dat, int model, double[] field )
@@ -939,12 +1005,21 @@ namespace CoordLib.WMM
             }
           break;
 
-        default: // any other model number uses the latest one (adjust when extending)
-          yearfrac = (dat - yymmdd_to_julian_days( 20, 1, 1 )) / 365.25; //20 -> 2020
+        case 2025:     /* WMM2025 */
+          yearfrac = (dat - yymmdd_to_julian_days( 25, 1, 1 )) / 365.25; //25 -> 2025
           for (n = 1; n <= nmaxl; n++)
             for (m = 0; m <= nmaxl; m++) {
-              gnm[n, m] = gnm_wmm2020[n, m] + yearfrac * gtnm_wmm2020[n, m];
-              hnm[n, m] = hnm_wmm2020[n, m] + yearfrac * htnm_wmm2020[n, m];
+              gnm[n, m] = gnm_wmm2025[n, m] + yearfrac * gtnm_wmm2025[n, m];
+              hnm[n, m] = hnm_wmm2025[n, m] + yearfrac * htnm_wmm2025[n, m];
+            }
+          break;
+
+        default: // any other model number uses the latest one (adjust when extending)
+          yearfrac = (dat - yymmdd_to_julian_days( 25, 1, 1 )) / 365.25; //25 -> 2025
+          for (n = 1; n <= nmaxl; n++)
+            for (m = 0; m <= nmaxl; m++) {
+              gnm[n, m] = gnm_wmm2025[n, m] + yearfrac * gtnm_wmm2025[n, m];
+              hnm[n, m] = hnm_wmm2025[n, m] + yearfrac * htnm_wmm2025[n, m];
             }
           break;
 

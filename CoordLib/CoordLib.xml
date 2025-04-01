@@ -627,7 +627,8 @@
             Added Altitude for convenience
             Added UTM Zone resolution
             
-            Changed to Struct (Aug 2033/BM)
+            Changed to Struct (Aug 2023/BM)
+            Add Serializable (Jan 2025/BM)
             </summary>
         </member>
         <member name="P:CoordLib.LatLon.Empty">
@@ -2864,7 +2865,8 @@
             return variation( in radians) given: 
              geodetic latitude( radians), longitude( radians), height( km), (Julian) date,
              
-             model(1985 za WMM85, 1990 za WMM90, 1995 za WMM95, 2000 za WMM2000, 2005 za WMM2005, 2010 za WMM2010, 2015 za WWM2015, 2020 WMM2020)
+             model(1985 za WMM85, 1990 za WMM90, 1995 za WMM95, 2000 za WMM2000, 2005 za WMM2005, 2010 za WMM2010
+             , 2015 za WWM2015, 2020 WMM2020, 2025 WMM2025)
              model other than the above uses the latest one (i.e. -1)
              
              N and E lat and long are positive, S and W negative
@@ -2876,7 +2878,7 @@
             <param name="lon_rad">longitude in radians</param>
             <param name="h_km">altitude in km</param>
             <param name="dat">julian date</param>
-            <param name="model">model to use: 1985 .. 2020 5y incr.</param>
+            <param name="model">model to use: 1985 .. 2025 5y incr.</param>
             <param name="field"></param>
             <returns>Magnetic variation in radians</returns>
         </member>

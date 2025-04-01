@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 
 using CoordLib.Extensions;
 
@@ -46,6 +45,7 @@ namespace CoordLib.MercatorTiles
   ///        15       8,388,608           4.7773           1 : 18,055.99        ~1.25km^2
   ///        
   /// </summary>
+  [Serializable]
   public struct TileXY
   {
     private Point _tileXY;

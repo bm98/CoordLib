@@ -1,5 +1,5 @@
-CoordLib V 1.4 - Build 17
-(c) M. Burri - 26-Jan-2023
+CoordLib V 1.9 - Build 27
+(c) M. Burri - 01-Apr-2025
 
 Contains files:
 
@@ -14,6 +14,9 @@ Scanned for viruses before packing...
 github@burri-web.org
 
 Changelog:
+
+V 1.9:
+- Add WMM calculations (WMM2025 coefficients)
 
 V 1.4:
 - Add WMM calculations (WMM2020 coefficients)

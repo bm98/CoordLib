@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 using CoordLib;
 using CoordLib.MercatorTiles;
@@ -22,11 +23,18 @@ namespace TEST_CoordLib
       InitializeComponent( );
     }
 
-    private class Item
+    private class Item : IEquatable<Item>
     {
       public int ID { get; set; }
       public string QString { get; set; }
       public Quad IQuad { get; set; }
+
+      public bool Equals( Item other )
+      {
+        return other.ID == ID
+          && other.QString == QString
+          && other.IQuad == IQuad;
+      }
     }
 
     // deterministic
@@ -151,12 +159,10 @@ namespace TEST_CoordLib
         var distLon = ll.DistanceTo( new LatLon( i, 1 ), ConvConsts.EarthRadiusM ); // lon dist  [m]
         //RTB.Text += $"{i,2:0},{distLon:#0.0},{distLat:#0.0}\n";
         //RTB.Text += $"{distLon:#0.0},\n";
-        RTB.Text += $"{ConvConsts.LonDistPerDeg(i, ConvConsts.EarthRadiusNm):#0.0000},\n";
+        RTB.Text += $"{ConvConsts.LonDistPerDeg( i, ConvConsts.EarthRadiusNm ):#0.0000},\n";
 
       }
     }
-
-
 
   }
 }

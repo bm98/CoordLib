@@ -1,10 +1,9 @@
-﻿using CoordLib.UTMGrid;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 using CoordLib.Extensions;
 using CoordLib.MercatorTiles;
+using CoordLib.UTMGrid;
 
 namespace CoordLib.WMM
 {

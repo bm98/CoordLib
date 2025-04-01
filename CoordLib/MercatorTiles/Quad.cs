@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 
 using static CoordLib.MercatorTiles.QuadOp;
 using static CoordLib.MercatorTiles.Projection;
@@ -18,6 +17,7 @@ namespace CoordLib.MercatorTiles
   /// Note: a Quad which is empty (ZoomLevel 0) would represent the entire map 
   /// 
   /// </summary>
+  [Serializable]
   public struct Quad
   {
     #region STATIC 

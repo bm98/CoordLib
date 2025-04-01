@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Xml;
 
 namespace CoordLib
 {
@@ -19,8 +18,10 @@ namespace CoordLib
   /// Added Altitude for convenience
   /// Added UTM Zone resolution
   /// 
-  /// Changed to Struct (Aug 2033/BM)
+  /// Changed to Struct (Aug 2023/BM)
+  /// Add Serializable (Jan 2025/BM)
   /// </summary>
+  [Serializable]
   public struct LatLon : IEquatable<LatLon>, IComparable<LatLon>
   {
     /// <summary>

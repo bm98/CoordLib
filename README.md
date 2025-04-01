@@ -11,7 +11,7 @@ https://github.com/chrisveness/geodesy
 
 ### LatLon drawing primitives (Point, Size, Rectangle)
 
-### Calculation of Magnetic Variation using WMM2020.COF
+### Calculation of Magnetic Variation using WMM2025.COF
 
 
 ---

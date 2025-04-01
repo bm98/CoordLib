@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 
 using static System.Math;
+
 using CoordLib.MercatorTiles;
 
 namespace CoordLib.Extensions

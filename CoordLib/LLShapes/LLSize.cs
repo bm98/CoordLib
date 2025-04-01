@@ -12,6 +12,7 @@ namespace CoordLib.LLShapes
   /// Note: all methods go with X,Y (Lon,Lat) parameters
   /// 
   /// </summary>
+  [Serializable]
   public struct LLSize
   {
     /// <summary>
