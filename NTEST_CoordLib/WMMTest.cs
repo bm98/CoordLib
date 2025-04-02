@@ -14,40 +14,88 @@ namespace NTEST_CoordLib
     [TestMethod]
     public void BasicTests( )
     {
+      var mdec_Ref = 0.0;
       var mdec_Calc = 0.0;
       var mdec_Look = 0.0;
       var pt = new LatLon( );
 
-      // KSFO MV ~ 12.9
+      // KSFO
       pt = new LatLon( Dms.ParseDMS( "N37° 37.13'" ), Dms.ParseDMS( "W122° 22.53'" ) );
+      mdec_Ref = 12.95; //MV 12° 57' E  ± 0° 21'
       mdec_Calc = MagVar_deg( pt, false );
       mdec_Look = MagVar_deg( pt, true );
       Assert.AreEqual( mdec_Calc, mdec_Look, 0.1 ); // lookup squares of 78x78 km at lat==0
-      Assert.AreEqual( 12.9, mdec_Calc, 0.5 );
+      Assert.AreEqual( mdec_Ref, mdec_Calc, 0.5 );
 
-      // OMDB MV ~ 2.35±0.31 (20241115)
+      // OMDB
       pt = new LatLon( Dms.ParseDMS( "N25°15.17'" ), Dms.ParseDMS( "E055°21.87'" ) );
+      mdec_Ref = 2.2333333333333333333333333333333; //MV 2° 14' E  ± 0° 18' 
       mdec_Calc = MagVar_deg( pt, false );
       mdec_Look = MagVar_deg( pt, true );
       Assert.AreEqual( mdec_Calc, mdec_Look, 0.1 ); // lookup squares of 78x78 km at lat==0
-      Assert.AreEqual( 2.35, mdec_Calc, 0.5 );
+      Assert.AreEqual( mdec_Ref, mdec_Calc, 0.5 );
 
-      // EGLL MV ~ 0.87±0.39 (20241115)
+      // EGLL
       pt = new LatLon( Dms.ParseDMS( "N51°28.65'" ), Dms.ParseDMS( "W000°27.68'" ) );
+      mdec_Ref = 0.8; //MV 0° 48' E  ± 0° 23'
       mdec_Calc = MagVar_deg( pt, false );
       mdec_Look = MagVar_deg( pt, true );
       Assert.AreEqual( mdec_Calc, mdec_Look, 0.1 ); // lookup squares of 78x78 km at lat==0
-      Assert.AreEqual( 0.87, mdec_Calc, 0.5 );
+      Assert.AreEqual( mdec_Ref, mdec_Calc, 0.5 );
 
-      // FAOB MV ~ -27.46±0.58 (20241115)
+      // FAOB
       pt = new LatLon( Dms.ParseDMS( "S34°33.8'" ), Dms.ParseDMS( "E020°15.1'" ) );
+      mdec_Ref = -27.9; //MV  	27° 54' W  ± 0° 33' 
       mdec_Calc = MagVar_deg( pt, false );
       mdec_Look = MagVar_deg( pt, true );
       Assert.AreEqual( mdec_Calc, mdec_Look, 0.1 ); // lookup squares of 78x78 km at lat==0
-      Assert.AreEqual( -27.46, mdec_Calc, 0.5 );
+      Assert.AreEqual( mdec_Ref, mdec_Calc, 0.5 );
 
     }
 
+    // using NOAA values of WMM2025 for some coords
+    // https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml
+    [TestMethod]
+    public void Model2025Tests( )
+    {
+      var mdec_Ref = 0.0;
+      var mdec_Calc = 0.0;
+      var mdec_Look = 0.0;
+      var pt = new LatLon( );
+
+      // KSFO
+      pt = new LatLon( Dms.ParseDMS( "N37° 37'" ), Dms.ParseDMS( "W122° 22'" ) );
+      mdec_Ref = 12.95; //MV 12° 57' E  ± 0° 21'
+      mdec_Calc = MagVar_deg( pt, new DateTime( 2025, 1, 1, 12, 0, 0 ), false );
+      mdec_Look = MagVar_deg( pt, new DateTime( 2025, 1, 1, 12, 0, 0 ), true );
+      Assert.AreEqual( mdec_Ref, mdec_Look, 0.5 ); // lookup squares of 78x78 km at lat==0
+      Assert.AreEqual( mdec_Ref, mdec_Calc, 0.35 );
+
+      // OMDB
+      pt = new LatLon( Dms.ParseDMS( "N25° 15'" ), Dms.ParseDMS( "E055° 21'" ) );
+      mdec_Ref = 2.2333333333333333333333333333333; //MV 2° 14' E  ± 0° 18' 
+      mdec_Calc = MagVar_deg( pt, new DateTime( 2025, 1, 1, 12, 0, 0 ), false );
+      mdec_Look = MagVar_deg( pt, new DateTime( 2025, 1, 1, 12, 0, 0 ), true );
+      Assert.AreEqual( mdec_Ref, mdec_Look, 0.5 ); // lookup squares of 78x78 km at lat==0
+      Assert.AreEqual( mdec_Ref, mdec_Calc, 0.3 );
+
+      // EGLL
+      pt = new LatLon( Dms.ParseDMS( "N51° 28'" ), Dms.ParseDMS( "W000° 27'" ) );
+      mdec_Ref = 0.8; //MV 0° 48' E  ± 0° 23'
+      mdec_Calc = MagVar_deg( pt, new DateTime( 2025, 1, 1, 12, 0, 0 ), false );
+      mdec_Look = MagVar_deg( pt, new DateTime( 2025, 1, 1, 12, 0, 0 ), true );
+      Assert.AreEqual( mdec_Ref, mdec_Look, 0.5 ); // lookup squares of 78x78 km at lat==0
+      Assert.AreEqual( mdec_Ref, mdec_Calc, 0.3833 );
+
+      // FAOB
+      pt = new LatLon( Dms.ParseDMS( "S34° 33'" ), Dms.ParseDMS( "E020° 15'" ) );
+      mdec_Ref = -27.9; //MV  	27° 54' W  ± 0° 33' 
+      mdec_Calc = MagVar_deg( pt, new DateTime( 2025, 1, 1, 12, 0, 0 ), false );
+      mdec_Look = MagVar_deg( pt, new DateTime( 2025, 1, 1, 12, 0, 0 ), true );
+      Assert.AreEqual( mdec_Ref, mdec_Look, 1.0 ); // lookup squares of 78x78 km at lat==0
+      Assert.AreEqual( mdec_Ref, mdec_Calc, 0.55 );
+
+    }
 
     [TestMethod]
     public void BearingTests( )

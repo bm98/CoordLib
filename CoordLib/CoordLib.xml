@@ -617,6 +617,243 @@
             <param name="degrees">Compass degrees</param>
             <returns>degrees within range 1..360.</returns>
         </member>
+        <member name="T:CoordLib.Calendar">
+            <summary>
+            Calendar Enum
+            </summary>
+        </member>
+        <member name="F:CoordLib.Calendar.Julian">
+            <summary>
+            Julian Calendar
+            </summary>
+        </member>
+        <member name="F:CoordLib.Calendar.Gregorian">
+            <summary>
+            Gregorian Calendar (DateTime base)
+            </summary>
+        </member>
+        <member name="T:CoordLib.JulianDay">
+            <summary>
+            The JDN the number of whole and fractional days since Noon, 1st January -4712 UTC.
+            </summary>
+        </member>
+        <member name="M:CoordLib.JulianDay.Now">
+            <summary>
+            A JDN obj for Now
+            </summary>
+            <returns>A JDN obj</returns>
+        </member>
+        <member name="P:CoordLib.JulianDay.Year">
+            <summary>
+            Julian Year number
+            </summary>
+        </member>
+        <member name="P:CoordLib.JulianDay.Month">
+            <summary>
+            Julian Month of year number
+            </summary>
+        </member>
+        <member name="P:CoordLib.JulianDay.Day">
+            <summary>
+            Julian Day of month number
+            </summary>
+        </member>
+        <member name="P:CoordLib.JulianDay.Hour">
+            <summary>
+            Julian Hour of day number
+            </summary>
+        </member>
+        <member name="P:CoordLib.JulianDay.Minute">
+            <summary>
+            Julian Minute of hour number
+            </summary>
+        </member>
+        <member name="P:CoordLib.JulianDay.Second">
+            <summary>
+            Julian Second of minute number
+            </summary>
+        </member>
+        <member name="P:CoordLib.JulianDay.Millisecond">
+            <summary>
+            Julian Millisecond of second number
+            </summary>
+        </member>
+        <member name="P:CoordLib.JulianDay.JulianDayNumber">
+            <summary>
+            Julian Day number since start of the calendar
+            </summary>
+        </member>
+        <member name="P:CoordLib.JulianDay.JulianDaysElapsed">
+            <summary>
+            Julian Day number (as long) since start of the calendar
+            </summary>
+        </member>
+        <member name="P:CoordLib.JulianDay.DayOfWeek">
+            <summary>
+            Day of the week
+            </summary>
+        </member>
+        <member name="P:CoordLib.JulianDay.DayOfYear">
+            <summary>
+            Day of the year number
+            </summary>
+        </member>
+        <member name="P:CoordLib.JulianDay.IsLeapYear">
+            <summary>
+            On the Julian Calendar a year divisible by 4 is a leap year
+            On the Gregorian Calendar a year divisible by 4, except centuries (divisible by 100) not divisible by 400, is a leap year.
+            </summary>
+        </member>
+        <member name="P:CoordLib.JulianDay.Calendar">
+            <summary>
+            Returns a Calendar Enum for the given JDN
+            
+            The Gregorian calendar reform moved changed the calendar from the Julian to Gregorian standard.
+            This means that the day immediately after 4th October 1582 is 15th October 1582.
+            </summary>
+        </member>
+        <member name="M:CoordLib.JulianDay.AddDays(System.Double)">
+            <summary>
+            Add Days to the current JDN
+            </summary>
+            <param name="days">Days to add</param>
+            <returns>A new JDN obj with added days</returns>
+        </member>
+        <member name="M:CoordLib.JulianDay.AddMinutes(System.Double)">
+            <summary>
+            Add Minutes to the current JDN
+            </summary>
+            <param name="minutes">Minutes to add</param>
+            <returns>A new JDN obj with added minutes</returns>
+        </member>
+        <member name="M:CoordLib.JulianDay.AddSeconds(System.Double)">
+            <summary>
+            Add Seconds to the current JDN
+            </summary>
+            <param name="seconds">Seconds to add</param>
+            <returns>A new JDN obj with added seconds</returns>
+        </member>
+        <member name="M:CoordLib.JulianDay.#ctor">
+            <summary>
+            cTor: JDN based on JD=0
+            </summary>
+        </member>
+        <member name="M:CoordLib.JulianDay.#ctor(CoordLib.JulianDay)">
+            <summary>
+            cTor: Copy
+            </summary>
+        </member>
+        <member name="M:CoordLib.JulianDay.#ctor(System.DateTime)">
+            <summary>
+            cTor: JDN based on Gregorian DateTime given
+            </summary>
+            <param name="dateTime">A Gregorian DateTime</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Invalid dates when calendars changed</exception>
+        </member>
+        <member name="M:CoordLib.JulianDay.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            cTor: JDN with given args
+            </summary>
+            <param name="Year">Year</param>
+            <param name="Month">Month</param>
+            <param name="Day">Day</param>
+        </member>
+        <member name="M:CoordLib.JulianDay.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            cTor: JDN with given args
+            </summary>
+            <param name="Year">Year</param>
+            <param name="Month">Month</param>
+            <param name="Day">Day</param>
+            <param name="Hour">Hour</param>
+        </member>
+        <member name="M:CoordLib.JulianDay.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            cTor: JDN with given args
+            </summary>
+            <param name="Year">Year</param>
+            <param name="Month">Month</param>
+            <param name="Day">Day</param>
+            <param name="Hour">Hour</param>
+            <param name="Minute">Minute</param>
+        </member>
+        <member name="M:CoordLib.JulianDay.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            cTor: JDN with given args
+            </summary>
+            <param name="Year">Year</param>
+            <param name="Month">Month</param>
+            <param name="Day">Day</param>
+            <param name="Hour">Hour</param>
+            <param name="Minute">Minute</param>
+            <param name="Second">Second</param>
+        </member>
+        <member name="M:CoordLib.JulianDay.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            cTor: JDN with given args
+            </summary>
+            <param name="Year">Year</param>
+            <param name="Month">Month</param>
+            <param name="Day">Day</param>
+            <param name="Hour">Hour</param>
+            <param name="Minute">Minute</param>
+            <param name="Second">Second</param>
+            <param name="Millisecond">Millisecond</param>
+        </member>
+        <member name="M:CoordLib.JulianDay.#ctor(System.Double)">
+            <summary>
+            cTor: JDN from a JDN number
+            </summary>
+        </member>
+        <member name="M:CoordLib.JulianDay.op_Addition(CoordLib.JulianDay,System.Double)">
+            <summary>
+            Add days to a JDN
+            </summary>
+            <param name="JDE1">Arg1</param>
+            <param name="days">Days to add</param>
+            <returns>A Julian</returns>
+        </member>
+        <member name="M:CoordLib.JulianDay.op_Subtraction(CoordLib.JulianDay,System.Double)">
+            <summary>
+            Subtract days from a JDN
+            </summary>
+            <param name="JDE1">Arg1</param>
+            <param name="days">Days to subtract</param>
+            <returns>A JDN obj</returns>
+        </member>
+        <member name="M:CoordLib.JulianDay.op_Equality(CoordLib.JulianDay,CoordLib.JulianDay)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CoordLib.JulianDay.op_Inequality(CoordLib.JulianDay,CoordLib.JulianDay)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CoordLib.JulianDay.op_GreaterThan(CoordLib.JulianDay,CoordLib.JulianDay)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CoordLib.JulianDay.op_LessThan(CoordLib.JulianDay,CoordLib.JulianDay)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CoordLib.JulianDay.op_GreaterThanOrEqual(CoordLib.JulianDay,CoordLib.JulianDay)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CoordLib.JulianDay.op_LessThanOrEqual(CoordLib.JulianDay,CoordLib.JulianDay)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CoordLib.JulianDay.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="M:CoordLib.JulianDay.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:CoordLib.JulianDay.Equals(CoordLib.JulianDay)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CoordLib.JulianDay.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CoordLib.JulianDay.CompareTo(CoordLib.JulianDay)">
+            <inheritdoc/>
+        </member>
         <member name="T:CoordLib.LatLon">
             <summary>
             Implements a Lat, Lon point
@@ -2807,6 +3044,11 @@
               
             </summary>
         </member>
+        <member name="M:CoordLib.WMM.MagVar.#ctor">
+            <summary>
+            cTor:
+            </summary>
+        </member>
         <member name="M:CoordLib.WMM.MagVar.deg_to_rad(System.Double)">
             <summary>
             Convert degrees to radians
@@ -2821,30 +3063,29 @@
             <param name="rad">A radian</param>
             <returns>Degree</returns>
         </member>
-        <member name="M:CoordLib.WMM.MagVar.yymmdd_to_julian_days(System.DateTime)">
-            <summary>
-            Convert to a Julian Date (year range is 1950..2049)
-            </summary>
-            <param name="dateTime">A Date</param>
-            <returns>A Julian Date</returns>
-        </member>
         <member name="M:CoordLib.WMM.MagVar.yymmdd_to_julian_days(System.Int32,System.Int32,System.Int32)">
             <summary>
             Convert to a Julian Date
-              Year 50..99 -> 1950 .. 1999
-              Year 00..49 -> 2000 .. 2049
             </summary>
-            <param name="yy"></param>
-            <param name="mm"></param>
-            <param name="dd"></param>
+            <param name="yyyy">Year 4 digits</param>
+            <param name="mm">Month 1..12</param>
+            <param name="dd">Day 1..31</param>
             <returns></returns>
+        </member>
+        <member name="M:CoordLib.WMM.MagVar.yymmdd_to_julian_days(System.DateTime)">
+            <summary>
+            Convert to a Julian Date
+            </summary>
+            <param name="dateTime">A Date</param>
+            <returns>A Julian Date</returns>
         </member>
         <member name="M:CoordLib.WMM.MagVar.SGMagVar(System.Double,System.Double,System.Double,System.DateTime,System.Int32,System.Double[])">
             <summary>
             return variation( in radians) given: 
              geodetic latitude( radians), longitude( radians), height( km), (Julian) date,
              
-             model(1985 za WMM85, 1990 za WMM90, 1995 za WMM95, 2000 za WMM2000, 2005 za WMM2005, 2010 za WMM2010, 2015 za WWM2015, 2020 WMM2020)
+             model(1985 za WMM85, 1990 za WMM90, 1995 za WMM95, 2000 za WMM2000, 2005 za WMM2005, 2010 za WMM2010
+             , 2015 za WWM2015, 2020 WMM2020, 2025 WMM2025)
              model other than the above uses the latest one (i.e. -1)
              
              N and E lat and long are positive, S and W negative
@@ -2852,12 +3093,12 @@
              field needs to be double[6] in order to be filled and returned
              
             </summary>
-            <param name="lat_deg">latitude in radians</param>
-            <param name="lon_deg">longitude in radians</param>
+            <param name="lat_deg">latitude in degrees</param>
+            <param name="lon_deg">longitude in degrees</param>
             <param name="h_km">altitude in km</param>
             <param name="date">A Date</param>
-            <param name="model">model to use: 1985 .. 2020 5y incr.</param>
-            <param name="field"></param>
+            <param name="model">model to use: -1 for current or 1985 .. 2025 5y incr.</param>
+            <param name="field">Provide an array of 6 doubles to receive the field parameters</param>
             <returns>Magnetic variation in radians</returns>
         </member>
         <member name="M:CoordLib.WMM.MagVar.SGMagVar(System.Double,System.Double,System.Double,System.Int64,System.Int32,System.Double[])">
@@ -2878,8 +3119,8 @@
             <param name="lon_rad">longitude in radians</param>
             <param name="h_km">altitude in km</param>
             <param name="dat">julian date</param>
-            <param name="model">model to use: 1985 .. 2025 5y incr.</param>
-            <param name="field"></param>
+            <param name="model">model to use: -1 for current or 1985 .. 2025 5y incr.</param>
+            <param name="field">Provide an array of 6 doubles to receive the field parameters</param>
             <returns>Magnetic variation in radians</returns>
         </member>
         <member name="T:CoordLib.WMM.MagVarEx">
@@ -2902,6 +3143,15 @@
             static cTor:
             </summary>
         </member>
+        <member name="M:CoordLib.WMM.MagVarEx.MagVar_rad(System.Int32,System.String,System.DateTime)">
+            <summary>
+            Returns the MagVar for the center of the UTM Cell at 3km Height
+            </summary>
+            <param name="utmZone">An UTM Zone Number</param>
+            <param name="utmBand">A Band Letter</param>
+            <param name="date">A date to calculate with</param>
+            <returns>The MagVar</returns>
+        </member>
         <member name="M:CoordLib.WMM.MagVarEx.MagVar_rad(System.Int32,System.String)">
             <summary>
             Returns the MagVar for the center of the UTM Cell at 3km Height
@@ -2910,41 +3160,85 @@
             <param name="utmBand">A Band Letter</param>
             <returns>The MagVar</returns>
         </member>
-        <member name="M:CoordLib.WMM.MagVarEx.MagVar_rad_Lookup(CoordLib.LatLon)">
-             <summary>
-            
-             </summary>
-             <param name="latLon">A LatLon coordinate</param>
-             <returns>The MagVar</returns>
+        <member name="M:CoordLib.WMM.MagVarEx.MagVar_rad_Lookup(CoordLib.LatLon,System.DateTime)">
+            <summary>
+            Returns the Magnetic Declination at a location at 3km height [rad]
+            </summary>
+            <param name="latLon">A LatLon coordinate</param>
+            <param name="date">A date to calculate with</param>
+            <returns>The MagVar</returns>
+        </member>
+        <member name="M:CoordLib.WMM.MagVarEx.MagVar_rad(CoordLib.LatLon,System.DateTime,System.Boolean)">
+            <summary>
+            Returns the Magnetic Declination at a location at 3km height [rad]
+            </summary>
+            <param name="latLon">The location</param>
+            <param name="date">A date to calculate with</param>
+            <param name="useLookup">When true using the UTM lookup table</param>
+            <returns>The magnetic declination [rad]</returns>
         </member>
         <member name="M:CoordLib.WMM.MagVarEx.MagVar_rad(CoordLib.LatLon,System.Boolean)">
             <summary>
             Returns the Magnetic Declination at a location at 3km height [rad]
+            using Now as date
             </summary>
             <param name="latLon">The location</param>
             <param name="useLookup">When true using the UTM lookup table</param>
             <returns>The magnetic declination [rad]</returns>
         </member>
+        <member name="M:CoordLib.WMM.MagVarEx.MagVar_deg(CoordLib.LatLon,System.DateTime,System.Boolean)">
+            <summary>
+            Returns the Magnetic Declination at a location at 3km height [deg]
+            </summary>
+            <param name="latLon">The location</param>
+            <param name="date">A date to calculate with</param>
+            <param name="useLookup">When true using the UTM lookup table</param>
+            <returns>The magnetic declination [deg]</returns>
+        </member>
         <member name="M:CoordLib.WMM.MagVarEx.MagVar_deg(CoordLib.LatLon,System.Boolean)">
             <summary>
             Returns the Magnetic Declination at a location at 3km height [deg]
+            using Now as date
             </summary>
             <param name="latLon">The location</param>
             <param name="useLookup">When true using the UTM lookup table</param>
             <returns>The magnetic declination [deg]</returns>
         </member>
+        <member name="M:CoordLib.WMM.MagVarEx.MagFromTrueBearing(System.Double,CoordLib.LatLon,System.DateTime,System.Boolean)">
+            <summary>
+            Returns the Magnetic Bearing from a True Bearing at a location at 3km height [deg]
+            </summary>
+            <param name="trueBearing">The true bearing [deg]</param>
+            <param name="latLon">The location</param>
+            <param name="date">A date to calculate with</param>
+            <param name="useLookup">When true using the UTM lookup table</param>
+            <returns>The magnetic bearing [deg]</returns>
+        </member>
         <member name="M:CoordLib.WMM.MagVarEx.MagFromTrueBearing(System.Double,CoordLib.LatLon,System.Boolean)">
             <summary>
             Returns the Magnetic Bearing from a True Bearing at a location at 3km height [deg]
+            using Now as date
             </summary>
             <param name="trueBearing">The true bearing [deg]</param>
             <param name="latLon">The location</param>
             <param name="useLookup">When true using the UTM lookup table</param>
             <returns>The magnetic bearing [deg]</returns>
         </member>
+        <member name="M:CoordLib.WMM.MagVarEx.MagFromTrueBearing(System.Double,CoordLib.LatLon,CoordLib.LatLon,System.DateTime,System.Boolean)">
+            <summary>
+            Returns the Magnetic Bearing from a True Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
+            </summary>
+            <param name="trueBearing">The true bearing [deg]</param>
+            <param name="latLon1">The location (from)</param>
+            <param name="latLon2">The location (to)</param>
+            <param name="date">A date to calculate with</param>
+            <param name="useLookup">When true using the UTM lookup table</param>
+            <returns>The magnetic bearing [deg]</returns>
+        </member>
         <member name="M:CoordLib.WMM.MagVarEx.MagFromTrueBearing(System.Double,CoordLib.LatLon,CoordLib.LatLon,System.Boolean)">
             <summary>
             Returns the Magnetic Bearing from a True Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
+            using Now as date
             </summary>
             <param name="trueBearing">The true bearing [deg]</param>
             <param name="latLon1">The location (from)</param>
@@ -2952,18 +3246,41 @@
             <param name="useLookup">When true using the UTM lookup table</param>
             <returns>The magnetic bearing [deg]</returns>
         </member>
+        <member name="M:CoordLib.WMM.MagVarEx.TrueFromMagBearing(System.Double,CoordLib.LatLon,System.DateTime,System.Boolean)">
+            <summary>
+            Returns the True Bearing from a Magnetic Bearing at a location at 3km height [deg]
+            </summary>
+            <param name="magBearing">The magnetic bearing [deg]</param>
+            <param name="latLon">The location</param>
+            <param name="date">A date to calculate with</param>
+            <param name="useLookup">When true using the UTM lookup table</param>
+            <returns>The magnetic bearing [deg]</returns>
+        </member>
         <member name="M:CoordLib.WMM.MagVarEx.TrueFromMagBearing(System.Double,CoordLib.LatLon,System.Boolean)">
             <summary>
             Returns the True Bearing from a Magnetic Bearing at a location at 3km height [deg]
+            using Now as date
             </summary>
             <param name="magBearing">The magnetic bearing [deg]</param>
             <param name="latLon">The location</param>
             <param name="useLookup">When true using the UTM lookup table</param>
             <returns>The magnetic bearing [deg]</returns>
         </member>
+        <member name="M:CoordLib.WMM.MagVarEx.TrueFromMagBearing(System.Double,CoordLib.LatLon,CoordLib.LatLon,System.DateTime,System.Boolean)">
+            <summary>
+            Returns the True Bearing from a Magnetic Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
+            </summary>
+            <param name="magBearing">The magnetic bearing [deg]</param>
+            <param name="latLon1">The location (from)</param>
+            <param name="latLon2">The location (to)</param>
+            <param name="date">A date to calculate with</param>
+            <param name="useLookup">When true using the UTM lookup table</param>
+            <returns>The magnetic bearing [deg]</returns>
+        </member>
         <member name="M:CoordLib.WMM.MagVarEx.TrueFromMagBearing(System.Double,CoordLib.LatLon,CoordLib.LatLon,System.Boolean)">
             <summary>
             Returns the True Bearing from a Magnetic Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
+            using Now as date
             </summary>
             <param name="magBearing">The magnetic bearing [deg]</param>
             <param name="latLon1">The location (from)</param>

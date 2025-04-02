@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 // CREDITS:
 //  https://github.com/etfovac/wmm-cs
@@ -93,18 +94,25 @@ namespace CoordLib.WMM
   {
 
     #region statics
+
     //const double a = 6378.16;	/* major radius (km) IAU66 ellipsoid */
-
     const double a = 6378.137; // iz WMM 2015 Calculator.xlsx sa www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml 
-                               //const double f = 1.0 / 298.25;	/* inverse flattening IAU66 ellipsoid */
-    const double f = 1.0 / 298.2572235630; // iz WMM 2015 Calculator.xlsx sa www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml 
-                                           //const double b = 6378.16 * (1.0 - 1.0 / 298.25);
-    /* minor radius b=a*(1-f) */
-    const double b = 6356.75231424518; // iz WMM 2015 Calculator.xlsx sa www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
-    const double r_0 = 6371.2;  /* "mean radius" for spherical harmonic expansion */
 
-    /*WMM85 constants */
-    static double[,] gnm_wmm85 = new double[13, 13]
+    //const double f = 1.0 / 298.25;	/* inverse flattening IAU66 ellipsoid */
+    const double f = 1.0 / 298.2572235630; // iz WMM 2015 Calculator.xlsx sa www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml 
+
+    /* minor radius b=a*(1-f) */
+    const double b = a * (1 - f); // 6356.75231424518; // iz WMM 2015 Calculator.xlsx sa www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+    const double r_0 = 6371.2;  /* "mean radius" for spherical harmonic expansion */
+    // max size and index of monthly matrices (elements at 0 seem to be unused as month as 1..12 is used)
+    const int monthSize = 13;
+    const int maxMonth = monthSize - 1;
+
+    #region WMM1985 constants
+
+    static readonly long wmm1985JDN = yymmdd_to_julian_days( 1985, 1, 1 );
+
+    static double[,] gnm_wmm1985 = new double[monthSize, monthSize]
     {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {-29879.8, -1903.3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -120,7 +128,7 @@ namespace CoordLib.WMM
             {2.3, -0.8, -2, 2.1, 0.2, -0.4, -0.4, 1.6, 1.5, -0.7, 2.3, 3.5, 0},
             {-1.8, 0, 0.1, -0.3, 0.5, 0.5, -0.6, -0.4, 0, -0.5, 0, 0.7, -0.2}};
 
-    static double[,] hnm_wmm85 = new double[13, 13]
+    static double[,] hnm_wmm1985 = new double[monthSize, monthSize]
     {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 5490.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -136,7 +144,7 @@ namespace CoordLib.WMM
             {0, 1.3, 2, -1.1, -2.8, 0.7, -0.1, -2.4, -0.4, -1.5, -1.5, 0.7, 0},
             {0, 0.3, 0.6, 2.5, -1.7, 0.3, 0.2, -0.1, 0.1, 0.1, -1.4, 0.4, 0.7}};
 
-    static double[,] gtnm_wmm85 = new double[13, 13]
+    static double[,] gtnm_wmm1985 = new double[monthSize, monthSize]
     {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {21.9, 10.6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -152,7 +160,7 @@ namespace CoordLib.WMM
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
-    static double[,] htnm_wmm85 = new double[13, 13]
+    static double[,] htnm_wmm1985 = new double[monthSize, monthSize]
     {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, -31.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -168,9 +176,13 @@ namespace CoordLib.WMM
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
-    /* wmm90 constants */
+    #endregion
 
-    static double[,] gnm_wmm90 = new double[13, 13]
+    #region wmm1990 constants
+
+    static readonly long wmm1990JDN = yymmdd_to_julian_days( 1990, 1, 1 );
+
+    static double[,] gnm_wmm1990 = new double[monthSize, monthSize]
     {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {-29780.5, -1851.7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -186,7 +198,7 @@ namespace CoordLib.WMM
             {1.3, -1.4, -2.5, 3.2, 0.2, -1.1, 0.3, -0.3, 0.9, -1.1, 2.4, 3, 0},
             {-1.3, 0.1, 0.5, 0.7, 0.4, -0.2, -1.1, 0.9, -0.6, 0.8, 0.2, 0.4, 0.2}};
 
-    static double[,] hnm_wmm90 = new double[13, 13]
+    static double[,] hnm_wmm1990 = new double[monthSize, monthSize]
     {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 5407.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -202,7 +214,7 @@ namespace CoordLib.WMM
             {0, 0, 1, -1.6, -2.2, 1.1, -0.7, -1.7, -1.5, -1.3, -1.1, 0.6, 0},
             {0, 0.7, 0.7, 1.3, -1.5, 0.3, 0.2, -1.1, 1.2, -0.2, -1.3, 0.6, 0.6}};
 
-    static double[,] gtnm_wmm90 = new double[13, 13]
+    static double[,] gtnm_wmm1990 = new double[monthSize, monthSize]
     {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {16, 9.3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -218,7 +230,7 @@ namespace CoordLib.WMM
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
-    static double[,] htnm_wmm90 = new double[13, 13]
+    static double[,] htnm_wmm1990 = new double[monthSize, monthSize]
     {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, -13.8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -234,9 +246,13 @@ namespace CoordLib.WMM
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
-    /* wmm95 constants */
+    #endregion
 
-    static double[,] gnm_wmm95 = new double[13, 13]
+    #region wmm1995 constants
+
+    static readonly long wmm1995JDN = yymmdd_to_julian_days( 1995, 1, 1 );
+
+    static double[,] gnm_wmm1995 = new double[monthSize, monthSize]
     {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {-29682.1,-1782.2,0,0,0,0,0,0,0,0,0,0,0},
@@ -252,7 +268,7 @@ namespace CoordLib.WMM
             {1.7,-1.6,-3.6,1.2,-0.6,0.1,-0.7,-0.8,1.3,-0.3,2.2,4.2,0},
             {-1.8,0.9,-0.1,-0.5,0.8,0.2,0.5,0.4,-0.4,0.3,0.2,0.4,0.6}};
 
-    static double[,] hnm_wmm95 = new double[13, 13]
+    static double[,] hnm_wmm1995 = new double[monthSize, monthSize]
     {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0,5315.6,0,0,0,0,0,0,0,0,0,0,0},
@@ -268,7 +284,7 @@ namespace CoordLib.WMM
             {0,0.3,1,-3.6,-1.4,1.9,0.2,-1.3,-2.4,-0.6,-2.2,1.3,0},
             {0,0.3,1.4,0.8,-3,0.7,0.5,-0.8,0.6,0.1,-1.3,-0.4,0.9}};
 
-    static double[,] gtnm_wmm95 = new double[13, 13]
+    static double[,] gtnm_wmm1995 = new double[monthSize, monthSize]
     {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {17.6,13.2,0,0,0,0,0,0,0,0,0,0,0},
@@ -284,7 +300,7 @@ namespace CoordLib.WMM
             {0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0}};
 
-    static double[,] htnm_wmm95 = new double[13, 13]
+    static double[,] htnm_wmm1995 = new double[monthSize, monthSize]
     {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0,-18,0,0,0,0,0,0,0,0,0,0,0},
@@ -300,9 +316,13 @@ namespace CoordLib.WMM
             {0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0}};
 
-    /* wmm2000 constants */
+    #endregion
 
-    static double[,] gnm_wmm2000 = new double[13, 13]
+    #region wmm2000 constants
+
+    static readonly long wmm2000JDN = yymmdd_to_julian_days( 2000, 1, 1 );
+
+    static double[,] gnm_wmm2000 = new double[monthSize, monthSize]
     {
             {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
             {-29616.0, -1722.7, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
@@ -319,7 +339,7 @@ namespace CoordLib.WMM
             {-1.5, -0.2, -0.3, 0.5, 0.2, 0.9, -1.4, 0.6, -0.6, -1.0, -0.3, 0.3, 0.4},
     };
 
-    static double[,] hnm_wmm2000 = new double[13, 13]
+    static double[,] hnm_wmm2000 = new double[monthSize, monthSize]
     {
             {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
             {0.0, 5194.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
@@ -336,7 +356,7 @@ namespace CoordLib.WMM
             {0.0, -1.0, 0.7, 2.2, -2.5, -0.2, 0.0, -0.2, 0.0, 0.2, -0.9, -0.2, 1.0},
     };
 
-    static double[,] gtnm_wmm2000 = new double[13, 13]
+    static double[,] gtnm_wmm2000 = new double[monthSize, monthSize]
     {
             {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
             {14.7, 11.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
@@ -353,7 +373,7 @@ namespace CoordLib.WMM
             {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
     };
 
-    static double[,] htnm_wmm2000 = new double[13, 13]
+    static double[,] htnm_wmm2000 = new double[monthSize, monthSize]
     {
             {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
             {0.0, -20.4, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
@@ -370,9 +390,13 @@ namespace CoordLib.WMM
             {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
     };
 
-    /* wmm2005 constants */
+    #endregion
 
-    static double[,] gnm_wmm2005 = new double[13, 13]
+    #region wmm2005 constants
+
+    static readonly long wmm2005JDN = yymmdd_to_julian_days( 2005, 1, 1 );
+
+    static double[,] gnm_wmm2005 = new double[monthSize, monthSize]
     {
             {     0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0},
             {-29556.8,  -1671.7,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0,      0.0},
@@ -389,7 +413,7 @@ namespace CoordLib.WMM
             {    -2.4,     -0.4,      0.2,      0.8,     -0.3,      1.1,     -0.5,      0.4,     -0.3,     -0.3,     -0.1,     -0.3,     -0.1}
     };
 
-    static double[,] hnm_wmm2005 = new double[13, 13]
+    static double[,] hnm_wmm2005 = new double[monthSize, monthSize]
     {
             {   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0},
             {   0.0, 5079.8,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0},
@@ -406,7 +430,7 @@ namespace CoordLib.WMM
             {   0.0,   -0.4,    0.3,    2.4,   -2.6,    0.6,    0.3,    0.0,    0.0,    0.3,   -0.9,   -0.4,    0.8}
     };
 
-    static double[,] gtnm_wmm2005 = new double[13, 13]
+    static double[,] gtnm_wmm2005 = new double[monthSize, monthSize]
     {
             { 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
             { 8.0, 10.6,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
@@ -423,7 +447,7 @@ namespace CoordLib.WMM
             { 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}
     };
 
-    static double[,] htnm_wmm2005 = new double[13, 13]
+    static double[,] htnm_wmm2005 = new double[monthSize, monthSize]
     {
             { 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
             { 0.0, -20.9,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
@@ -440,9 +464,13 @@ namespace CoordLib.WMM
             { 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}
     };
 
-    /* wmm2010 constants */
+    #endregion
 
-    static double[,] gnm_wmm2010 = new double[13, 13] {
+    #region wmm2010 constants
+
+    static readonly long wmm2010JDN = yymmdd_to_julian_days( 2010, 1, 1 );
+
+    static double[,] gnm_wmm2010 = new double[monthSize, monthSize] {
             {0,0,0,0,0,0,0,0,0,0,0,0,0},
             {-29496.6,-1586.3,0,0,0,0,0,0,0,0,0,0,0},
             {-2396.6,3026.1,1668.6,0,0,0,0,0,0,0,0,0,0},
@@ -458,7 +486,7 @@ namespace CoordLib.WMM
             {-2.2,-0.2,0.3,1,-0.6,0.9,-0.1,0.5,-0.4,-0.4,0.2,-0.8,0}
         };
 
-    static double[,] hnm_wmm2010 = new double[13, 13]{
+    static double[,] hnm_wmm2010 = new double[monthSize, monthSize]{
             {0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,4944.4,0,0,0,0,0,0,0,0,0,0,0},
             {0,-2707.7,-576.1,0,0,0,0,0,0,0,0,0,0},
@@ -474,7 +502,7 @@ namespace CoordLib.WMM
             {0,-0.9,0.3,2.1,-2.5,0.5,0.6,0,0.1,0.3,-0.9,-0.2,0.9}
         };
 
-    static double[,] gtnm_wmm2010 = new double[13, 13]{
+    static double[,] gtnm_wmm2010 = new double[monthSize, monthSize]{
             {0,0,0,0,0,0,0,0,0,0,0,0,0},
             {11.6,16.5,0,0,0,0,0,0,0,0,0,0,0},
             {-12.1,-4.4,1.9,0,0,0,0,0,0,0,0,0,0},
@@ -490,7 +518,7 @@ namespace CoordLib.WMM
             {0,0,0.1,0.1,-0.1,0,0,0,0,0,0,-0.1,0.1}
         };
 
-    static double[,] htnm_wmm2010 = new double[13, 13]{
+    static double[,] htnm_wmm2010 = new double[monthSize, monthSize]{
             {0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,-25.9,0,0,0,0,0,0,0,0,0,0,0},
             {0,-22.5,-11.8,0,0,0,0,0,0,0,0,0,0},
@@ -506,11 +534,17 @@ namespace CoordLib.WMM
             {0,0,0,0,0,0,0.1,0,0,0,0,0,0}
         };
 
+    #endregion
+
+    #region wmm2015 constants
+
     //************************************************************************
     // WMM Gausovi koeficijenti za 2015 su dodati rucno iz WMM 2015 Calculator.xlsx sa www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml 
     // vaze od 01.01.2015 do 31.12.2019.
 
-    static double[,] gnm_wmm2015 = new double[13, 13] {
+    static readonly long wmm2015JDN = yymmdd_to_julian_days( 2015, 1, 1 );
+
+    static double[,] gnm_wmm2015 = new double[monthSize, monthSize] {
             {0,0,0,0,0,0,0,0,0,0,0,0,0},
             {-29438.5, -1501.1, 0,0,0,0,0,0,0,0,0,0,0},
             {-2445.3, 3012.5, 1676.6, 0,0,0,0,0,0,0,0,0,0},
@@ -526,7 +560,7 @@ namespace CoordLib.WMM
             {-2, -0.3, 0.4, 1.3, -0.9, 0.9, 0.1, 0.5, -0.4, -0.4, 0.2, -0.9, 0}
         };
 
-    static double[,] hnm_wmm2015 = new double[13, 13]{
+    static double[,] hnm_wmm2015 = new double[monthSize, monthSize]{
             {0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0, 4796.2, 0,0,0,0,0,0,0,0,0,0,0},
             {0, -2845.6, -642, 0,0,0,0,0,0,0,0,0,0},
@@ -542,7 +576,7 @@ namespace CoordLib.WMM
             {0, -1, 0.5, 1.8, -2.2, 0.3, 0.7, -0.1, 0.3, 0.2, -0.9, -0.2, 0.7}
         };
 
-    static double[,] gtnm_wmm2015 = new double[13, 13]{
+    static double[,] gtnm_wmm2015 = new double[monthSize, monthSize]{
             {0,0,0,0,0,0,0,0,0,0,0,0,0},
             {10.7, 17.9, 0,0,0,0,0,0,0,0,0,0,0},
             {-8.6, -3.3, 2.4, 0,0,0,0,0,0,0,0,0,0},
@@ -558,7 +592,7 @@ namespace CoordLib.WMM
             {0.1, 0, 0, 0.1, -0.1, 0, 0.1, 0,0,0,0,0,0}
         };
 
-    static double[,] htnm_wmm2015 = new double[13, 13]{
+    static double[,] htnm_wmm2015 = new double[monthSize, monthSize]{
             {0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0, -26.8, 0,0,0,0,0,0,0,0,0,0,0},
             {0, -27.1, -13.3, 0,0,0,0,0,0,0,0,0,0},
@@ -574,12 +608,18 @@ namespace CoordLib.WMM
             {0, 0, 0, -0.1, 0,0,0,0,0,0,0,0,0}
         };
 
+    #endregion
+
+    #region wmm2020 constants
+
     //************************************************************************
     // BM: WMM coeff 2020-2025   NOAA download 20230126 file WMM2020COF.zip
     // rem. transposed tables from the COF file, each COD col goes into rows 1..12
-    //      of the corresponding table (
+    //      of the corresponding table
 
-    static double[,] gnm_wmm2020 = new double[13, 13] {
+    static readonly long wmm2020JDN = yymmdd_to_julian_days( 2020, 1, 1 );
+
+    static double[,] gnm_wmm2020 = new double[monthSize, monthSize] {
         {0,0,0,0,0,0,0,0,0,0,0,0,0},
         {-29404.5,-1450.7,0,0,0,0,0,0,0,0,0,0,0},
         {-2500,2982,1676.8,0,0,0,0,0,0,0,0,0,0},
@@ -595,7 +635,7 @@ namespace CoordLib.WMM
         {-2,-0.1,0.5,1.3,-1.2,0.7,0.3,0.5,-0.2,-0.5,0.1,-1.1,-0.3}
     };
 
-    static double[,] hnm_wmm2020 = new double[13, 13]{
+    static double[,] hnm_wmm2020 = new double[monthSize, monthSize]{
         {0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,4652.9,0,0,0,0,0,0,0,0,0,0,0},
         {0,-2991.6,-734.8,0,0,0,0,0,0,0,0,0,0},
@@ -611,7 +651,7 @@ namespace CoordLib.WMM
         {0,-1.2,0.5,1.3,-1.8,0.1,0.7,-0.1,0.6,0.2,-0.9,0,0.5}
     };
 
-    static double[,] gtnm_wmm2020 = new double[13, 13]{
+    static double[,] gtnm_wmm2020 = new double[monthSize, monthSize]{
         {0,0,0,0,0,0,0,0,0,0,0,0,0},
         {6.7,7.7,0,0,0,0,0,0,0,0,0,0,0},
         {-11.5,-7.1,-2.2,0,0,0,0,0,0,0,0,0,0},
@@ -627,7 +667,7 @@ namespace CoordLib.WMM
         {0,0,0,0,0,0,0,0,0,0,0,0,-0.1}
     };
 
-    static double[,] htnm_wmm2020 = new double[13, 13]{
+    static double[,] htnm_wmm2020 = new double[monthSize, monthSize]{
         {0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,-25.1,0,0,0,0,0,0,0,0,0,0,0},
         {0,-30.2,-23.9,0,0,0,0,0,0,0,0,0,0},
@@ -643,12 +683,18 @@ namespace CoordLib.WMM
         {0,0,0,-0.1,0.1,0,0,0,0.1,0,0,0,-0.1}
     };
 
+    #endregion
+
+    #region wmm2025 constants
+
     //************************************************************************
     // BM: WMM coeff 2025-2030   NOAA download 20250401 file WMM2025COF.zip
     // rem. transposed tables from the COF file, each COD col goes into rows 1..12
     //      of the corresponding table (
 
-    static double[,] gnm_wmm2025 = new double[13, 13] {
+    static readonly long wmm2025JDN = yymmdd_to_julian_days( 2025, 1, 1 );
+
+    static double[,] gnm_wmm2025 = new double[monthSize, monthSize] {
         {0,0,0,0,0,0,0,0,0,0,0,0,0},
         {-29351.8,-1410.8,0,0,0,0,0,0,0,0,0,0,0},
         {-2556.6,2951.1,1649.3,0,0,0,0,0,0,0,0,0,0},
@@ -663,7 +709,7 @@ namespace CoordLib.WMM
         { 2.9,-1.5,-2.5,2.4,-0.6,-0.1,-0.6,-0.1,1.1,-1,-0.2,2.6,0},
         { -2,-0.2,0.3,1.2,-1.3,0.6,0.6,0.5,-0.1,-0.4,-0.2,-1.3,-0.7}
     };
-    static double[,] hnm_wmm2025 = new double[13, 13]{
+    static double[,] hnm_wmm2025 = new double[monthSize, monthSize]{
         {0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,4545.4,0,0,0,0,0,0,0,0,0,0,0},
         {0,-3133.6,-815.1,0,0,0,0,0,0,0,0,0,0},
@@ -678,7 +724,7 @@ namespace CoordLib.WMM
         {0,0,2.9,-0.6,0.2,0.5,-0.3,-1.2,-1.7,-2.9,-1.8,-2.3,0},
         {0,-1.3,0.7,1,-1.4,0,0.6,-0.1,0.8,0.1,-1,0.1,0.2}
     };
-    static double[,] gtnm_wmm2025 = new double[13, 13]{
+    static double[,] gtnm_wmm2025 = new double[monthSize, monthSize]{
         {0,0,0,0,0,0,0,0,0,0,0,0,0},
         {12,9.7,0,0,0,0,0,0,0,0,0,0,0},
         {-11.6,-5.2,-8,0,0,0,0,0,0,0,0,0,0},
@@ -693,7 +739,7 @@ namespace CoordLib.WMM
         {0,0,0,0,0,-0.1,0,0,-0.1,-0.1,-0.1,-0.1,0},
         {0,0,0,0,0,0,0.1,0,0,0,-0.1,0,-0.1}
     };
-    static double[,] htnm_wmm2025 = new double[13, 13]{
+    static double[,] htnm_wmm2025 = new double[monthSize, monthSize]{
         {0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,-21.5,0,0,0,0,0,0,0,0,0,0,0},
         {0,-27.7,-12.1,0,0,0,0,0,0,0,0,0,0},
@@ -711,30 +757,152 @@ namespace CoordLib.WMM
 
     #endregion
 
-    const int nmax = 12;
+    // compute matrices from model
+    // model: -1, 1985,.. 2025 in 5y increments (-1 uses the current model)
+    // julDayElapsed: day number of Julian Days since start of calendar
+    // gnm,hnm: matrices [13,13]
+    private void ComputeModelMat( int model, long julDayElapsed, double[,] gnm, double[,] hnm )
+    {
+      // sanity
+      if (julDayElapsed <= 0) throw new ArgumentException( "julDayElapsed must be >= 0" );
 
-    double[,] P = new double[13, 13];
-    double[,] DP = new double[13, 13];
-    double[,] gnm = new double[13, 13];
-    double[,] hnm = new double[13, 13];
-    double[] sm = new double[13];
-    double[] cm = new double[13];
+      if (gnm.Rank < 2) throw new ArgumentException( "gnm must be size of [13,13]" );
+      if (gnm.GetLength( 0 ) < monthSize) throw new ArgumentException( "gnm must be size of [13,13]" );
+      if (gnm.GetLength( 1 ) < monthSize) throw new ArgumentException( "gnm must be size of [13,13]" );
 
-    static double[] root = new double[13];
-    static double[,,] roots = new double[13, 13, 2];
+      if (hnm.Rank < 2) throw new ArgumentException( "hnm must be size of [13,13]" );
+      if (hnm.GetLength( 0 ) < monthSize) throw new ArgumentException( "hnm must be size of [13,13]" );
+      if (hnm.GetLength( 1 ) < monthSize) throw new ArgumentException( "hnm must be size of [13,13]" );
+
+      int n, m;
+      double yearfrac;
+
+      /* compute gnm, hnm at dat using the fractional part of elaped days of the model reference date*/
+      switch (model) {
+        case 1985:  /* WMM1985 */
+          yearfrac = (julDayElapsed - wmm1985JDN) / 365.25;
+          for (n = 1; n <= maxMonth; n++)
+            for (m = 0; m <= maxMonth; m++) {
+              gnm[n, m] = gnm_wmm1985[n, m] + yearfrac * gtnm_wmm1985[n, m];
+              hnm[n, m] = hnm_wmm1985[n, m] + yearfrac * htnm_wmm1985[n, m];
+            }
+          break;
+
+        case 1990:  /* WMM1990 */
+          yearfrac = (julDayElapsed - wmm1990JDN) / 365.25;
+          for (n = 1; n <= maxMonth; n++)
+            for (m = 0; m <= maxMonth; m++) {
+              gnm[n, m] = gnm_wmm1990[n, m] + yearfrac * gtnm_wmm1990[n, m];
+              hnm[n, m] = hnm_wmm1990[n, m] + yearfrac * htnm_wmm1990[n, m];
+            }
+          break;
+
+        case 1995:  /* WMM1995 */
+          yearfrac = (julDayElapsed - wmm1995JDN) / 365.25;
+          for (n = 1; n <= maxMonth; n++)
+            for (m = 0; m <= maxMonth; m++) {
+              gnm[n, m] = gnm_wmm1995[n, m] + yearfrac * gtnm_wmm1995[n, m];
+              hnm[n, m] = hnm_wmm1995[n, m] + yearfrac * htnm_wmm1995[n, m];
+            }
+          break;
+
+        case 2000:      /* WMM2000 */
+          yearfrac = (julDayElapsed - wmm2000JDN) / 365.25;
+          for (n = 1; n <= maxMonth; n++)
+            for (m = 0; m <= maxMonth; m++) {
+              gnm[n, m] = gnm_wmm2000[n, m] + yearfrac * gtnm_wmm2000[n, m];
+              hnm[n, m] = hnm_wmm2000[n, m] + yearfrac * htnm_wmm2000[n, m];
+            }
+          break;
+
+        case 2005:      /* WMM2005 */
+          yearfrac = (julDayElapsed - wmm2005JDN) / 365.25;
+          for (n = 1; n <= maxMonth; n++)
+            for (m = 0; m <= maxMonth; m++) {
+              gnm[n, m] = gnm_wmm2005[n, m] + yearfrac * gtnm_wmm2005[n, m];
+              hnm[n, m] = hnm_wmm2005[n, m] + yearfrac * htnm_wmm2005[n, m];
+            }
+          break;
+
+        case 2010:      /* WMM2010 */
+          yearfrac = (julDayElapsed - wmm2010JDN) / 365.25;
+          for (n = 1; n <= maxMonth; n++)
+            for (m = 0; m <= maxMonth; m++) {
+              gnm[n, m] = gnm_wmm2010[n, m] + yearfrac * gtnm_wmm2010[n, m];
+              hnm[n, m] = hnm_wmm2010[n, m] + yearfrac * htnm_wmm2010[n, m];
+            }
+          break;
+
+        case 2015:     /* WMM2015 */
+          yearfrac = (julDayElapsed - wmm2015JDN) / 365.25;
+          for (n = 1; n <= maxMonth; n++)
+            for (m = 0; m <= maxMonth; m++) {
+              gnm[n, m] = gnm_wmm2015[n, m] + yearfrac * gtnm_wmm2015[n, m];
+              hnm[n, m] = hnm_wmm2015[n, m] + yearfrac * htnm_wmm2015[n, m];
+            }
+          break;
+
+        case 2020:     /* WMM2020 */
+          yearfrac = (julDayElapsed - wmm2020JDN) / 365.25;
+          for (n = 1; n <= maxMonth; n++)
+            for (m = 0; m <= maxMonth; m++) {
+              gnm[n, m] = gnm_wmm2020[n, m] + yearfrac * gtnm_wmm2020[n, m];
+              hnm[n, m] = hnm_wmm2020[n, m] + yearfrac * htnm_wmm2020[n, m];
+            }
+          break;
+
+        case 2025:     /* WMM2025 */
+        // copy default to here and replace default with 2030 ...
+        default: // any other model number uses the latest one (adjust when extending)
+          yearfrac = (julDayElapsed - wmm2025JDN) / 365.25;
+          for (n = 1; n <= maxMonth; n++)
+            for (m = 0; m <= maxMonth; m++) {
+              gnm[n, m] = gnm_wmm2025[n, m] + yearfrac * gtnm_wmm2025[n, m];
+              hnm[n, m] = hnm_wmm2025[n, m] + yearfrac * htnm_wmm2025[n, m];
+            }
+          break;
+      }
+    }
+
+    #endregion
+
+    // Root Values are consts and are calculated on Init
+    private static readonly double[] root = new double[monthSize];
+    private static readonly double[,,] roots = new double[monthSize, monthSize, 2];
+    private static void CalcRoots( )
+    {
+      int n, m;
+      for (n = 2; n < monthSize; n++) {
+        root[n] = sqrt( (2.0 * n - 1) / (2.0 * n) );
+      }
+
+      for (m = 0; m < monthSize; m++) {
+        double mm = m * m;
+        for (n = max( m + 1, 2 ); n < monthSize; n++) {
+          roots[m, n, 0] = sqrt( (n - 1) * (n - 1) - mm );
+          roots[m, n, 1] = 1.0 / sqrt( n * n - mm );
+        }
+      }
+    }
+
+    // shortcuts for readability (compiler should optimize them)
+    private static double cos( double d ) { return Math.Cos( d ); }
+    private static double sin( double d ) { return Math.Sin( d ); }
+    private static double sqrt( double d ) { return Math.Sqrt( d ); }
+    private static double max( double d, double e ) { return Math.Max( d, e ); }
+    private static int max( int d, int e ) { return Math.Max( d, e ); }
+    private static double min( double d, double e ) { return Math.Min( d, e ); }
+    private static double atan2( double d, double e ) { return Math.Atan2( d, e ); }
+    private static double pi { get { return Math.PI; } }
 
 
-    private double cos( double d ) { return Math.Cos( d ); }
-    private double sin( double d ) { return Math.Sin( d ); }
-    private double sqrt( double d ) { return Math.Sqrt( d ); }
-    private double max( double d, double e ) { return Math.Max( d, e ); }
-    private int max( int d, int e ) { return Math.Max( d, e ); }
-    private double min( double d, double e ) { return Math.Min( d, e ); }
-    private double atan2( double d, double e ) { return Math.Atan2( d, e ); }
-    private double pi { get { return Math.PI; } }
-    // precalc flag
-    private static bool been_here = false;
-
+    /// <summary>
+    /// cTor:
+    /// </summary>
+    public MagVar( )
+    {
+      CalcRoots( );
+    }
 
     // *******  API *************
 
@@ -744,7 +912,7 @@ namespace CoordLib.WMM
     /// </summary>
     /// <param name="deg">A deg number</param>
     /// <returns>Radians</returns>
-    public double deg_to_rad( double deg ) // dodah da bude public da bih preracunao lat,long iz deg u rad
+    public static double deg_to_rad( double deg )
     {
       return deg * Math.PI / 180.0;
     }
@@ -755,48 +923,52 @@ namespace CoordLib.WMM
     /// </summary>
     /// <param name="rad">A radian</param>
     /// <returns>Degree</returns>
-    public double rad_to_deg( double rad )
+    public static double rad_to_deg( double rad )
     {
       return rad * 180.0 / Math.PI;
     }
 
     /// <summary>
-    /// Convert to a Julian Date (year range is 1950..2049)
+    /// Convert to a Julian Date
+    /// </summary>
+    /// <param name="yyyy">Year 4 digits</param>
+    /// <param name="mm">Month 1..12</param>
+    /// <param name="dd">Day 1..31</param>
+    /// <returns></returns>
+    public static long yymmdd_to_julian_days( int yyyy, int mm, int dd )
+    {
+      // using our JulianDay class
+      JulianDay JD = new JulianDay( yyyy, mm, dd, 12 ); // JDs start at noon
+      return JD.JulianDaysElapsed;
+      /*
+      long jd;
+
+      jd = dd - 32075L + 1461L * (yyyy + 4800L + (mm - 14) / 12) / 4;
+      jd = jd + 367L * (mm - 2 - (mm - 14) / 12 * 12) / 12;
+      jd = jd - 3 * ((yyyy + 4900L + (mm - 14) / 12) / 100) / 4;
+
+      return (jd);
+      */
+    }
+
+    /// <summary>
+    /// Convert to a Julian Date
     /// </summary>
     /// <param name="dateTime">A Date</param>
     /// <returns>A Julian Date</returns>
-    public long yymmdd_to_julian_days( DateTime dateTime )
+    public static long yymmdd_to_julian_days( DateTime dateTime )
     {
-      return yymmdd_to_julian_days( dateTime.Year % 100, dateTime.Month, dateTime.Day );
+      return yymmdd_to_julian_days( dateTime.Year, dateTime.Month, dateTime.Day );
     }
 
-    /* Convert date to Julian day    1950-2049 */
-    /// <summary>
-    /// Convert to a Julian Date
-    ///   Year 50..99 -> 1950 .. 1999
-    ///   Year 00..49 -> 2000 .. 2049
-    /// </summary>
-    /// <param name="yy"></param>
-    /// <param name="mm"></param>
-    /// <param name="dd"></param>
-    /// <returns></returns>
-    public long yymmdd_to_julian_days( int yy, int mm, int dd )
-    {
-      long jd;
 
-      yy = (yy < 50) ? (2000 + yy) : (1900 + yy);
-      jd = dd - 32075L + 1461L * (yy + 4800L + (mm - 14) / 12) / 4;
-      jd = jd + 367L * (mm - 2 - (mm - 14) / 12 * 12) / 12;
-      jd = jd - 3 * ((yy + 4900L + (mm - 14) / 12) / 100) / 4;
-
-      return (jd);
-    }
 
     /// <summary>
     /// return variation( in radians) given: 
     ///  geodetic latitude( radians), longitude( radians), height( km), (Julian) date,
     ///  
-    ///  model(1985 za WMM85, 1990 za WMM90, 1995 za WMM95, 2000 za WMM2000, 2005 za WMM2005, 2010 za WMM2010, 2015 za WWM2015, 2020 WMM2020)
+    ///  model(1985 za WMM85, 1990 za WMM90, 1995 za WMM95, 2000 za WMM2000, 2005 za WMM2005, 2010 za WMM2010
+    ///  , 2015 za WWM2015, 2020 WMM2020, 2025 WMM2025)
     ///  model other than the above uses the latest one (i.e. -1)
     ///  
     ///  N and E lat and long are positive, S and W negative
@@ -804,12 +976,12 @@ namespace CoordLib.WMM
     ///  field needs to be double[6] in order to be filled and returned
     ///  
     /// </summary>
-    /// <param name="lat_deg">latitude in radians</param>
-    /// <param name="lon_deg">longitude in radians</param>
+    /// <param name="lat_deg">latitude in degrees</param>
+    /// <param name="lon_deg">longitude in degrees</param>
     /// <param name="h_km">altitude in km</param>
     /// <param name="date">A Date</param>
-    /// <param name="model">model to use: 1985 .. 2020 5y incr.</param>
-    /// <param name="field"></param>
+    /// <param name="model">model to use: -1 for current or 1985 .. 2025 5y incr.</param>
+    /// <param name="field">Provide an array of 6 doubles to receive the field parameters</param>
     /// <returns>Magnetic variation in radians</returns>
     public double SGMagVar( double lat_deg, double lon_deg, double h_km, DateTime date, int model, double[] field )
     {
@@ -840,35 +1012,44 @@ namespace CoordLib.WMM
     /// <param name="lon_rad">longitude in radians</param>
     /// <param name="h_km">altitude in km</param>
     /// <param name="dat">julian date</param>
-    /// <param name="model">model to use: 1985 .. 2025 5y incr.</param>
-    /// <param name="field"></param>
+    /// <param name="model">model to use: -1 for current or 1985 .. 2025 5y incr.</param>
+    /// <param name="field">Provide an array of 6 doubles to receive the field parameters</param>
     /// <returns>Magnetic variation in radians</returns>
     public double SGMagVar( double lat_rad, double lon_rad, double h_km, long dat, int model, double[] field )
     {
       /* output field B_r,B_th,B_phi,B_x,B_y,B_z */
-      int n, m, nmaxl;
-      double yearfrac, sr, r, theta, c, s, psi, fn, fn_0, B_r, B_theta, B_phi, X, Y, Z;
+      int n, m;
+      double sr, r, theta, c, s, psi, fn, fn_0, B_r, B_theta, B_phi, X, Y, Z;
       double sinpsi, cospsi, inv_s;
 
-      //static int been_here = 0;
+      // used to calc fields
+      double[,] P = new double[monthSize, monthSize];
+      double[,] DP = new double[monthSize, monthSize];
+      double[,] gnm = new double[monthSize, monthSize];
+      double[,] hnm = new double[monthSize, monthSize];
+      double[] sm = new double[monthSize];
+      double[] cm = new double[monthSize];
 
+      // precalc sin cos of lat
       double sinlat = sin( lat_rad );
       double coslat = cos( lat_rad );
 
+      // precalc squares of a and b
+      double a2 = a * a;
+      double b2 = b * b;
+
       /* convert to geocentric */
-      sr = sqrt( a * a * coslat * coslat + b * b * sinlat * sinlat );
+      sr = sqrt( a2 * coslat * coslat + b2 * sinlat * sinlat );
       /* sr is effective radius */
-      theta = atan2( coslat * (h_km * sr + a * a), sinlat * (h_km * sr + b * b) );
+      theta = atan2( coslat * (h_km * sr + a2), sinlat * (h_km * sr + b2) );
 
       /* theta is geocentric co-latitude */
-
       r = h_km * h_km + 2.0 * h_km * sr +
-      (a * a * a * a - (a * a * a * a - b * b * b * b) * sinlat * sinlat) /
-      (a * a - (a * a - b * b) * sinlat * sinlat);
-
-      r = sqrt( r );
+        (a2 * a2 - (a2 * a2 - b2 * b2) * sinlat * sinlat) /
+        (a2 - (a2 - b2) * sinlat * sinlat);
 
       /* r is geocentric radial distance */
+      r = sqrt( r );
       c = cos( theta );
       s = sin( theta );
       /* protect against zero divide at geographic poles */
@@ -879,7 +1060,7 @@ namespace CoordLib.WMM
         inv_s = 1.0 / (s + 0 * 1.0e-8);
 
       /*zero out arrays */
-      for (n = 0; n <= nmax; n++) {
+      for (n = 0; n < monthSize; n++) {
         for (m = 0; m <= n; m++) {
           P[n, m] = 0;
           DP[n, m] = 0;
@@ -894,32 +1075,16 @@ namespace CoordLib.WMM
       P[1, 0] = c;
       DP[1, 0] = -s;
 
-      /* these values will not change for subsequent function calls */
-      if (!been_here) {
-        for (n = 2; n <= nmax; n++) {
-          root[n] = sqrt( (2.0 * n - 1) / (2.0 * n) );
-        }
-
-        for (m = 0; m <= nmax; m++) {
-          double mm = m * m;
-          for (n = max( m + 1, 2 ); n <= nmax; n++) {
-            roots[m, n, 0] = sqrt( (n - 1) * (n - 1) - mm );
-            roots[m, n, 1] = 1.0 / sqrt( n * n - mm );
-          }
-        }
-        been_here = true;
-      }
-
-      for (n = 2; n <= nmax; n++) {
+      for (n = 2; n < monthSize; n++) {
         /*  double root = sqrt((2.0*n-1) / (2.0*n)); */
         P[n, n] = P[n - 1, n - 1] * s * root[n];
         DP[n, n] = (DP[n - 1, n - 1] * s + P[n - 1, n - 1] * c) * root[n];
       }
 
       /* lower triangle */
-      for (m = 0; m <= nmax; m++) {
+      for (m = 0; m < monthSize; m++) {
         /*  double mm = m*m;  */
-        for (n = max( m + 1, 2 ); n <= nmax; n++) {
+        for (n = max( m + 1, 2 ); n < monthSize; n++) {
           /* double root1 = sqrt((n-1)*(n-1) - mm); */
           /* double root2 = 1.0 / sqrt( n*n - mm);  */
           P[n, m] = (P[n - 1, m] * c * (2.0 * n - 1) -
@@ -930,103 +1095,10 @@ namespace CoordLib.WMM
       }
 
       /* compute gnm, hnm at dat */
-      nmaxl = 12;  /* month index */
-      // rem: julian days translates 50..99, 00..49 to 1950-2049 
-      switch (model) {
-        case 1985:  /* WMM85 */
-          yearfrac = (dat - yymmdd_to_julian_days( 85, 1, 1 )) / 365.25;
-          for (n = 1; n <= nmaxl; n++)
-            for (m = 0; m <= nmaxl; m++) {
-              gnm[n, m] = gnm_wmm85[n, m] + yearfrac * gtnm_wmm85[n, m];
-              hnm[n, m] = hnm_wmm85[n, m] + yearfrac * htnm_wmm85[n, m];
-            }
-          break;
-
-        case 1990:  /* WMM90 */
-          yearfrac = (dat - yymmdd_to_julian_days( 90, 1, 1 )) / 365.25;
-          for (n = 1; n <= nmaxl; n++)
-            for (m = 0; m <= nmaxl; m++) {
-              gnm[n, m] = gnm_wmm90[n, m] + yearfrac * gtnm_wmm90[n, m];
-              hnm[n, m] = hnm_wmm90[n, m] + yearfrac * htnm_wmm90[n, m];
-            }
-          break;
-
-        case 1995:  /* WMM95 */
-          yearfrac = (dat - yymmdd_to_julian_days( 95, 1, 1 )) / 365.25;
-          for (n = 1; n <= nmaxl; n++)
-            for (m = 0; m <= nmaxl; m++) {
-              gnm[n, m] = gnm_wmm95[n, m] + yearfrac * gtnm_wmm95[n, m];
-              hnm[n, m] = hnm_wmm95[n, m] + yearfrac * htnm_wmm95[n, m];
-            }
-          break;
-
-        case 2000:      /* WMM2000 */
-          yearfrac = (dat - yymmdd_to_julian_days( 0, 1, 1 )) / 365.25;
-          for (n = 1; n <= nmaxl; n++)
-            for (m = 0; m <= nmaxl; m++) {
-              gnm[n, m] = gnm_wmm2000[n, m] + yearfrac * gtnm_wmm2000[n, m];
-              hnm[n, m] = hnm_wmm2000[n, m] + yearfrac * htnm_wmm2000[n, m];
-            }
-          break;
-
-        case 2005:      /* WMM2005 */
-          yearfrac = (dat - yymmdd_to_julian_days( 5, 1, 1 )) / 365.25;
-          for (n = 1; n <= nmaxl; n++)
-            for (m = 0; m <= nmaxl; m++) {
-              gnm[n, m] = gnm_wmm2005[n, m] + yearfrac * gtnm_wmm2005[n, m];
-              hnm[n, m] = hnm_wmm2005[n, m] + yearfrac * htnm_wmm2005[n, m];
-            }
-          break;
-
-        case 2010:      /* WMM2010 */
-          yearfrac = (dat - yymmdd_to_julian_days( 10, 1, 1 )) / 365.25;
-          for (n = 1; n <= nmaxl; n++)
-            for (m = 0; m <= nmaxl; m++) {
-              gnm[n, m] = gnm_wmm2010[n, m] + yearfrac * gtnm_wmm2010[n, m];
-              hnm[n, m] = hnm_wmm2010[n, m] + yearfrac * htnm_wmm2010[n, m];
-            }
-          break;
-
-        case 2015:     /* WMM2015 */
-          yearfrac = (dat - yymmdd_to_julian_days( 15, 1, 1 )) / 365.25; //15 jer je 2015
-          for (n = 1; n <= nmaxl; n++)
-            for (m = 0; m <= nmaxl; m++) {
-              gnm[n, m] = gnm_wmm2015[n, m] + yearfrac * gtnm_wmm2015[n, m];
-              hnm[n, m] = hnm_wmm2015[n, m] + yearfrac * htnm_wmm2015[n, m];
-            }
-          break;
-
-        case 2020:     /* WMM2020 */
-          yearfrac = (dat - yymmdd_to_julian_days( 20, 1, 1 )) / 365.25; //20 -> 2020
-          for (n = 1; n <= nmaxl; n++)
-            for (m = 0; m <= nmaxl; m++) {
-              gnm[n, m] = gnm_wmm2020[n, m] + yearfrac * gtnm_wmm2020[n, m];
-              hnm[n, m] = hnm_wmm2020[n, m] + yearfrac * htnm_wmm2020[n, m];
-            }
-          break;
-
-        case 2025:     /* WMM2025 */
-          yearfrac = (dat - yymmdd_to_julian_days( 25, 1, 1 )) / 365.25; //25 -> 2025
-          for (n = 1; n <= nmaxl; n++)
-            for (m = 0; m <= nmaxl; m++) {
-              gnm[n, m] = gnm_wmm2025[n, m] + yearfrac * gtnm_wmm2025[n, m];
-              hnm[n, m] = hnm_wmm2025[n, m] + yearfrac * htnm_wmm2025[n, m];
-            }
-          break;
-
-        default: // any other model number uses the latest one (adjust when extending)
-          yearfrac = (dat - yymmdd_to_julian_days( 25, 1, 1 )) / 365.25; //25 -> 2025
-          for (n = 1; n <= nmaxl; n++)
-            for (m = 0; m <= nmaxl; m++) {
-              gnm[n, m] = gnm_wmm2025[n, m] + yearfrac * gtnm_wmm2025[n, m];
-              hnm[n, m] = hnm_wmm2025[n, m] + yearfrac * htnm_wmm2025[n, m];
-            }
-          break;
-
-      }
+      ComputeModelMat( model, dat, gnm, hnm );
 
       /* compute sm (sin(m lon) and cm (cos(m lon)) */
-      for (m = 0; m <= nmaxl; m++) {
+      for (m = 0; m < monthSize; m++) {
         sm[m] = sin( m * lon_rad );
         cm[m] = cos( m * lon_rad );
       }
@@ -1038,7 +1110,7 @@ namespace CoordLib.WMM
       fn_0 = r_0 / r;
       fn = fn_0 * fn_0;
 
-      for (n = 1; n <= nmaxl; n++) {
+      for (n = 1; n < monthSize; n++) {
         double c1_n = 0;
         double c2_n = 0;
         double c3_n = 0;

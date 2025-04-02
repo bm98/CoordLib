@@ -12,6 +12,10 @@ https://github.com/chrisveness/geodesy
 ### LatLon drawing primitives (Point, Size, Rectangle)
 
 ### Calculation of Magnetic Variation using WMM2025.COF
+see License file for sources
+
+### JulianDay class based on: 
+https://github.com/GoodOlClint/Astronomy
 
 
 ---

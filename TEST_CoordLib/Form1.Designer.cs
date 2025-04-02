@@ -38,14 +38,21 @@ namespace TEST_CoordLib
       this.cbxUseTable = new System.Windows.Forms.CheckBox();
       this.btQuadList = new System.Windows.Forms.Button();
       this.btDistTable = new System.Windows.Forms.Button();
+      this.txLat = new System.Windows.Forms.TextBox();
+      this.label1 = new System.Windows.Forms.Label();
+      this.label2 = new System.Windows.Forms.Label();
+      this.txLon = new System.Windows.Forms.TextBox();
+      this.txMv = new System.Windows.Forms.TextBox();
+      this.label3 = new System.Windows.Forms.Label();
+      this.btCalcMvFromLatLon = new System.Windows.Forms.Button();
       this.SuspendLayout();
       // 
       // RTB
       // 
       this.RTB.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.RTB.Location = new System.Drawing.Point(12, 132);
+      this.RTB.Location = new System.Drawing.Point(12, 215);
       this.RTB.Name = "RTB";
-      this.RTB.Size = new System.Drawing.Size(604, 579);
+      this.RTB.Size = new System.Drawing.Size(604, 496);
       this.RTB.TabIndex = 0;
       this.RTB.Text = "";
       // 
@@ -136,11 +143,79 @@ namespace TEST_CoordLib
       this.btDistTable.UseVisualStyleBackColor = true;
       this.btDistTable.Click += new System.EventHandler(this.btDistTable_Click);
       // 
+      // txLat
+      // 
+      this.txLat.Location = new System.Drawing.Point(45, 126);
+      this.txLat.Name = "txLat";
+      this.txLat.Size = new System.Drawing.Size(106, 20);
+      this.txLat.TabIndex = 10;
+      this.txLat.Text = "180";
+      // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(12, 129);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(27, 13);
+      this.label1.TabIndex = 11;
+      this.label1.Text = "LAT";
+      // 
+      // label2
+      // 
+      this.label2.AutoSize = true;
+      this.label2.Location = new System.Drawing.Point(12, 156);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(29, 13);
+      this.label2.TabIndex = 13;
+      this.label2.Text = "LON";
+      // 
+      // txLon
+      // 
+      this.txLon.Location = new System.Drawing.Point(45, 153);
+      this.txLon.Name = "txLon";
+      this.txLon.Size = new System.Drawing.Size(106, 20);
+      this.txLon.TabIndex = 12;
+      this.txLon.Text = "180";
+      // 
+      // txMv
+      // 
+      this.txMv.Location = new System.Drawing.Point(45, 179);
+      this.txMv.Name = "txMv";
+      this.txMv.Size = new System.Drawing.Size(106, 20);
+      this.txMv.TabIndex = 14;
+      this.txMv.Text = "180";
+      // 
+      // label3
+      // 
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point(12, 182);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(27, 13);
+      this.label3.TabIndex = 15;
+      this.label3.Text = "MV°";
+      // 
+      // btCalcMvFromLatLon
+      // 
+      this.btCalcMvFromLatLon.Location = new System.Drawing.Point(157, 167);
+      this.btCalcMvFromLatLon.Name = "btCalcMvFromLatLon";
+      this.btCalcMvFromLatLon.Size = new System.Drawing.Size(85, 32);
+      this.btCalcMvFromLatLon.TabIndex = 16;
+      this.btCalcMvFromLatLon.Text = "Calc MagVar";
+      this.btCalcMvFromLatLon.UseVisualStyleBackColor = true;
+      this.btCalcMvFromLatLon.Click += new System.EventHandler(this.btCalcMvFromLatLon_Click);
+      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(649, 779);
+      this.Controls.Add(this.btCalcMvFromLatLon);
+      this.Controls.Add(this.label3);
+      this.Controls.Add(this.txMv);
+      this.Controls.Add(this.label2);
+      this.Controls.Add(this.txLon);
+      this.Controls.Add(this.label1);
+      this.Controls.Add(this.txLat);
       this.Controls.Add(this.btDistTable);
       this.Controls.Add(this.btQuadList);
       this.Controls.Add(this.cbxUseTable);
@@ -170,6 +245,13 @@ namespace TEST_CoordLib
     private System.Windows.Forms.CheckBox cbxUseTable;
     private System.Windows.Forms.Button btQuadList;
     private System.Windows.Forms.Button btDistTable;
+    private System.Windows.Forms.TextBox txLat;
+    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.TextBox txLon;
+    private System.Windows.Forms.TextBox txMv;
+    private System.Windows.Forms.Label label3;
+    private System.Windows.Forms.Button btCalcMvFromLatLon;
   }
 }
 

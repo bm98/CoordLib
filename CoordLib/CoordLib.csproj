@@ -6,10 +6,10 @@
 https://github.com/chrisveness/geodesy
 plus Mercator projection with Tile, Pixel and Quad types</Description>
     <Copyright>2022 M.Burri</Copyright>
-    <AssemblyVersion>1.9.0.27</AssemblyVersion>
-    <FileVersion>1.9.0.27</FileVersion>
+    <AssemblyVersion>1.9.0.28</AssemblyVersion>
+    <FileVersion>1.9.0.28</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.5.0</Version>
+    <Version>1.9.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

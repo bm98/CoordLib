@@ -48,6 +48,7 @@
     <Compile Include="DMS.cs" />
     <Compile Include="LLATests.cs" />
     <Compile Include="LLShapesTests.cs" />
+    <Compile Include="JDNTests.cs" />
     <Compile Include="WMMTest.cs" />
   </ItemGroup>
   <ItemGroup>

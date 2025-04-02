@@ -26,7 +26,7 @@ namespace CoordLib.WMM
     private const double c_height_km = 3; //km
 
     // the model
-    private static MagVar _wmm = new MagVar( );
+    private readonly static MagVar _wmm = new MagVar( );
 
     // magVar lookup table Quad
     private static QuadLookup<double?> _quadLookup;
@@ -63,21 +63,34 @@ namespace CoordLib.WMM
     /// </summary>
     /// <param name="utmZone">An UTM Zone Number</param>
     /// <param name="utmBand">A Band Letter</param>
+    /// <param name="date">A date to calculate with</param>
     /// <returns>The MagVar</returns>
-    private static double MagVar_rad( int utmZone, string utmBand )
+    private static double MagVar_rad( int utmZone, string utmBand, DateTime date )
     {
       var ll = UtmOp.UTMCellCenterCoord( utmZone, utmBand );
       if (ll.IsEmpty) return 0;
 
-      return _wmm.SGMagVar( ll.Lat, ll.Lon, c_height_km, DateTime.Now, -1, new double[] { } );
+      return _wmm.SGMagVar( ll.Lat, ll.Lon, c_height_km, date, -1, new double[0] { } );
     }
 
     /// <summary>
-    ///
+    /// Returns the MagVar for the center of the UTM Cell at 3km Height
+    /// </summary>
+    /// <param name="utmZone">An UTM Zone Number</param>
+    /// <param name="utmBand">A Band Letter</param>
+    /// <returns>The MagVar</returns>
+    private static double MagVar_rad( int utmZone, string utmBand )
+    {
+      return MagVar_rad( utmZone, utmBand, DateTime.Now );
+    }
+
+    /// <summary>
+    /// Returns the Magnetic Declination at a location at 3km height [rad]
     /// </summary>
     /// <param name="latLon">A LatLon coordinate</param>
+    /// <param name="date">A date to calculate with</param>
     /// <returns>The MagVar</returns>
-    private static double MagVar_rad_Lookup( LatLon latLon )
+    private static double MagVar_rad_Lookup( LatLon latLon, DateTime date )
     {
       // sanity
       if (latLon.IsEmpty) return 0;
@@ -102,7 +115,9 @@ namespace CoordLib.WMM
         else {
           // not found, calculate and add
           var center = quad.Center( );
-          magVar_rad = _wmm.SGMagVar( center.Lat, center.Lon, c_height_km, DateTime.Now, -1, new double[0] );
+          lock (_wmm) {
+            magVar_rad = _wmm.SGMagVar( center.Lat, center.Lon, c_height_km, date, -1, new double[0] );
+          }
           _quadLookup.Add( quad, magVar_rad );
         }
       }
@@ -117,32 +132,59 @@ namespace CoordLib.WMM
     /// Returns the Magnetic Declination at a location at 3km height [rad]
     /// </summary>
     /// <param name="latLon">The location</param>
+    /// <param name="date">A date to calculate with</param>
     /// <param name="useLookup">When true using the UTM lookup table</param>
     /// <returns>The magnetic declination [rad]</returns>
-    public static double MagVar_rad( LatLon latLon, bool useLookup )
+    public static double MagVar_rad( LatLon latLon, DateTime date, bool useLookup )
     {
       // sanity
       if (latLon.IsEmpty) return 0;
 
       double magVar_rad;
       if (useLookup) {
-        magVar_rad = MagVar_rad_Lookup( latLon );
+        magVar_rad = MagVar_rad_Lookup( latLon, date );
       }
       else {
-        magVar_rad = _wmm.SGMagVar( latLon.Lat, latLon.Lon, c_height_km, DateTime.Now, -1, new double[0] );
+        lock (_wmm) {
+          magVar_rad = _wmm.SGMagVar( latLon.Lat, latLon.Lon, c_height_km, date, -1, new double[0] );
+        }
       }
       return magVar_rad;
+    }
+    /// <summary>
+    /// Returns the Magnetic Declination at a location at 3km height [rad]
+    /// using Now as date
+    /// </summary>
+    /// <param name="latLon">The location</param>
+    /// <param name="useLookup">When true using the UTM lookup table</param>
+    /// <returns>The magnetic declination [rad]</returns>
+    public static double MagVar_rad( LatLon latLon, bool useLookup )
+    {
+      return MagVar_rad( latLon, DateTime.Now, useLookup );
     }
 
     /// <summary>
     /// Returns the Magnetic Declination at a location at 3km height [deg]
     /// </summary>
     /// <param name="latLon">The location</param>
+    /// <param name="date">A date to calculate with</param>
+    /// <param name="useLookup">When true using the UTM lookup table</param>
+    /// <returns>The magnetic declination [deg]</returns>
+    public static double MagVar_deg( LatLon latLon, DateTime date, bool useLookup )
+    {
+      return MagVar_rad( latLon, date, useLookup ).ToDegrees( );
+    }
+
+    /// <summary>
+    /// Returns the Magnetic Declination at a location at 3km height [deg]
+    /// using Now as date
+    /// </summary>
+    /// <param name="latLon">The location</param>
     /// <param name="useLookup">When true using the UTM lookup table</param>
     /// <returns>The magnetic declination [deg]</returns>
     public static double MagVar_deg( LatLon latLon, bool useLookup )
     {
-      return MagVar_rad( latLon, useLookup ).ToDegrees( );
+      return MagVar_deg( latLon, DateTime.Now, useLookup );
     }
 
 
@@ -151,17 +193,31 @@ namespace CoordLib.WMM
     /// </summary>
     /// <param name="trueBearing">The true bearing [deg]</param>
     /// <param name="latLon">The location</param>
+    /// <param name="date">A date to calculate with</param>
     /// <param name="useLookup">When true using the UTM lookup table</param>
     /// <returns>The magnetic bearing [deg]</returns>
-    public static double MagFromTrueBearing( double trueBearing, LatLon latLon, bool useLookup = false )
+    public static double MagFromTrueBearing( double trueBearing, LatLon latLon, DateTime date, bool useLookup = false )
     {
       // sanity
       if (latLon.IsEmpty) return trueBearing;
 
-      double magVar = MagVar_deg( latLon, useLookup );
+      double magVar = MagVar_deg( latLon, date, useLookup );
 
       // correction is: add if West(neg magVar) else sub
       return Geo.Wrap360( trueBearing - magVar );
+    }
+
+    /// <summary>
+    /// Returns the Magnetic Bearing from a True Bearing at a location at 3km height [deg]
+    /// using Now as date
+    /// </summary>
+    /// <param name="trueBearing">The true bearing [deg]</param>
+    /// <param name="latLon">The location</param>
+    /// <param name="useLookup">When true using the UTM lookup table</param>
+    /// <returns>The magnetic bearing [deg]</returns>
+    public static double MagFromTrueBearing( double trueBearing, LatLon latLon, bool useLookup = false )
+    {
+      return MagFromTrueBearing( trueBearing, latLon, DateTime.Now, useLookup );
     }
 
     /// <summary>
@@ -170,9 +226,10 @@ namespace CoordLib.WMM
     /// <param name="trueBearing">The true bearing [deg]</param>
     /// <param name="latLon1">The location (from)</param>
     /// <param name="latLon2">The location (to)</param>
+    /// <param name="date">A date to calculate with</param>
     /// <param name="useLookup">When true using the UTM lookup table</param>
     /// <returns>The magnetic bearing [deg]</returns>
-    public static double MagFromTrueBearing( double trueBearing, LatLon latLon1, LatLon latLon2, bool useLookup = false )
+    public static double MagFromTrueBearing( double trueBearing, LatLon latLon1, LatLon latLon2, DateTime date, bool useLookup = false )
     {
       // sanity
       if (latLon1.IsEmpty) return trueBearing;
@@ -181,14 +238,50 @@ namespace CoordLib.WMM
       var llIntermediate = latLon1.IntermediatePointTo( latLon2, 0.5 );
       double magVar = MagVar_deg( llIntermediate, useLookup );
       // take ( start + mid + end ) / 3 as magVar
-      double mgCalc = (magVar + MagVar_deg( latLon1, useLookup ) + MagVar_deg( latLon2, useLookup )) / 3.0;
+      double mgCalc = (magVar + MagVar_deg( latLon1, date, useLookup ) + MagVar_deg( latLon2, date, useLookup )) / 3.0;
 
       // correction is: add if West(neg magVar) else sub
       return Geo.Wrap360( trueBearing - mgCalc );
     }
 
     /// <summary>
+    /// Returns the Magnetic Bearing from a True Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
+    /// using Now as date
+    /// </summary>
+    /// <param name="trueBearing">The true bearing [deg]</param>
+    /// <param name="latLon1">The location (from)</param>
+    /// <param name="latLon2">The location (to)</param>
+    /// <param name="useLookup">When true using the UTM lookup table</param>
+    /// <returns>The magnetic bearing [deg]</returns>
+    public static double MagFromTrueBearing( double trueBearing, LatLon latLon1, LatLon latLon2, bool useLookup = false )
+    {
+      return MagFromTrueBearing( trueBearing, latLon1, latLon2, DateTime.Now, useLookup );
+    }
+
+
+    /// <summary>
     /// Returns the True Bearing from a Magnetic Bearing at a location at 3km height [deg]
+    /// </summary>
+    /// <param name="magBearing">The magnetic bearing [deg]</param>
+    /// <param name="latLon">The location</param>
+    /// <param name="date">A date to calculate with</param>
+    /// <param name="useLookup">When true using the UTM lookup table</param>
+    /// <returns>The magnetic bearing [deg]</returns>
+    public static double TrueFromMagBearing( double magBearing, LatLon latLon, DateTime date, bool useLookup = false )
+    {
+      // sanity
+      if (latLon.IsEmpty) return magBearing;
+
+      double magVar = MagVar_deg( latLon, date, useLookup );
+
+      // correction is: add if East(pos magVar) else sub
+      // correction is: add if East else sub
+      return Geo.Wrap360( magBearing + magVar );
+    }
+
+    /// <summary>
+    /// Returns the True Bearing from a Magnetic Bearing at a location at 3km height [deg]
+    /// using Now as date
     /// </summary>
     /// <param name="magBearing">The magnetic bearing [deg]</param>
     /// <param name="latLon">The location</param>
@@ -196,14 +289,7 @@ namespace CoordLib.WMM
     /// <returns>The magnetic bearing [deg]</returns>
     public static double TrueFromMagBearing( double magBearing, LatLon latLon, bool useLookup = false )
     {
-      // sanity
-      if (latLon.IsEmpty) return magBearing;
-
-      double magVar = MagVar_deg( latLon, useLookup );
-
-      // correction is: add if East(pos magVar) else sub
-      // correction is: add if East else sub
-      return Geo.Wrap360( magBearing + magVar );
+      return TrueFromMagBearing( magBearing, latLon, DateTime.Now, useLookup );
     }
 
     /// <summary>
@@ -212,9 +298,10 @@ namespace CoordLib.WMM
     /// <param name="magBearing">The magnetic bearing [deg]</param>
     /// <param name="latLon1">The location (from)</param>
     /// <param name="latLon2">The location (to)</param>
+    /// <param name="date">A date to calculate with</param>
     /// <param name="useLookup">When true using the UTM lookup table</param>
     /// <returns>The magnetic bearing [deg]</returns>
-    public static double TrueFromMagBearing( double magBearing, LatLon latLon1, LatLon latLon2, bool useLookup = false )
+    public static double TrueFromMagBearing( double magBearing, LatLon latLon1, LatLon latLon2, DateTime date, bool useLookup = false )
     {
       // sanity
       if (latLon1.IsEmpty) return magBearing;
@@ -223,11 +310,25 @@ namespace CoordLib.WMM
       var llIntermediate = latLon1.IntermediatePointTo( latLon2, 0.5 );
       double magVar = MagVar_deg( llIntermediate, useLookup );
       // take ( start + mid + end ) / 3 as magVar
-      double mgCalc = (magVar + MagVar_deg( latLon1, useLookup ) + MagVar_deg( latLon2, useLookup )) / 3.0;
+      double mgCalc = (magVar + MagVar_deg( latLon1, date, useLookup ) + MagVar_deg( latLon2, date, useLookup )) / 3.0;
 
       // correction is: add if East(pos magVar) else sub
       // correction is: add if East else sub
       return Geo.Wrap360( magBearing + mgCalc );
+    }
+
+    /// <summary>
+    /// Returns the True Bearing from a Magnetic Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
+    /// using Now as date
+    /// </summary>
+    /// <param name="magBearing">The magnetic bearing [deg]</param>
+    /// <param name="latLon1">The location (from)</param>
+    /// <param name="latLon2">The location (to)</param>
+    /// <param name="useLookup">When true using the UTM lookup table</param>
+    /// <returns>The magnetic bearing [deg]</returns>
+    public static double TrueFromMagBearing( double magBearing, LatLon latLon1, LatLon latLon2, bool useLookup = false )
+    {
+      return TrueFromMagBearing( magBearing, latLon1, latLon2, DateTime.Now, useLookup );
     }
 
     #endregion

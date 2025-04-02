@@ -164,5 +164,12 @@ namespace TEST_CoordLib
       }
     }
 
+    private void btCalcMvFromLatLon_Click( object sender, EventArgs e )
+    {
+      txMv.Text = CoordLib.WMM.MagVarEx.MagVar_deg(
+        new LatLon( double.Parse( txLat.Text ), double.Parse( txLon.Text ) ),
+        new DateTime( 2025, 1, 1, 12, 0, 0 ),
+        false ).ToString( "G5" );
+    }
   }
 }
