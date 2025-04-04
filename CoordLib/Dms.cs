@@ -36,10 +36,12 @@ namespace CoordLib
     public const string NbSpace = "\u202F";
 
 
-    private readonly static IFormatProvider c_us = CultureInfo.InvariantCulture.NumberFormat; // culture for DMS (decimal point)
-    private readonly static NumberStyles c_real = // parse options for DMS
-        NumberStyles.AllowDecimalPoint
-      | NumberStyles.AllowLeadingSign;
+    internal readonly static IFormatProvider c_us = CultureInfo.InvariantCulture.NumberFormat; // culture for DMS (decimal point)
+    internal readonly static NumberStyles c_real = // parse options for DMS
+      NumberStyles.Integer
+      | NumberStyles.AllowDecimalPoint;
+    internal readonly static NumberStyles c_int = // parse options for DMS
+      NumberStyles.Integer;
 
 
     // match: {E|W|e|w}d.dddddd or {N|S|n|s}d.dddddd
@@ -160,21 +162,21 @@ namespace CoordLib
           }
         }
 
-        // c) type: 3 part dms D[D[D]]{°| }M[M]{'| }S[S]["]
+        // c) type: 3 part dms D[D[D]]{°| }M[M]{'| }S[S][.S]["]
         match = c_RxLL_3part.Match( stuff );
         if (match.Success) {
-          double dd = int.Parse( match.Groups["deg"].Value );
-          double mm = int.Parse( match.Groups["min"].Value );
-          double ss = double.Parse( match.Groups["sec"].Value );
+          double dd = int.Parse( match.Groups["deg"].Value, c_int, c_us );
+          double mm = int.Parse( match.Groups["min"].Value, c_int, c_us );
+          double ss = double.Parse( match.Groups["sec"].Value, c_real, c_us );
           deg = dd + mm / 60.0 + ss / 3600.0;
           return deg * sign;
         }
 
-        // d) type: 2 part dm D[D[D]]{°| }M[M][']
+        // d) type: 2 part dm D[D[D]]{°| }M[M][.M][']
         match = c_RxLL_2part.Match( stuff );
         if (match.Success) {
-          double dd = int.Parse( match.Groups["deg"].Value );
-          double mm = double.Parse( match.Groups["min"].Value );
+          double dd = int.Parse( match.Groups["deg"].Value, c_int, c_us );
+          double mm = double.Parse( match.Groups["min"].Value, c_real, c_us );
           deg = dd + mm / 60.0;
           return deg * sign;
         }
@@ -182,7 +184,7 @@ namespace CoordLib
         // e) type: 1 part d D[D[D]][°]
         match = c_RxLL_1part.Match( stuff );
         if (match.Success) {
-          double dd = int.Parse( match.Groups["deg"].Value );
+          double dd = int.Parse( match.Groups["deg"].Value, c_int, c_us );
           deg = dd;
           return deg * sign;
         }
@@ -191,9 +193,9 @@ namespace CoordLib
           // f2) type: full DD[MM[SS]]
           match = c_RxLL_2deg.Match( stuff );
           if (match.Success) {
-            deg = int.Parse( match.Groups["deg"].Value );
-            double mm = match.Groups["min"].Success ? int.Parse( match.Groups["min"].Value ) : 0.0;
-            double ss = match.Groups["sec"].Success ? int.Parse( match.Groups["sec"].Value ) : 0.0;
+            deg = int.Parse( match.Groups["deg"].Value, c_int, c_us );
+            double mm = match.Groups["min"].Success ? int.Parse( match.Groups["min"].Value, c_int, c_us ) : 0.0;
+            double ss = match.Groups["sec"].Success ? int.Parse( match.Groups["sec"].Value, c_int, c_us ) : 0.0;
             deg = deg + mm / 60.0 + ss / 3600.0;
             return deg * sign;
           }
@@ -365,9 +367,9 @@ namespace CoordLib
         case "deg": {
           // round/right-pad degrees, left-pad with leading zeros (note may include doubles)
           if (dPlaces > 0)
-            d = Math.Round( deg, dPlaces ).ToString( degFmt + "." + "000000".Substring( 0, dPlaces ) );
+            d = Math.Round( deg, dPlaces ).ToString( degFmt + "." + "000000".Substring( 0, dPlaces ), c_us );
           else
-            d = Math.Round( deg, dPlaces ).ToString( degFmt );
+            d = Math.Round( deg, dPlaces ).ToString( degFmt, c_us );
           dms = d + '°';
         }
         break;
@@ -379,9 +381,9 @@ namespace CoordLib
           if (mN == 60) { mN = 0; dN++; }               // check for rounding up
           d = dN.ToString( degFmt );
           if (dPlaces > 0)
-            m = mN.ToString( "00." + "000000".Substring( 0, dPlaces ) );
+            m = mN.ToString( "00." + "000000".Substring( 0, dPlaces ), c_us );
           else
-            m = mN.ToString( "00" );
+            m = mN.ToString( "00", c_us );
           dms = d + '°' + sepS + m + "'";
         }
         break;
@@ -393,12 +395,12 @@ namespace CoordLib
           sN = Math.Round( (deg * 3600 % 60), dPlaces );  // get component sec & round/right-pad
           if (sN == 60) { sN = 0; mN++; } // check for rounding up
           if (mN == 60) { mN = 0; dN++; } // check for rounding up
-          d = dN.ToString( degFmt );
-          m = mN.ToString( "00" );
+          d = dN.ToString( degFmt, c_us );
+          m = mN.ToString( "00", c_us );
           if (dPlaces > 0)
-            s = sN.ToString( "00." + "000000".Substring( 0, dPlaces ) );
+            s = sN.ToString( "00." + "000000".Substring( 0, dPlaces ), c_us );
           else
-            s = sN.ToString( "00" );
+            s = sN.ToString( "00", c_us );
           dms = d + '°' + sepS + m + "'" + sepS + s + '"';
         }
         break;

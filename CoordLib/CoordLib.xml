@@ -400,17 +400,30 @@
             Returns the UTM Latitude Zone Letter
             </summary>
         </member>
-        <member name="M:CoordLib.Extensions.Extensions.MagVarCalc_deg(CoordLib.LatLon)">
+        <member name="M:CoordLib.Extensions.Extensions.MagDecCalc_deg(CoordLib.LatLon)">
             <summary>
             Returns the Magnetic Variation (declinattion) at this location 
-            using WMM2020 (valid 2020..2025)
+            using WMM2025 base date (valid 2025..2030)
             </summary>
         </member>
-        <member name="M:CoordLib.Extensions.Extensions.MagVarLookup_deg(CoordLib.LatLon)">
+        <member name="M:CoordLib.Extensions.Extensions.MagDecLookup_deg(CoordLib.LatLon)">
             <summary>
             Returns the Magnetic Variation (declinattion) at this location 
             using the Lookup table/tree
-            using WMM2020 (valid 2020..2025)
+            using WMM2025 base date (valid 2025..2030)
+            </summary>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.MagDecCalc_deg(CoordLib.LatLon,System.DateTime)">
+            <summary>
+            Returns the Magnetic Variation (declinattion) at this location 
+            using WMM2025 and the given date (valid 2025..2030)
+            </summary>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.MagDecLookup_deg(CoordLib.LatLon,System.DateTime)">
+            <summary>
+            Returns the Magnetic Variation (declinattion) at this location 
+            using the Lookup table/tree
+            using WMM2025 and the given date (valid 2025..2030)
             </summary>
         </member>
         <member name="T:CoordLib.Geo">

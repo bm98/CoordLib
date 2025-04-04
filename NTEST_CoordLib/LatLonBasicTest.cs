@@ -21,5 +21,6 @@ namespace NTEST_CoordLib
       Assert.AreEqual( ll, new LatLon( ll ) );
 
     }
+
   }
 }

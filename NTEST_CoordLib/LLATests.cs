@@ -2,6 +2,7 @@
 
 using System;
 using CoordLib;
+using System.Globalization;
 
 namespace NTEST_CoordLib
 {
@@ -39,7 +40,19 @@ namespace NTEST_CoordLib
       Assert.AreEqual( -45.340180555555555555555555555556, lat, 0.0000001 );
       Assert.AreEqual( 67.738641666666666666666666666667, lon, 0.0000001 );
 
-
     }
+
+    [TestMethod]
+    public void TestLLA_Global( )
+    {
+      T_GlobalTools.SetTestCulture( );
+
+      Assert.AreEqual( ",", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator ); // check
+
+      TestLLA( );
+
+      T_GlobalTools.ResetCulture( );
+    }
+
   }
 }

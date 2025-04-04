@@ -1,11 +1,30 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using CoordLib;
+using System.Globalization;
 
 namespace NTEST_CoordLib
 {
+  public static class T_GlobalTools
+  {
+    // set on init
+    private static CultureInfo _localCulture = CultureInfo.CurrentCulture;
+    // test culture which does have a number format which is not using decimal points
+    public static void SetTestCulture( )
+    {
+      CultureInfo.CurrentCulture = new CultureInfo( "it_it" ); // uses comma as decimal point
+    }
+
+    // test culture which does have a number format which is not using decimal points
+    public static void ResetCulture( )
+    {
+      CultureInfo.CurrentCulture = new CultureInfo( _localCulture.LCID ); // uses comma as decimal point
+    }
+  }
+
+
   [TestClass]
-  public class DMS
+  public class DMSTests
   {
     [TestMethod]
     public void DMS_ParseGen( )
@@ -244,6 +263,26 @@ namespace NTEST_CoordLib
 
       var x = Dms.ToDMSarray( 0, false );
 
+    }
+
+
+    /// <summary>
+    /// Test with a locale of , as decimal point
+    /// </summary>
+    [TestMethod]
+    public void DMS_Global( )
+    {
+      T_GlobalTools.SetTestCulture( );
+
+      Assert.AreEqual( ",", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator ); // check
+
+      DMS_ParseGen( );
+      DMS_ParseLat1( );
+      DMS_ParseLon1( );
+
+      Assert.AreEqual( double.NaN, Dms.ParseDMS( "0,12345" ) ); // invalid sign
+
+      T_GlobalTools.ResetCulture( );
     }
 
 

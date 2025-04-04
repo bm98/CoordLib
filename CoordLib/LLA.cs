@@ -34,7 +34,7 @@ namespace CoordLib
     public static string ToLLA( double lat, double lon, double alt )
     {
       string lla = ToLL( lat, lon ) + ",";
-      lla += $"{alt:+000000.00;000000.00}";
+      lla += string.Format( Dms.c_us, "+000000.00;000000.00", alt ); // $"{alt:+000000.00;000000.00}";
       return lla;
     }
 
@@ -70,7 +70,7 @@ namespace CoordLib
       if (e.Length != 3) return false; // nope
       lat = Dms.ParseDMS( e[0] );
       lon = Dms.ParseDMS( e[1] );
-      if (double.TryParse( e[2], out alt )) {
+      if (double.TryParse( e[2], Dms.c_real, Dms.c_us, out alt )) {
         return !(double.IsNaN( lat ) || double.IsNaN( lon ));
       }
       return false;

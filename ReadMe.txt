@@ -1,5 +1,5 @@
-CoordLib V 1.9 - Build 27
-(c) M. Burri - 01-Apr-2025
+CoordLib V 1.9 - Build 29
+(c) M. Burri - 04-Apr-2025
 
 Contains files:
 
@@ -17,6 +17,7 @@ Changelog:
 
 V 1.9:
 - Add WMM calculations (WMM2025 coefficients)
+- Update Ensure string formats (using and expecting decimal point) for DMS and LLA
 
 V 1.4:
 - Add WMM calculations (WMM2020 coefficients)

@@ -152,18 +152,34 @@ namespace CoordLib.Extensions
     public static string UtmZoneLetter( this LatLon _ll ) => UTMGrid.UtmOp.UtmLetterDesignator( _ll );
 
 
+    // MagDec calc base date
+    private static readonly DateTime c_mvBaseDate = new DateTime( 2025, 1, 1, 12, 0, 0 );
+
     /// <summary>
     /// Returns the Magnetic Variation (declinattion) at this location 
-    /// using WMM2020 (valid 2020..2025)
+    /// using WMM2025 base date (valid 2025..2030)
     /// </summary>
-    public static double MagVarCalc_deg( this LatLon _ll ) => WMM.MagVarEx.MagVar_deg( _ll, false );
+    public static double MagDecCalc_deg( this LatLon _ll ) => WMM.MagVarEx.MagVar_deg( _ll, c_mvBaseDate, false );
 
     /// <summary>
     /// Returns the Magnetic Variation (declinattion) at this location 
     /// using the Lookup table/tree
-    /// using WMM2020 (valid 2020..2025)
+    /// using WMM2025 base date (valid 2025..2030)
     /// </summary>
-    public static double MagVarLookup_deg( this LatLon _ll ) => WMM.MagVarEx.MagVar_deg( _ll, true );
+    public static double MagDecLookup_deg( this LatLon _ll ) => WMM.MagVarEx.MagVar_deg( _ll, c_mvBaseDate, true );
+
+    /// <summary>
+    /// Returns the Magnetic Variation (declinattion) at this location 
+    /// using WMM2025 and the given date (valid 2025..2030)
+    /// </summary>
+    public static double MagDecCalc_deg( this LatLon _ll, DateTime date ) => WMM.MagVarEx.MagVar_deg( _ll, date, false );
+
+    /// <summary>
+    /// Returns the Magnetic Variation (declinattion) at this location 
+    /// using the Lookup table/tree
+    /// using WMM2025 and the given date (valid 2025..2030)
+    /// </summary>
+    public static double MagDecLookup_deg( this LatLon _ll, DateTime date ) => WMM.MagVarEx.MagVar_deg( _ll, date, true );
 
   }
 }

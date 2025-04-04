@@ -512,7 +512,7 @@ namespace CoordLib
       if (double.IsNaN( _altitude ))
         return ToString( "dms" );
       else
-        return ToString( "dms" ) + $", {_altitude:####0}";
+        return ToString( "dms" ) + string.Format( Dms.c_us, "####0", _altitude ); // $", {_altitude:####0}";
     }
 
     // Crude Serializing support
@@ -528,9 +528,9 @@ namespace CoordLib
 
       // "lat;lon;alt" as decimals from Invariant Culture
       string[] e = serString.Split( new char[] { ';' } );
-      if (e.Length > 0) double.TryParse( e[0], NumberStyles.Float, CultureInfo.InvariantCulture, out _lat );
-      if (e.Length > 1) double.TryParse( e[1], NumberStyles.Float, CultureInfo.InvariantCulture, out _lon );
-      if (e.Length > 2) double.TryParse( e[2], NumberStyles.Float, CultureInfo.InvariantCulture, out _altitude );
+      if (e.Length > 0) double.TryParse( e[0], Dms.c_real, Dms.c_us, out _lat );
+      if (e.Length > 1) double.TryParse( e[1], Dms.c_real, Dms.c_us, out _lon );
+      if (e.Length > 2) double.TryParse( e[2], Dms.c_real, Dms.c_us, out _altitude );
     }
 
     /// <summary>
@@ -538,7 +538,7 @@ namespace CoordLib
     /// </summary>
     public string ToSerString( )
     {
-      return $"{_lat.ToString( "#0.000000000000", CultureInfo.InvariantCulture )};{_lon.ToString( "##0.000000000000", CultureInfo.InvariantCulture )};{_altitude.ToString( "####0.0", CultureInfo.InvariantCulture )}";
+      return $"{_lat.ToString( "#0.000000000000", Dms.c_us )};{_lon.ToString( "##0.000000000000", Dms.c_us )};{_altitude.ToString( "####0.0", Dms.c_us )}";
     }
 
   }
