@@ -181,5 +181,49 @@ namespace CoordLib.Extensions
     /// </summary>
     public static double MagDecLookup_deg( this LatLon _ll, DateTime date ) => WMM.MagVarEx.MagVar_deg( _ll, date, true );
 
+
+    /// <summary>
+    /// Returns the True Bearing from a Magnetic Bearing at a location at 3km height [deg]
+    /// using WMM2025 base date (valid 2025..2030)
+    /// </summary>
+    /// <param name="_ll"></param>
+    /// <param name="magBearing">The magnetic bearing [deg]</param>
+    /// <returns>The magnetic bearing [deg]</returns>
+    public static double TrueFromMagBearing( this LatLon _ll, double magBearing )
+      => WMM.MagVarEx.TrueFromMagBearing( magBearing, _ll, c_mvBaseDate, false );
+
+    /// <summary>
+    /// Returns the True Bearing from a Magnetic Bearing at a location at 3km height [deg]
+    /// using WMM2025 and the given date (valid 2025..2030)
+    /// </summary>
+    /// <param name="_ll"></param>
+    /// <param name="magBearing">The magnetic bearing [deg]</param>
+    /// <param name="date">A date to calculate with</param>
+    /// <returns>The magnetic bearing [deg]</returns>
+    public static double TrueFromMagBearing( this LatLon _ll, double magBearing, DateTime date )
+      => WMM.MagVarEx.TrueFromMagBearing( magBearing, _ll, date, false );
+
+
+    /// <summary>
+    /// Returns the Magnetic Bearing from a True Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
+    /// using WMM2025 base date (valid 2025..2030)
+    /// </summary>
+    /// <param name="_ll"></param>
+    /// <param name="trueBearing">The true bearing [deg]</param>
+    /// <returns>The magnetic bearing [deg]</returns>
+    public static double MagFromTrueBearing( this LatLon _ll, double trueBearing )
+      => WMM.MagVarEx.MagFromTrueBearing( trueBearing, _ll, c_mvBaseDate, false );
+    /// <summary>
+    /// Returns the Magnetic Bearing from a True Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
+    /// using WMM2025 and the given date (valid 2025..2030)
+    /// </summary>
+    /// <param name="_ll"></param>
+    /// <param name="trueBearing">The true bearing [deg]</param>
+    /// <param name="date">A date to calculate with</param>
+    /// <returns>The magnetic bearing [deg]</returns>
+    public static double MagFromTrueBearing( this LatLon _ll, double trueBearing, DateTime date )
+      => WMM.MagVarEx.MagFromTrueBearing( trueBearing, _ll, date, false );
+
+
   }
 }

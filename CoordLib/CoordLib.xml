@@ -426,6 +426,44 @@
             using WMM2025 and the given date (valid 2025..2030)
             </summary>
         </member>
+        <member name="M:CoordLib.Extensions.Extensions.TrueFromMagBearing(CoordLib.LatLon,System.Double)">
+            <summary>
+            Returns the True Bearing from a Magnetic Bearing at a location at 3km height [deg]
+            using WMM2025 base date (valid 2025..2030)
+            </summary>
+            <param name="_ll"></param>
+            <param name="magBearing">The magnetic bearing [deg]</param>
+            <returns>The magnetic bearing [deg]</returns>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.TrueFromMagBearing(CoordLib.LatLon,System.Double,System.DateTime)">
+            <summary>
+            Returns the True Bearing from a Magnetic Bearing at a location at 3km height [deg]
+            using WMM2025 and the given date (valid 2025..2030)
+            </summary>
+            <param name="_ll"></param>
+            <param name="magBearing">The magnetic bearing [deg]</param>
+            <param name="date">A date to calculate with</param>
+            <returns>The magnetic bearing [deg]</returns>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.MagFromTrueBearing(CoordLib.LatLon,System.Double)">
+            <summary>
+            Returns the Magnetic Bearing from a True Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
+            using WMM2025 base date (valid 2025..2030)
+            </summary>
+            <param name="_ll"></param>
+            <param name="trueBearing">The true bearing [deg]</param>
+            <returns>The magnetic bearing [deg]</returns>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.MagFromTrueBearing(CoordLib.LatLon,System.Double,System.DateTime)">
+            <summary>
+            Returns the Magnetic Bearing from a True Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
+            using WMM2025 and the given date (valid 2025..2030)
+            </summary>
+            <param name="_ll"></param>
+            <param name="trueBearing">The true bearing [deg]</param>
+            <param name="date">A date to calculate with</param>
+            <returns>The magnetic bearing [deg]</returns>
+        </member>
         <member name="T:CoordLib.Geo">
             <summary>
             Geodetic functions

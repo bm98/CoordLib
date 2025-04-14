@@ -4,7 +4,7 @@ using System;
 
 using CoordLib;
 using static CoordLib.WMM.MagVarEx;
-
+using CoordLib.Extensions;
 
 namespace NTEST_CoordLib
 {
@@ -193,7 +193,23 @@ namespace NTEST_CoordLib
       Assert.AreEqual( brg, TrueFromMagBearing( MagFromTrueBearing( brg, ptTo, false ), ptTo, false ), 0.000001 ); // calc at loc
       Assert.AreEqual( brg, TrueFromMagBearing( MagFromTrueBearing( brg, ptTo, true ), ptTo, true ), 0.000001 ); // lookup
 
-
     }
+
+    [TestMethod]
+    public void Bearing_NaN_Tests( )
+    {
+      LatLon ptFrom = new LatLon( Dms.ParseDMS( "N35°38'49.1\"" ), Dms.ParseDMS( "119°58'43.0\"W" ) ); // AVE (VOR) TrueH=95°(94.8)
+
+      // -> MAG
+      Assert.AreEqual( double.NaN, ptFrom.MagFromTrueBearing( double.NaN ) );
+      Assert.AreEqual( double.NaN, ptFrom.MagFromTrueBearing( float.NaN ) );
+      Assert.AreEqual( float.NaN, (float)ptFrom.MagFromTrueBearing( float.NaN ) );
+      // -> TRUE
+      Assert.AreEqual( double.NaN, ptFrom.TrueFromMagBearing( double.NaN ) );
+      Assert.AreEqual( double.NaN, ptFrom.TrueFromMagBearing( float.NaN ) );
+      Assert.AreEqual( float.NaN, (float)ptFrom.TrueFromMagBearing( float.NaN ) );
+    }
+
+
   }
 }

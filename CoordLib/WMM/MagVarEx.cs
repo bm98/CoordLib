@@ -199,6 +199,7 @@ namespace CoordLib.WMM
     public static double MagFromTrueBearing( double trueBearing, LatLon latLon, DateTime date, bool useLookup = false )
     {
       // sanity
+      if (double.IsNaN( trueBearing )) return double.NaN;
       if (latLon.IsEmpty) return trueBearing;
 
       double magVar = MagVar_deg( latLon, date, useLookup );
@@ -232,6 +233,7 @@ namespace CoordLib.WMM
     public static double MagFromTrueBearing( double trueBearing, LatLon latLon1, LatLon latLon2, DateTime date, bool useLookup = false )
     {
       // sanity
+      if (double.IsNaN( trueBearing )) return double.NaN;
       if (latLon1.IsEmpty) return trueBearing;
       if (latLon2.IsEmpty) return trueBearing;
 
@@ -270,6 +272,7 @@ namespace CoordLib.WMM
     public static double TrueFromMagBearing( double magBearing, LatLon latLon, DateTime date, bool useLookup = false )
     {
       // sanity
+      if (double.IsNaN( magBearing )) return double.NaN;
       if (latLon.IsEmpty) return magBearing;
 
       double magVar = MagVar_deg( latLon, date, useLookup );
@@ -304,6 +307,7 @@ namespace CoordLib.WMM
     public static double TrueFromMagBearing( double magBearing, LatLon latLon1, LatLon latLon2, DateTime date, bool useLookup = false )
     {
       // sanity
+      if (double.IsNaN( magBearing )) return double.NaN;
       if (latLon1.IsEmpty) return magBearing;
       if (latLon2.IsEmpty) return magBearing;
 
