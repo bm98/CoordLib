@@ -512,7 +512,7 @@ namespace CoordLib
       if (double.IsNaN( _altitude ))
         return ToString( "dms" );
       else
-        return ToString( "dms" ) + ", " + _altitude.ToString( "####0", Dms.c_us ); // $", {_altitude:####0}";
+        return ToString( "dms" ) + ", " + _altitude.ToString( "+####0;####0", Dms.c_us ); // $", {_altitude:####0}";
     }
 
     // Crude Serializing support

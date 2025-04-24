@@ -668,24 +668,24 @@
             <param name="degrees">Compass degrees</param>
             <returns>degrees within range 1..360.</returns>
         </member>
-        <member name="T:CoordLib.Calendar">
+        <member name="T:CoordLib.JulianDay">
+            <summary>
+            The JDN the number of whole and fractional days since Noon, 1st January -4712 UTC.
+            </summary>
+        </member>
+        <member name="T:CoordLib.JulianDay.Calendar">
             <summary>
             Calendar Enum
             </summary>
         </member>
-        <member name="F:CoordLib.Calendar.Julian">
+        <member name="F:CoordLib.JulianDay.Calendar.Julian">
             <summary>
             Julian Calendar
             </summary>
         </member>
-        <member name="F:CoordLib.Calendar.Gregorian">
+        <member name="F:CoordLib.JulianDay.Calendar.Gregorian">
             <summary>
             Gregorian Calendar (DateTime base)
-            </summary>
-        </member>
-        <member name="T:CoordLib.JulianDay">
-            <summary>
-            The JDN the number of whole and fractional days since Noon, 1st January -4712 UTC.
             </summary>
         </member>
         <member name="M:CoordLib.JulianDay.Now">
@@ -755,7 +755,7 @@
             On the Gregorian Calendar a year divisible by 4, except centuries (divisible by 100) not divisible by 400, is a leap year.
             </summary>
         </member>
-        <member name="P:CoordLib.JulianDay.Calendar">
+        <member name="P:CoordLib.JulianDay.CalendarOfDate">
             <summary>
             Returns a Calendar Enum for the given JDN
             
@@ -796,7 +796,7 @@
         </member>
         <member name="M:CoordLib.JulianDay.#ctor(System.DateTime)">
             <summary>
-            cTor: JDN based on Gregorian DateTime given
+            cTor: JDN based on Gregorian DateTime given i.e. past Oct 15 A.D. 1582
             </summary>
             <param name="dateTime">A Gregorian DateTime</param>
             <exception cref="T:System.ArgumentOutOfRangeException">Invalid dates when calendars changed</exception>
@@ -805,51 +805,51 @@
             <summary>
             cTor: JDN with given args
             </summary>
-            <param name="Year">Year</param>
-            <param name="Month">Month</param>
-            <param name="Day">Day</param>
+            <param name="Year">Year -4712..9999</param>
+            <param name="Month">Month 1..12</param>
+            <param name="Day">Day 1..31</param>
         </member>
         <member name="M:CoordLib.JulianDay.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             cTor: JDN with given args
             </summary>
-            <param name="Year">Year</param>
-            <param name="Month">Month</param>
-            <param name="Day">Day</param>
-            <param name="Hour">Hour</param>
+            <param name="Year">Year -4712..9999</param>
+            <param name="Month">Month 1..12</param>
+            <param name="Day">Day 1..31</param>
+            <param name="Hour">Hour 0..23</param>
         </member>
         <member name="M:CoordLib.JulianDay.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             cTor: JDN with given args
             </summary>
-            <param name="Year">Year</param>
-            <param name="Month">Month</param>
-            <param name="Day">Day</param>
-            <param name="Hour">Hour</param>
-            <param name="Minute">Minute</param>
+            <param name="Year">Year -4712..9999</param>
+            <param name="Month">Month 1..12</param>
+            <param name="Day">Day 1..31</param>
+            <param name="Hour">Hour 0..23</param>
+            <param name="Minute">Minute 0..59</param>
         </member>
         <member name="M:CoordLib.JulianDay.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             cTor: JDN with given args
             </summary>
-            <param name="Year">Year</param>
-            <param name="Month">Month</param>
-            <param name="Day">Day</param>
-            <param name="Hour">Hour</param>
-            <param name="Minute">Minute</param>
-            <param name="Second">Second</param>
+            <param name="Year">Year -4712..9999</param>
+            <param name="Month">Month 1..12</param>
+            <param name="Day">Day 1..31</param>
+            <param name="Hour">Hour 0..23</param>
+            <param name="Minute">Minute 0..59</param>
+            <param name="Second">Second 0..59</param>
         </member>
         <member name="M:CoordLib.JulianDay.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             cTor: JDN with given args
             </summary>
-            <param name="Year">Year</param>
-            <param name="Month">Month</param>
-            <param name="Day">Day</param>
-            <param name="Hour">Hour</param>
-            <param name="Minute">Minute</param>
-            <param name="Second">Second</param>
-            <param name="Millisecond">Millisecond</param>
+            <param name="Year">Year -4712..9999</param>
+            <param name="Month">Month 1..12</param>
+            <param name="Day">Day 1..31</param>
+            <param name="Hour">Hour 0..23</param>
+            <param name="Minute">Minute 0..59</param>
+            <param name="Second">Second 0..59</param>
+            <param name="Millisecond">Millisecond 0..999</param>
         </member>
         <member name="M:CoordLib.JulianDay.#ctor(System.Double)">
             <summary>

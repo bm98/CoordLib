@@ -1,26 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.Text;
 
 namespace CoordLib
 {
-  /// <summary>
-  /// Calendar Enum
-  /// </summary>
-  public enum Calendar
-  {
-    /// <summary>
-    /// Julian Calendar
-    /// </summary>
-    Julian,
-    /// <summary>
-    /// Gregorian Calendar (DateTime base)
-    /// </summary>
-    Gregorian
-  }
-
   /// <summary>
   /// The JDN the number of whole and fractional days since Noon, 1st January -4712 UTC.
   /// </summary>
@@ -28,6 +10,37 @@ namespace CoordLib
   {
     // Thank you (no license attached AFAIK):
     // https://github.com/GoodOlClint/Astronomy
+    // modified BM for clarity
+
+    /// <summary>
+    /// Calendar Enum
+    /// </summary>
+    public enum Calendar
+    {
+      /// <summary>
+      /// Julian Calendar
+      /// </summary>
+      Julian,
+      /// <summary>
+      /// Gregorian Calendar (DateTime base)
+      /// </summary>
+      Gregorian
+    }
+
+    // DateTime Ticks (100 ns/Tick) per Day
+    private const long c_TicksPerDay = 24L * 60L * 60L * 1000L * 1000L * 10L;
+
+    // A.D. 1582 October 15 	12:00:00.0 	2299161.000000
+    private const long c_JDN_GregorianStart = 2299161L;
+
+    // ref dates to calc a JDN from Ticks (could be any date)
+    // Saturday 	A.D. 2000 January 1 	00:00:00.0 	2451544.500000
+    private const double c_JDN_20000101 = 2451544.5;
+    // new DateTime( 2000, 1, 1 ).Ticks = 63_082_281_600_000_000_0
+    private static readonly long c_Ticks_20000101 = new DateTime( 2000, 1, 1 ).Ticks;
+    // a JDN from a Ticks Date Value / past Gregorian Start only !!
+    private static double JDN_FromTicksDate( long ticksDate ) => c_JDN_20000101 + (ticksDate - c_Ticks_20000101) / c_TicksPerDay;
+
 
     #region Public Static Methods
 
@@ -79,14 +92,14 @@ namespace CoordLib
     /// <summary>
     /// Julian Day number (as long) since start of the calendar
     /// </summary>
-    public long JulianDaysElapsed => INT( JulianDayNumber );
+    public long JulianDaysElapsed => INTF( JulianDayNumber );
 
     /// <summary>
     /// Day of the week
     /// </summary>
     public DayOfWeek DayOfWeek {
       get {
-        int JD = INT( this.JulianDayNumber + 1.5 );
+        int JD = INTF( this.JulianDayNumber + 1.5 );
         return (DayOfWeek)(JD % 7);
       }
     }
@@ -97,14 +110,14 @@ namespace CoordLib
     public int DayOfYear {
       get {
         int K;
-        if (this.IsLeapYear) { K = 1; }
-        else { K = 2; }
+        if (this.IsLeapYear) {
+          K = 1;
+        }
+        else {
+          K = 2;
+        }
 
-        Debug.WriteLine( "K\t= " + K );
-        Debug.WriteLine( "M\t= " + this.Month );
-        Debug.WriteLine( "D\t= " + this.Day );
-        int N = INT( (275 * this.Month) / 9 ) - K * INT( (this.Month + 9) / 12 ) + this.Day - 30;
-        Debug.WriteLine( "N\t= " + N );
+        int N = INTF( (275 * this.Month) / 9 ) - K * INTF( (this.Month + 9) / 12 ) + this.Day - 30;
 
         return N;
       }
@@ -117,7 +130,7 @@ namespace CoordLib
     public bool IsLeapYear {
       get {
         bool isCentury = (this.Year % 100 == 0);
-        if (isCentury && this.Calendar == Calendar.Gregorian) { return ((this.Year % 400) == 0); }
+        if (isCentury && this.CalendarOfDate == Calendar.Gregorian) { return ((this.Year % 400) == 0); }
         else { return ((this.Year % 4) == 0); }
       }
 
@@ -129,20 +142,28 @@ namespace CoordLib
     /// The Gregorian calendar reform moved changed the calendar from the Julian to Gregorian standard.
     /// This means that the day immediately after 4th October 1582 is 15th October 1582.
     /// </summary>
-    public Calendar Calendar {
+    public Calendar CalendarOfDate {
       get {
         if (this.JulianDayNumber != 0) {
-          if (this.JulianDayNumber < 2299161) { return Calendar.Julian; }
-          else { return Calendar.Gregorian; }
+          // A.D. 1582 October 15 	12:00:00.0 	2299161.000000
+          if (this.JulianDayNumber < c_JDN_GregorianStart) {
+            // JDN is non zero i.e. set and needs to be offset
+            return Calendar.Julian;
+          }
+          else {
+            // JDN is non zero i.e. set and does not needs to be offset
+            return Calendar.Gregorian;
+          }
         }
         else {
-          if (this.Year > 1582) { return Calendar.Gregorian; }
-          else if (this.Year < 1582) { return Calendar.Julian; }
-          else if ((this.Year == 1582) && (this.Month < 10)) { return Calendar.Julian; }
-          else if ((this.Year == 1582) && (this.Month > 10)) { return Calendar.Gregorian; }
-          else if ((this.Year == 1582) && (this.Month == 10) && (this.Day < 5)) { return Calendar.Julian; }
-          else if ((this.Year == 1582) && (this.Month > 10) && (this.Day > 14)) { return Calendar.Gregorian; }
-          else { throw new IndexOutOfRangeException( "The dates October 5th - 14th 1582 are not valid" ); }
+          // JDN is not set (have only parts property values)
+          if (this.Year > 1582) { return Calendar.Gregorian; } // no offset
+          else if (this.Year < 1582) { return Calendar.Julian; } // needs offset
+          else if ((this.Year == 1582) && (this.Month < 10)) { return Calendar.Julian; } // needs offset
+          else if ((this.Year == 1582) && (this.Month > 10)) { return Calendar.Gregorian; } // no offset
+          else if ((this.Year == 1582) && (this.Month == 10) && (this.Day < 5)) { return Calendar.Julian; } // needs offset
+          else if ((this.Year == 1582) && (this.Month > 10) && (this.Day > 14)) { return Calendar.Gregorian; } // no offset
+          else { throw new IndexOutOfRangeException( "The dates October 5th - 14th 1582 are not valid for JDN" ); }
         }
       }
     }
@@ -170,7 +191,7 @@ namespace CoordLib
     public JulianDay AddSeconds( double seconds ) => this.AddMinutes( (seconds / 60) / 60 );
 
     // floor of input
-    private int INT( double input ) => Convert.ToInt32( Math.Floor( input ) );
+    private int INTF( double input ) => Convert.ToInt32( Math.Floor( input ) );
 
     #region Constructors
 
@@ -179,6 +200,7 @@ namespace CoordLib
     /// </summary>
     public JulianDay( )
     {
+      // JDN = 0 date
       this.Year = -4712;
       this.Month = 1;
       this.Day = 1;
@@ -192,67 +214,77 @@ namespace CoordLib
     public JulianDay( JulianDay other ) : this( other.JulianDayNumber ) { }
 
     /// <summary>
-    /// cTor: JDN based on Gregorian DateTime given
+    /// cTor: JDN based on Gregorian DateTime given i.e. past Oct 15 A.D. 1582
     /// </summary>
     /// <param name="dateTime">A Gregorian DateTime</param>
     /// <exception cref="ArgumentOutOfRangeException">Invalid dates when calendars changed</exception>
     public JulianDay( DateTime dateTime )
-        : this( 2451544.5 + ((dateTime.Ticks - 630822816000000000) / 10000d / 1000d) / 60d / 60d / 24d )
+        // Saturday 	A.D. 2000 January 1 	00:00:00.0 	2451544.500000
+        // new DateTime( 2000, 1, 1 ).Ticks = 63_082_281_600_000_000_0
+        : this( JDN_FromTicksDate( dateTime.Ticks ) )
     {
-      //DateTime objects are always Gregorian Calendar based. Throw an error to prevent unexpected results.
-      if (this.Calendar == Calendar.Julian) { throw new ArgumentOutOfRangeException( "The System.DateTime class should not be use for dates prior to October 15th 1582. Invalid calculations will result." ); }
+      // Throw an error to prevent unexpected results.
+      if (this.CalendarOfDate == Calendar.Julian) { throw new ArgumentOutOfRangeException( "The System.DateTime class should not be use for dates prior to October 15th 1582. Invalid calculations will result." ); }
     }
 
     /// <summary>
     /// cTor: JDN with given args
     /// </summary>
-    /// <param name="Year">Year</param>
-    /// <param name="Month">Month</param>
-    /// <param name="Day">Day</param>
+    /// <param name="Year">Year -4712..9999</param>
+    /// <param name="Month">Month 1..12</param>
+    /// <param name="Day">Day 1..31</param>
     public JulianDay( int Year, int Month, int Day ) : this( Year, Month, Day, 0 ) { }
 
     /// <summary>
     /// cTor: JDN with given args
     /// </summary>
-    /// <param name="Year">Year</param>
-    /// <param name="Month">Month</param>
-    /// <param name="Day">Day</param>
-    /// <param name="Hour">Hour</param>
+    /// <param name="Year">Year -4712..9999</param>
+    /// <param name="Month">Month 1..12</param>
+    /// <param name="Day">Day 1..31</param>
+    /// <param name="Hour">Hour 0..23</param>
     public JulianDay( int Year, int Month, int Day, int Hour ) : this( Year, Month, Day, Hour, 0 ) { }
 
     /// <summary>
     /// cTor: JDN with given args
     /// </summary>
-    /// <param name="Year">Year</param>
-    /// <param name="Month">Month</param>
-    /// <param name="Day">Day</param>
-    /// <param name="Hour">Hour</param>
-    /// <param name="Minute">Minute</param>
+    /// <param name="Year">Year -4712..9999</param>
+    /// <param name="Month">Month 1..12</param>
+    /// <param name="Day">Day 1..31</param>
+    /// <param name="Hour">Hour 0..23</param>
+    /// <param name="Minute">Minute 0..59</param>
     public JulianDay( int Year, int Month, int Day, int Hour, int Minute ) : this( Year, Month, Day, Hour, Minute, 0 ) { }
 
     /// <summary>
     /// cTor: JDN with given args
     /// </summary>
-    /// <param name="Year">Year</param>
-    /// <param name="Month">Month</param>
-    /// <param name="Day">Day</param>
-    /// <param name="Hour">Hour</param>
-    /// <param name="Minute">Minute</param>
-    /// <param name="Second">Second</param>
+    /// <param name="Year">Year -4712..9999</param>
+    /// <param name="Month">Month 1..12</param>
+    /// <param name="Day">Day 1..31</param>
+    /// <param name="Hour">Hour 0..23</param>
+    /// <param name="Minute">Minute 0..59</param>
+    /// <param name="Second">Second 0..59</param>
     public JulianDay( int Year, int Month, int Day, int Hour, int Minute, int Second ) : this( Year, Month, Day, Hour, Minute, Second, 0 ) { }
 
     /// <summary>
     /// cTor: JDN with given args
     /// </summary>
-    /// <param name="Year">Year</param>
-    /// <param name="Month">Month</param>
-    /// <param name="Day">Day</param>
-    /// <param name="Hour">Hour</param>
-    /// <param name="Minute">Minute</param>
-    /// <param name="Second">Second</param>
-    /// <param name="Millisecond">Millisecond</param>
+    /// <param name="Year">Year -4712..9999</param>
+    /// <param name="Month">Month 1..12</param>
+    /// <param name="Day">Day 1..31</param>
+    /// <param name="Hour">Hour 0..23</param>
+    /// <param name="Minute">Minute 0..59</param>
+    /// <param name="Second">Second 0..59</param>
+    /// <param name="Millisecond">Millisecond 0..999</param>
     public JulianDay( int Year, int Month, int Day, int Hour, int Minute, int Second, int Millisecond )
     {
+      // sanity
+      if (Year < -4712 || Year > 9999) throw new ArgumentException( "Year must be within -4712..9999" );
+      if (Month < 1 || Month > 12) throw new ArgumentException( "Month must be within 1..12" );
+      if (Day < 1 || Day > 31) throw new ArgumentException( "Day must be within 1..31" );
+      if (Hour < 0 || Hour > 23) throw new ArgumentException( "Hour must be within 0..23" );
+      if (Minute < 0 || Minute > 59) throw new ArgumentException( "Minute must be within 0..59" );
+      if (Second < 0 || Second > 59) throw new ArgumentException( "Second must be within 0..59" );
+      if (Millisecond < 0 || Second > 999) throw new ArgumentException( "Millisecond must be within 0..999" );
 
       this.Year = Year;
       this.Month = Month;
@@ -268,9 +300,12 @@ namespace CoordLib
     /// <summary>
     /// cTor: JDN from a JDN number
     /// </summary>
-    public JulianDay( double JDN )
+    public JulianDay( double jdn )
     {
-      this.JulianDayNumber = JDN;
+      // sanity
+      if (jdn < 0) throw new ArgumentException( "JDN must be >= 0" );
+
+      this.JulianDayNumber = jdn;
       this.CalculateDate( );
     }
 
@@ -280,74 +315,100 @@ namespace CoordLib
     private void CalculateFromDate( )
     {
       this.JulianDayNumber = 0;
+
       int y = this.Year;
       int m = this.Month;
       double d = this.Day;
+      // fractions of the day
       d += ((double)this.Hour / 24d);
       d += ((double)this.Minute / 60d) / 24d;
       d += ((double)this.Second / 60d) / 60d / 24d;
       d += ((double)this.Millisecond / 1000d) / 60d / 60d / 24d;
+
+      /* Jean Meeus: Astronomical Algorithms.
+          wenn Monat > 2 dann
+              Y = Jahr;    M = Monat
+          sonst
+              Y = Jahr−1;  M = Monat+12
+          D = Tag   // inklusive Tagesbruchteil
+   
+          wenn julianischer Kalender dann
+              B = 0
+          sonst  // gregorianischer Kalender
+              B = 2 − ⌊Y/100⌋ + ⌊Y/400⌋
+   
+          JD = ⌊365.25(Y+4716)⌋ + ⌊30.6001(M+1)⌋ + D + B − 1524.5       
+      */
       if (m <= 2) {
         y = y - 1;
         m = m + 12;
       }
       int B = 0;
-      if (this.Calendar == Calendar.Gregorian) {
-        int A = INT( y / 100 );
-        B = 2 - A + INT( A / 4 );
-        Debug.WriteLine( "A\t= " + A );
+      if (this.CalendarOfDate == Calendar.Gregorian) {
+        // adjust for difference in leap years usage between the two calendars
+        B = 2 - INTF( y / 100 ) + INTF( y / 400 );
       }
+      double JD = INTF( 365.25 * (y + 4716) ) + INTF( 30.6001 * (m + 1) ) + d + B - 1524.5;
 
-      double JD = INT( 365.25 * (y + 4716) ) + INT( 30.6001 * (m + 1) ) + d + B - 1524.5;
-
-      Debug.WriteLine( "B\t= " + B );
-      Debug.WriteLine( "JD\t= " + JD );
       this.JulianDayNumber = JD;
     }
 
     // calc Date values from JDN
     private void CalculateDate( )
     {
-      double JD = this.JulianDayNumber + 0.5;
-      int Z = (int)Math.Truncate( JD );
-      double F = JD - Z;
+      /* Jean Meeus: Astronomical Algorithms.
+          Z = ⌊JD + 0,5⌋
+          F = JD + 0,5 − Z
+   
+          wenn julianischer Kalender dann
+              A = Z
+          sonst  // gregorianischer Kalender
+              α = ⌊(Z − 1_867_216.25)/36_524.25⌋
+              A = Z + 1 + α − ⌊α/4⌋
+   
+          B = A + 1524
+          C = ⌊(B − 122.1)/365.25⌋
+          D = ⌊365.25 C⌋
+          E = ⌊(B − D)/30.6001⌋
+   
+          Tag = B − D − ⌊30.6001 E⌋ + F   // inklusive Tagesbruchteil
+          wenn E ≤ 13 dann
+              Monat = E − 1;   Jahr = C − 4716
+          sonst
+              Monat = E − 13;  Jahr = C − 4715       
+       */
+      double JD = this.JulianDayNumber;
+      int Z = INTF( JD + 0.5 );
+      double F = JD + 0.5 - Z;
+
       int A;
-      if (Z < 2299161) { A = Z; }
+      if (Z < c_JDN_GregorianStart) {
+        A = Z;
+      }
       else {
-        int a = INT( (Z - 1867216.25) / 36524.25 );
-        A = Z + 1 + a - INT( a / 4 );
-        Debug.WriteLine( "a\t= " + a );
+        int α = INTF( (Z - 1_867_216.25) / 36_524.25 );
+        A = Z + 1 + α - INTF( α / 4 );
       }
       int B = A + 1524;
-      int C = INT( (B - 122.1) / 365.25 );
-      int D = INT( 365.25 * C );
-      int E = INT( (B - D) / 30.6001 );
+      int C = INTF( (B - 122.1) / 365.25 );
+      int D = INTF( 365.25 * C );
+      int E = INTF( (B - D) / 30.6001 );
 
-      this.Day = B - D - INT( 30.6001 * E );
+      this.Day = B - D - INTF( 30.6001 * E ); // omit day parts here
 
-      if (E < 14) { this.Month = E - 1; }
-      else { this.Month = E - 13; }
-
-      if (this.Month > 2) { this.Year = C - 4716; }
-      else { this.Year = C - 4715; }
-
-      this.Hour = INT( F * 24 );
-      this.Minute = INT( ((F * 24) - this.Hour) * 60 );
-      this.Second = INT( ((((F * 24) - this.Hour) * 60) - this.Minute) * 60 );
-      this.Millisecond = INT( ((((((F * 24) - this.Hour) * 60) - this.Minute) * 60) - this.Second) * 1000 );
-
-#if DEBUG
-      /*
-      Debug.WriteLine( "A\t= " + A );
-      Debug.WriteLine( "B\t= " + B );
-      Debug.WriteLine( "C\t= " + C );
-      Debug.WriteLine( "D\t= " + D );
-      Debug.WriteLine( "E\t= " + E );
-      Debug.WriteLine( "Day\t= " + this.Day );
-      Debug.WriteLine( "Month\t= " + this.Month );
-      Debug.WriteLine( "Year\t= " + this.Year );
-      */
-#endif
+      if (E <= 13) {
+        this.Month = E - 1;
+        this.Year = C - 4716;
+      }
+      else {
+        this.Month = E - 13;
+        this.Year = C - 4715;
+      }
+      // day parts
+      this.Hour = INTF( F * 24 );
+      this.Minute = INTF( ((F * 24) - this.Hour) * 60 );
+      this.Second = INTF( ((((F * 24) - this.Hour) * 60) - this.Minute) * 60 );
+      this.Millisecond = INTF( ((((((F * 24) - this.Hour) * 60) - this.Minute) * 60) - this.Second) * 1000 );
 
     }
 
@@ -426,7 +487,7 @@ namespace CoordLib
     /// <inheritdoc/>
     public override int GetHashCode( )
     {
-      return INT( this.JulianDayNumber );
+      return INTF( this.JulianDayNumber );
     }
 
     /// <inheritdoc/>
