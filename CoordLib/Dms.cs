@@ -338,8 +338,9 @@ namespace CoordLib
     /// <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
     /// <param name="separator">Item separator character - default a space</param>
     /// <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
+    /// <param name="leadingZeros">Deg will be prepended with leading zeros e.g. 09° - default true</param>
     /// <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
-    public static string ToDMS( double deg, bool lat = true, string format = "dms", char separator = ' ', int dPlaces = -1 )
+    public static string ToDMS( double deg, bool lat = true, string format = "dms", char separator = ' ', int dPlaces = -1, bool leadingZeros = true )
     {
       string lFormat = format.ToLowerInvariant( ); // accept upper and lower case
       if (!((lFormat == "d") || (lFormat == "dm") || (lFormat == "dms"))) return ""; // invalid format
@@ -362,6 +363,7 @@ namespace CoordLib
       string dms = "", d = "", m = "", s = "";
       double dN = 0, mN = 0, sN = 0;
       string degFmt = lat ? "00" : "000";
+      degFmt = leadingZeros ? degFmt : "0"; // no leading zeros
       switch (lFormat) {
         case "d":
         case "deg": {
@@ -438,10 +440,11 @@ namespace CoordLib
     /// <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
     /// <param name="separator">Item separator character - default a space</param>
     /// <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
+    /// <param name="leadingZeros">Deg will be prepended with leading zeros e.g. N09° - default true</param>
     /// <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
-    public static string ToLat( double deg, string format = "dms", char separator = ' ', int dPlaces = -1 )
+    public static string ToLat( double deg, string format = "dms", char separator = ' ', int dPlaces = -1, bool leadingZeros = true )
     {
-      var lat = ToDMS( deg, true, format, separator, dPlaces );
+      var lat = ToDMS( deg, true, format, separator, dPlaces, leadingZeros );
       string sepS = separator == '\0' ? "" : separator.ToString( ); // need a string 
 
       return (lat == "") ? "–" : ((deg < 0 ? 'S' : 'N') + sepS + lat);
@@ -455,10 +458,11 @@ namespace CoordLib
     /// <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
     /// <param name="separator">Item separator character - default a space</param>
     /// <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
+    /// <param name="leadingZeros">Deg will be prepended with leading zeros e.g. W009° - default true</param>
     /// <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
-    public static string ToLon( double deg, string format = "dms", char separator = ' ', int dPlaces = -1 )
+    public static string ToLon( double deg, string format = "dms", char separator = ' ', int dPlaces = -1, bool leadingZeros = true )
     {
-      var lon = ToDMS( deg, false, format, separator, dPlaces );
+      var lon = ToDMS( deg, false, format, separator, dPlaces, leadingZeros );
       string sepS = separator == '\0' ? "" : separator.ToString( ); // need a string 
 
       return (lon == "") ? "–" : (deg < 0 ? 'W' : 'E') + sepS + lon;

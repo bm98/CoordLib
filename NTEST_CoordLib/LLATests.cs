@@ -2,6 +2,8 @@
 
 using System;
 using CoordLib;
+using CoordLib.Extensions;
+
 using System.Globalization;
 
 namespace NTEST_CoordLib
@@ -40,7 +42,16 @@ namespace NTEST_CoordLib
       Assert.AreEqual( -45.340180555555555555555555555556, lat, 0.0000001 );
       Assert.AreEqual( 67.738641666666666666666666666667, lon, 0.0000001 );
 
+      // to LLA
+      // eg from FSIM SDK:   <WorldPosition>N53° 53' 55.87",W166° 32' 40.78",+000000.00</WorldPosition>
+      Assert.AreEqual( "N45° 20' 24.00\",W67° 44' 19.00\",+032000.00", LLA.ToLLA( 45.34, -67.738611111111111111111111111111, 32000 ) );
+      Assert.AreEqual( "N45° 20' 24.00\",W67° 44' 19.00\",+032000.00", new LatLon( 45.34, -67.738611111111111111111111111111, 32000 ).AsLLA( ) );
+
+      Assert.AreEqual( "S45° 20' 24.00\",E67° 44' 19.00\",+032000.00", LLA.ToLLA( -45.34, 67.738611111111111111111111111111, 32000 ) );
+      Assert.AreEqual( "S45° 20' 24.00\",E67° 44' 19.00\",+032000.00", new LatLon( -45.34, 67.738611111111111111111111111111, 32000 ).AsLLA( ) );
+
     }
+
 
     [TestMethod]
     public void TestLLA_Global( )

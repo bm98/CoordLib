@@ -223,7 +223,7 @@
             <param name="format">{string} [format=dm] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
             <returns>A coord string</returns>
         </member>
-        <member name="M:CoordLib.Dms.ToDMS(System.Double,System.Boolean,System.String,System.Char,System.Int32)">
+        <member name="M:CoordLib.Dms.ToDMS(System.Double,System.Boolean,System.String,System.Char,System.Int32,System.Boolean)">
             <summary>
             Converts double degrees to deg/min/sec format
              - degree, prime, double-prime symbols are added, but sign is discarded, though no compass
@@ -234,6 +234,7 @@
             <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
             <param name="separator">Item separator character - default a space</param>
             <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
+            <param name="leadingZeros">Deg will be prepended with leading zeros e.g. 09° - default true</param>
             <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
         </member>
         <member name="M:CoordLib.Dms.ToDMSarray(System.Double,System.Boolean)">
@@ -245,7 +246,7 @@
             <param name="lat">bool - Format Latitude(00 Deg), else it is Longitude(000 Deg)</param>
             <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
         </member>
-        <member name="M:CoordLib.Dms.ToLat(System.Double,System.String,System.Char,System.Int32)">
+        <member name="M:CoordLib.Dms.ToLat(System.Double,System.String,System.Char,System.Int32,System.Boolean)">
             <summary>
             Converts numeric degrees to deg/min/sec latitude (2-digit degrees, prefixed with N/S).
             </summary>
@@ -253,9 +254,10 @@
             <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
             <param name="separator">Item separator character - default a space</param>
             <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
+            <param name="leadingZeros">Deg will be prepended with leading zeros e.g. N09° - default true</param>
             <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
         </member>
-        <member name="M:CoordLib.Dms.ToLon(System.Double,System.String,System.Char,System.Int32)">
+        <member name="M:CoordLib.Dms.ToLon(System.Double,System.String,System.Char,System.Int32,System.Boolean)">
             <summary>
             Convert numeric degrees to deg/min/sec longitude (3-digit degrees, prefixed with E/W)
             </summary>
@@ -263,6 +265,7 @@
             <param name="format">{string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.</param>
             <param name="separator">Item separator character - default a space</param>
             <param name="dPlaces">{number} [dp=0|2|4] - Number of double places to use – default 0 for dms, 2 for dm, 4 for d.</param>
+            <param name="leadingZeros">Deg will be prepended with leading zeros e.g. W009° - default true</param>
             <returns>{string} Degrees formatted as deg/min/secs according to specified format.</returns>
         </member>
         <member name="M:CoordLib.Dms.ToBrng(System.Double,System.String,System.Char,System.Int32)">
@@ -431,7 +434,7 @@
             Returns the True Bearing from a Magnetic Bearing at a location at 3km height [deg]
             using WMM2025 base date (valid 2025..2030)
             </summary>
-            <param name="_ll"></param>
+            <param name="_ll">source LatLon</param>
             <param name="magBearing">The magnetic bearing [deg]</param>
             <returns>The magnetic bearing [deg]</returns>
         </member>
@@ -440,7 +443,7 @@
             Returns the True Bearing from a Magnetic Bearing at a location at 3km height [deg]
             using WMM2025 and the given date (valid 2025..2030)
             </summary>
-            <param name="_ll"></param>
+            <param name="_ll">source LatLon</param>
             <param name="magBearing">The magnetic bearing [deg]</param>
             <param name="date">A date to calculate with</param>
             <returns>The magnetic bearing [deg]</returns>
@@ -450,7 +453,7 @@
             Returns the Magnetic Bearing from a True Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
             using WMM2025 base date (valid 2025..2030)
             </summary>
-            <param name="_ll"></param>
+            <param name="_ll">source LatLon</param>
             <param name="trueBearing">The true bearing [deg]</param>
             <returns>The magnetic bearing [deg]</returns>
         </member>
@@ -459,10 +462,24 @@
             Returns the Magnetic Bearing from a True Bearing using the MagVar at the intermediate point of loc1 and loc2 at 3km height [deg]
             using WMM2025 and the given date (valid 2025..2030)
             </summary>
-            <param name="_ll"></param>
+            <param name="_ll">source LatLon</param>
             <param name="trueBearing">The true bearing [deg]</param>
             <param name="date">A date to calculate with</param>
             <returns>The magnetic bearing [deg]</returns>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.AsLLA(CoordLib.LatLon)">
+            <summary>
+            Returns an LLA string for this LatLon
+            </summary>
+            <param name="_ll">source LatLon</param>
+            <returns></returns>
+        </member>
+        <member name="M:CoordLib.Extensions.Extensions.AsLL(CoordLib.LatLon)">
+            <summary>
+            Returns an LL string for this LatLon
+            </summary>
+            <param name="_ll">source LatLon</param>
+            <returns></returns>
         </member>
         <member name="T:CoordLib.Geo">
             <summary>
@@ -1248,6 +1265,8 @@
             <summary>
             Convert from values to an LLA string
               N9° 44' 31.60",E118° 45' 31.51",+000045.00
+              N53° 53' 55.87",W166° 32' 40.78",+000000.00
+              if ALT is NaN returns Alt=0 only
             </summary>
             <param name="lat">Latitude</param>
             <param name="lon">Longitude</param>

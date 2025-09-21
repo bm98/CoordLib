@@ -14,6 +14,9 @@ Scanned for viruses before packing...
 github@burri-web.org
 
 Changelog:
+V 1.10:
+- Add Extension: AsLL[A](this LatLon)
+- Fix LLA method and also return Alt=0 when Alt is NaN
 
 V 1.9:
 - Add WMM calculations (WMM2025 coefficients)

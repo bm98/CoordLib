@@ -18,14 +18,18 @@ namespace CoordLib
     /// <returns>An LL string</returns>
     public static string ToLL( double lat, double lon )
     {
-      string ll = Dms.ToLat( lat, "dms", ' ', 2 ) + ",";
-      ll += Dms.ToLon( lon, "dms", ' ', 2 );
+      string ll = Dms.ToLat( lat, format: "dms", separator: ' ', dPlaces: 2, leadingZeros: false ) + ",";
+      ll += Dms.ToLon( lon, format: "dms", separator: ' ', dPlaces: 2, leadingZeros: false );
+      // we have a separator ' ' between e.g. N and deg 'N 9° 58...' which needs to be removed
+      ll = ll.Replace( "N ", "N" ).Replace( "W ", "W" ).Replace( "S ", "S" ).Replace( "E ", "E" ); // cheap, could use regex...
       return ll;
     }
 
     /// <summary>
     /// Convert from values to an LLA string
     ///   N9° 44' 31.60",E118° 45' 31.51",+000045.00
+    ///   N53° 53' 55.87",W166° 32' 40.78",+000000.00
+    ///   if ALT is NaN returns Alt=0 only
     /// </summary>
     /// <param name="lat">Latitude</param>
     /// <param name="lon">Longitude</param>
@@ -33,8 +37,8 @@ namespace CoordLib
     /// <returns>An LLA string</returns>
     public static string ToLLA( double lat, double lon, double alt )
     {
-      string lla = ToLL( lat, lon ) + ",";
-      lla += string.Format( Dms.c_us, "+000000.00;000000.00", alt ); // $"{alt:+000000.00;000000.00}";
+      string lla = ToLL( lat, lon );
+      lla += "," + string.Format( Dms.c_us, "{0:+000000.00;000000.00}", double.IsNaN( alt ) ? 0 : alt ); // $"{alt:+000000.00;000000.00}";
       return lla;
     }
 

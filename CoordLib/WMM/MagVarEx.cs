@@ -32,6 +32,7 @@ namespace CoordLib.WMM
     private static QuadLookup<double?> _quadLookup;
     private const ushort c_qtZoom = 9; // L9 -> squares of 78x78 km at lat==0
 
+    /*
     // magVar lookup table UTM - NOT IN USE - too coarse
     private static Dictionary<string, List<double>> _mvLookup_rad = new Dictionary<string, List<double>>( );
     // build the UTM lookup table
@@ -45,6 +46,7 @@ namespace CoordLib.WMM
         }
       }
     }
+    */
 
     /// <summary>
     /// static cTor:
@@ -97,9 +99,11 @@ namespace CoordLib.WMM
 
       double magVar_rad;
 
-      // UTM based lookup
+      /*
+      // UTM based lookup NOT IN USE too coarse
       // Returns the MagVar for the center of the UTM Cell of a LatLon at 3km height
       //magVar_rad = _mvLookup_rad[latLon.UtmZoneLetter( )][latLon.UtmZoneNumber( )];
+      */
 
       // Quad based lookup
       // Returns the MagVar for the center LatLon of a Quad containing the input coord at 3km height
