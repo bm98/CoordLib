@@ -1,5 +1,5 @@
-CoordLib V 1.9 - Build 29
-(c) M. Burri - 04-Apr-2025
+CoordLib V 1.10 - Build 32
+(c) M. Burri - 22-Sep-2025
 
 Contains files:
 

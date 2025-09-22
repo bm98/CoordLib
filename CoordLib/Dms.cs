@@ -362,8 +362,14 @@ namespace CoordLib
 
       string dms = "", d = "", m = "", s = "";
       double dN = 0, mN = 0, sN = 0;
+
       string degFmt = lat ? "00" : "000";
       degFmt = leadingZeros ? degFmt : "0"; // no leading zeros
+      string minFmt = "00";
+      minFmt = leadingZeros ? minFmt : "0";
+      string secFmt = "00";
+      secFmt = leadingZeros ? secFmt : "0";
+
       switch (lFormat) {
         case "d":
         case "deg": {
@@ -383,9 +389,9 @@ namespace CoordLib
           if (mN == 60) { mN = 0; dN++; }               // check for rounding up
           d = dN.ToString( degFmt );
           if (dPlaces > 0)
-            m = mN.ToString( "00." + "000000".Substring( 0, dPlaces ), c_us );
+            m = mN.ToString( minFmt + "." + "000000".Substring( 0, dPlaces ), c_us );
           else
-            m = mN.ToString( "00", c_us );
+            m = mN.ToString( minFmt, c_us );
           dms = d + '°' + sepS + m + "'";
         }
         break;
@@ -398,11 +404,11 @@ namespace CoordLib
           if (sN == 60) { sN = 0; mN++; } // check for rounding up
           if (mN == 60) { mN = 0; dN++; } // check for rounding up
           d = dN.ToString( degFmt, c_us );
-          m = mN.ToString( "00", c_us );
+          m = mN.ToString( minFmt, c_us );
           if (dPlaces > 0)
-            s = sN.ToString( "00." + "000000".Substring( 0, dPlaces ), c_us );
+            s = sN.ToString( secFmt + "." + "000000".Substring( 0, dPlaces ), c_us );
           else
-            s = sN.ToString( "00", c_us );
+            s = sN.ToString( secFmt, c_us );
           dms = d + '°' + sepS + m + "'" + sepS + s + '"';
         }
         break;
